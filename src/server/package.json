@@ -1,0 +1,53 @@
+{
+  "name": "api-starter",
+  "version": "1.0.0",
+  "description": "This is a baseline api starter in typescript.",
+  "main": "./dist/server.js",
+  "scripts": {
+    "build": "npm run clean && tsc",
+    "clean": "rimraf dist",
+    "dev": "PORT=3000 node --inspect ./dist/server.js",
+    "lint": "tslint ./src/**/*.ts ./test/**/*.spec.ts",
+    "lint:fix": "tslint --fix ./src/**/*.ts ./test/**/*.spec.ts -t verbose",
+    "test": "cross-env NODE_ENV=test mocha --reporter spec test/**/*.spec.ts ",
+    "tsc": "tsc"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "keywords": [
+    "api",
+    "template",
+    "TypeScript 3"
+  ],
+  "author": "Joshua C. Belden",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/body-parser": "^1.17.0",
+    "@types/chai": "^4.2.3",
+    "@types/chai-http": "^4.2.0",
+    "@types/express": "^4.16.0",
+    "@types/mocha": "^5.2.7",
+    "@types/mongodb": "^3.3.1",
+    "@types/node": "^10.12.12",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "cross-env": "^6.0.0",
+    "express": "^4.16.4",
+    "inversify": "^5.0.1",
+    "mocha": "^6.2.0",
+    "rimraf": "^2.6.2",
+    "ts-node": "^8.4.1",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.17.0",
+    "typescript": "^3.2.1"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "build": "^0.1.4",
+    "express": "^4.16.4",
+    "inversify": "^5.0.1",
+    "mongodb": "^3.3.2",
+    "reflect-metadata": "^0.1.13"
+  }
+}
