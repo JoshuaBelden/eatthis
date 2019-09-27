@@ -1,11 +1,13 @@
 import { injectable } from "inversify"
 import * as Mongo from 'mongodb'
 import IUserRepository from '../data/iUserRepository'
+import config from '../environments/config'
 import User from '../model/user'
 
 const url = 'mongodb://localhost:27017'
-const dbName = 'starter-api'
+const dbName = config.database.name
 const collectionName = 'users'
+
 
 @injectable()
 export default class UserRepository implements IUserRepository {
