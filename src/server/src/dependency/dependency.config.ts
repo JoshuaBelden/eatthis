@@ -1,26 +1,26 @@
 import { Container } from 'inversify'
 import "reflect-metadata"
 import Application from '../application'
-import UserController from '../controllers/userController'
-import IUserRepository from '../data/iUserRepository'
-import UserRepository from '../data/userRepository'
+import AccountController from '../controllers/accountController'
+import AccountRepository from '../data/accountRepository'
+import IAccountRepository from '../data/IAccountRepository'
+import AccountRoute from '../routes/accountRoute'
 import IRoute from '../routes/iRoute'
-import UserRoute from '../routes/userRoute'
 import SERVICE_IDENTIFIERS from './serviceIdentifiers'
 
 const container = new Container()
 
 container
-    .bind<IUserRepository>(SERVICE_IDENTIFIERS.IUserRepository)
-    .to(UserRepository)
+    .bind<IAccountRepository>(SERVICE_IDENTIFIERS.IAccountRepository)
+    .to(AccountRepository)
 
 container
-    .bind<UserController>(SERVICE_IDENTIFIERS.UserController)
-    .to(UserController)
+    .bind<AccountController>(SERVICE_IDENTIFIERS.AccountController)
+    .to(AccountController)
 
 container
     .bind<IRoute>(SERVICE_IDENTIFIERS.Routes)
-    .to(UserRoute)
+    .to(AccountRoute)
 
 container
     .bind<Application>(SERVICE_IDENTIFIERS.Application)

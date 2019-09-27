@@ -1,8 +1,8 @@
- const SERVICE_IDENTIFIERS = {
+const SERVICE_IDENTIFIERS = {
+    AccountController: Symbol("AccountController"),
     Application: Symbol("Application"),
-    IUserRepository: Symbol("IUserRepository"),
-    Routes: Symbol("Routes"),
-    UserController: Symbol("UserController")
+    IAccountRepository: Symbol("IAccountRepository"),
+    Routes: Symbol("Routes")
 }
 
 export default SERVICE_IDENTIFIERS

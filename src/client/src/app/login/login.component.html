@@ -1,0 +1,38 @@
+<div id="main">
+    <article>
+        <div class="title">
+            <h3>Login</h3>
+        </div>
+
+        <form #form="ngForm" (ngSubmit)="login(form)" novalidate>
+            <div class="form-group">
+                <label>
+                    Email Address:
+                    <input type="email" name="email" #email="ngModel" [(ngModel)]="loginUser.email" class="form-control" required />
+                </label>
+                <div *ngIf="email.touched && email.invalid" class="alert alert-danger">
+                    Email address is required.
+                </div>
+            </div>
+            <div class="form-group">
+                <label>
+                    Password:
+                    <input type="password" name="password" #password="ngModel" [(ngModel)]="loginUser.password" class="form-control" required />
+                </label>
+                <div *ngIf="password.touched && password.invalid" class="alert alert-danger">
+                    Password is required.
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Login</button>
+                <button class="btn btn-default" [routerLink]="['/']">Cancel</button>
+                <a href="#" [routerLink]="['/register']">or create an account</a>
+            </div>
+            <div *ngIf="errors" class="alert alert-danger mt-3">
+                <ul>
+                    <li *ngFor="let error of errors">{{error}}</li>
+                </ul>
+            </div>
+        </form>
+    </article>
+</div>
