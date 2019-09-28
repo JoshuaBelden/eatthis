@@ -30,19 +30,15 @@ export class AuthService {
     this.accountNotification.emitUserLoggedIn(this.getAuthenticatedUser());
   }
 
-  login(email: string, password: string) {
-    return this.http
-      .post<any>(`${environment.apiEndpoint}/account/login`, {
-        email,
-        password
-      })
-      .pipe(
-        map(response => {
-          this.storeAuthenticatedUser(response);
-          this.accountNotification.emitUserLoggedIn(this.getAuthenticatedUser());
-          return response.success;
-        })
-      );
+  async login(email: string, password: string) {
+    const response = await this.http.post<any>(`${environment.apiEndpoint}/account/login`, {
+      email,
+      password
+    }).toPromise();
+
+    this.storeAuthenticatedUser(response);
+    this.accountNotification.emitUserLoggedIn(this.getAuthenticatedUser());
+    return response.success;
   }
 
   logout() {
@@ -52,11 +48,11 @@ export class AuthService {
 
   async createAccount(firstName: string, lastName: string, email: string, password: string) {
     const response = await this.http.post<any>(`${environment.apiEndpoint}/account/register`, {
-        firstName,
-        lastName,
-        email,
-        password
-      }).toPromise();
+      firstName,
+      lastName,
+      email,
+      password
+    }).toPromise();
 
     this.storeAuthenticatedUser(response);
     this.accountNotification.emitUserLoggedIn(this.getAuthenticatedUser());
