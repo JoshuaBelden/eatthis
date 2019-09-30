@@ -17,6 +17,7 @@ import { UnauthenticatedGuard } from './guards/unauthenticated.guard';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
+import { RecipeListComponent } from './recipe-list/recipe-list.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { LogoutComponent } from './logout/logout.component';
     AccountComponent,
     RegisterComponent,
     LoginComponent,
-    LogoutComponent
+    LogoutComponent,
+    RecipeListComponent
   ],
   imports: [
     BrowserModule,

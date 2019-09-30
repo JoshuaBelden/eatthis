@@ -8,9 +8,15 @@ import { AuthenticatedGuard } from './guards/authenticated.guard';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { UnauthenticatedGuard } from './guards/unauthenticated.guard';
+import { RecipeListComponent } from './recipe-list/recipe-list.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
+  {
+    path: 'recipes',
+    component: RecipeListComponent,
+    canActivate: [UnauthenticatedGuard]
+  },
   {
     path: 'register',
     component: RegisterComponent,

@@ -27,18 +27,6 @@ export class RegisterComponent implements OnInit {
       .createAccount(this.registration.firstName, this.registration.lastName, this.registration.email, this.registration.password);
 
     this.router.navigateByUrl('/');
-
-      //   error => {
-      //     // todo: See if we can consolidate where the backend service is putting errors vs the http error codes from the request.
-      //     if (error.error) {
-      //       this.errors = error.error.map(e => e.description);
-      //     }
-
-      //     if (error.errors) {
-      //       this.errors = error.errors.map(e => e.description);
-      //     }
-      //   }
-      // );
     } catch (error) {
       console.log(error);
     }
