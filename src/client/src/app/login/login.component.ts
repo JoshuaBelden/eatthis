@@ -22,8 +22,8 @@ export class LoginComponent implements OnInit {
 
   async login(form: NgForm) {
     try {
-      const response = await this.authService.login(this.loginUser.email, this.loginUser.password);
-      this.router.navigateByUrl('/');
+      await this.authService.login(this.loginUser.email, this.loginUser.password);
+      this.router.navigate(['/']);
     } catch (error) {
       console.log(error);
     }

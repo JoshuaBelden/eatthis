@@ -36,6 +36,11 @@ export default class AccountRepository implements IAccountRepository {
                     return
                 }
 
+                if (user.password !== password) {
+                    resolve(null)
+                    return
+                }
+
                 resolve({
                     email: user.email,
                     firstName: user.firstName,
