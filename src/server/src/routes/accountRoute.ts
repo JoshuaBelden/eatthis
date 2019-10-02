@@ -1,7 +1,7 @@
 import * as express from 'express'
 import { inject, injectable } from 'inversify'
 import AccountController from '../controllers/accountController'
-import SERVICE_IDENTIFIERS from '../dependency/serviceIdentifiers'
+import SERVICE_IDENTIFIERS from '../dependencies/serviceIdentifiers'
 import IRoute from './iRoute'
 
 @injectable()

@@ -2,7 +2,7 @@ import * as bodyParser from 'body-parser'
 import * as cors from "cors";
 import * as express from 'express'
 import { injectable, multiInject } from 'inversify'
-import SERVICE_IDENTIFIERS from './dependency/serviceIdentifiers'
+import SERVICE_IDENTIFIERS from './dependencies/serviceIdentifiers'
 import IRoute from './routes/iRoute'
 
 @injectable()

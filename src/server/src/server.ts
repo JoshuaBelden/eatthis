@@ -1,6 +1,6 @@
 import Application from './application'
-import container from './dependency/dependency.config'
-import SERVICE_IDENTIFIERS from './dependency/serviceIdentifiers'
+import container from './dependencies/dependency.config'
+import SERVICE_IDENTIFIERS from './dependencies/serviceIdentifiers'
 
 container
     .get<Application>(SERVICE_IDENTIFIERS.Application)

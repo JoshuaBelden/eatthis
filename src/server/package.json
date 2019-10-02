@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run clean && tsc",
     "clean": "rimraf dist",
-    "dev": "cross-env PORT=3000 node --inspect ./dist/server.js",
+    "start": "npm run build && cross-env PORT=3000 node --inspect ./dist/server.js",
     "lint": "tslint ./src/**/*.ts ./test/**/*.spec.ts",
     "lint:fix": "tslint --fix ./src/**/*.ts ./test/**/*.spec.ts -t verbose",
     "test": "cross-env NODE_ENV=test mocha --reporter spec test/**/*.spec.ts ",
@@ -49,6 +49,7 @@
     "build": "^0.1.4",
     "cors": "^2.8.5",
     "express": "^4.16.4",
+    "guid-typescript": "^1.0.9",
     "inversify": "^5.0.1",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.3.2",

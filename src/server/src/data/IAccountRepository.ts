@@ -1,4 +1,4 @@
-import User from '../model/user'
+import User from '../models/user'
 
 export default interface IAccountRepository {
     login(email: string, password: string): Promise<User> 
