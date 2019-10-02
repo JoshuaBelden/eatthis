@@ -5,5 +5,7 @@ export interface Recipe {
     userId: string,
     title: string,
     description: string,
+    preparation: string,
+    yield: string,
     ingredients: Array<Ingredient>
 }

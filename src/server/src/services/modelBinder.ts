@@ -9,10 +9,16 @@ export default class ModelBinder {
       userId: userId,
       title: body.title,
       description: body.description,
+      preparation: body.preparation,
+      yield: body.yield,
       ingredients: body.ingredients.map(i => {
         return {
           id: i.id,
-          title: i.title
+          name: i.name,
+          unit: i.unit,
+          quantity: i.quantity,
+          preparation: i.preparation,
+          purpose: i.purpose
         }
       })
     }

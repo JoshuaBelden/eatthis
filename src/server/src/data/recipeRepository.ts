@@ -65,25 +65,18 @@ export default class RecipeRepository implements IRecipeRepository {
                     return reject(connectError)
                 }
 
-                const record = {
-                    id: this.randomNumberGenerator.generateGuid(),
-                    userId: recipe.userId,
-                    title: recipe.title,
-                    description: recipe.description,
-                    ingredients: recipe.ingredients.map(r => {
-                        return {
-                            id: this.randomNumberGenerator.generateGuid(),
-                            title: r.title
-                        }
-                    })
-                }
+                recipe.id = this.randomNumberGenerator.generateGuid()
+                recipe.ingredients = recipe.ingredients.map(i => {
+                    i.id = this.randomNumberGenerator.generateGuid()
+                    return i
+                })
 
                 await client
                     .db(dbName)
                     .collection(collectionName)
-                    .insertOne(record)
+                    .insertOne(recipe)
 
-                resolve(record)
+                resolve(recipe)
             })
         })
     }
