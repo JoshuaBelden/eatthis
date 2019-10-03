@@ -19,7 +19,7 @@ export default class AccountRepository implements IAccountRepository {
         this.randomNumberGenerator = randomNumberGenerator
     }
 
-    public login(email: string, password: string): Promise<User> {
+    public loginAsync(email: string, password: string): Promise<User> {
         return new Promise<User>((resolve, reject) => {
 
             const options = {
@@ -60,7 +60,7 @@ export default class AccountRepository implements IAccountRepository {
         })
     }
     
-    public register(user: User) : Promise<User> {
+    public registerAsync(user: User) : Promise<User> {
         return new Promise((resolve, reject) => {
 
             const options = {
@@ -75,20 +75,14 @@ export default class AccountRepository implements IAccountRepository {
                     return
                 }
 
-                const record = {
-                    email: user.email,
-                    firstName: user.firstName,
-                    id: this.randomNumberGenerator.generateGuid(),
-                    lastName: user.lastName,
-                    password: user.password
-                }
+                user.id = this.randomNumberGenerator.generateGuid()
 
                 await client
                     .db(dbName)
                     .collection(collectionName)
-                    .insertOne(record)
+                    .insertOne(user)
 
-                resolve(record)
+                resolve(user)
             })
         })
     }

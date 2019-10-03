@@ -20,7 +20,7 @@ export default class RecipeRepository implements IRecipeRepository {
         this.randomNumberGenerator = randomNumberGenerator
     }
 
-    public getByUserId(userId: string): Promise<Array<Recipe>> {
+    public getByUserIdAsync(userId: string): Promise<Array<Recipe>> {
         return new Promise<Array<Recipe>>((resolve, reject) => {
 
             const options = {
@@ -51,7 +51,7 @@ export default class RecipeRepository implements IRecipeRepository {
         })
     }
 
-    public create(recipe: Recipe): Promise<Recipe> {
+    public createAsync(recipe: Recipe): Promise<Recipe> {
         return new Promise((resolve, reject) => {
 
             const options = {

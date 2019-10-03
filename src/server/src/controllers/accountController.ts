@@ -1,61 +1,43 @@
-import { Request, Response } from 'express'
 import { inject, injectable } from 'inversify'
-import * as jwt from 'jsonwebtoken'
 import IAccountRepository from '../data/IAccountRepository'
 import SERVICE_IDENTIFIERS from '../dependencies/serviceIdentifiers'
-import { default as config } from '../environments/config'
+import Result from '../models/result'
 import User from '../models/user'
-import RandomNumberGenerator from '../services/randomNumberGenerator'
+import AuthenticationService from '../services/authenticationService'
 
 @injectable()
 export default class AccountController {
 
   private accountRepository: IAccountRepository
-  private randomNumberGenerator: RandomNumberGenerator
+  private authenticatonService: AuthenticationService
 
   constructor(
     @inject(SERVICE_IDENTIFIERS.IAccountRepository) repo: IAccountRepository,
-    @inject(SERVICE_IDENTIFIERS.RandomNumberGenerator) randomNumberGenerator: RandomNumberGenerator) {
+    @inject(SERVICE_IDENTIFIERS.AuthenticationService) authenticatonService: AuthenticationService) {
     this.accountRepository = repo
-    this.randomNumberGenerator = randomNumberGenerator
+    this.authenticatonService = authenticatonService
   }
 
-  public async login(req: Request, res: Response) {
-    const user = await this.accountRepository.login(req.body.email, req.body.password)
-    if (!user) {
-      return res.status(404).send()
-    } else {
-      return res.status(200).send(this.createToken(user))
-    }
-  }
-
-  public async register(req: Request, res: Response) {
+  public async loginAsync(email: string, password: string): Promise<Result<any>> {
     try {
-      const user: User = {
-        email: req.body.email,
-        firstName: req.body.firstName,
-        id: this.randomNumberGenerator.generateGuid(),
-        lastName: req.body.lastName,
-        password: req.body.password
+      const user = await this.accountRepository.loginAsync(email, password)
+      if (!user) {
+        return new Result<any>(false, null, "User not found.")
       }
-
-      const updatedUser = await this.accountRepository.register(user)
-
-      return res.status(201).send(this.createToken(updatedUser))
+      
+      const token = this.authenticatonService.createToken(user)
+      return new Result<any>(true, token)
     } catch (error) {
-      return res.status(500).send(error)
+      return new Result<any>(false, null, error)
     }
   }
 
-  private createToken(user: User) {
-    const expiresIn = 60 * 60;
-    const secret = config.security.secret;
-    return {
-      expiresIn,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      token: jwt.sign(user, secret, { expiresIn }),
-    };
-  }
+  public async registerAsync(user: User): Promise<Result<User>> {
+    try {
+      const result = await this.accountRepository.registerAsync(user)
+      return new Result<User>(true, result)
+    } catch (error) {
+        return new Result<User>(false, null, error)
+    }
+  }  
 }

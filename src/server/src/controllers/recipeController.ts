@@ -15,7 +15,7 @@ export default class RecipeController {
 
     public async createAsync(recipe: Recipe) : Promise<Result<Recipe>> {
         try {
-            const result = await this.recipeRepository.create(recipe)
+            const result = await this.recipeRepository.createAsync(recipe)
             return new Result<Recipe>(true, result)
         } catch (error) {
             return new Result<Recipe>(false, null, error)
