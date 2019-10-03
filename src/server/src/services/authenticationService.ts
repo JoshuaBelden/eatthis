@@ -1,37 +1,30 @@
 import { Request } from 'express'
-import { injectable } from 'inversify'
-import * as jwt from 'jsonwebtoken'
-import config from '../environments/config'
+import { inject, injectable } from 'inversify'
+import { serviceIdentity } from '../dependency.config'
 import User from '../models/user'
+import TokenHandler from './tokenHandler'
 
 @injectable()
 export default class AuthenticationService {
 
-  public createToken(user: User) {
-    const expiresIn = 60 * 60;
-    const secret = config.security.secret;
+  private tokenHandler: TokenHandler
+
+  public constructor(
+    @inject(serviceIdentity.TokenHandler) tokenHandler: TokenHandler) {
+    this.tokenHandler = tokenHandler
+  }
+  
+  public authorizeUser(user: User): object {
     return {
-      expiresIn,
+      expiresIn: this.tokenHandler.tokenExpiration,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      token: jwt.sign(user, secret, { expiresIn }),
+      token: this.tokenHandler.sign(user),
     };
   }
 
   public getAuthorizedUser(request: Request): User {
-    try {
-      const authorizationHeader = request.headers.authorization
-      if (!authorizationHeader) {
-        return null
-      }
-
-      return jwt.verify(
-        authorizationHeader.replace('Bearer ', ''),
-        config.security.secret) as User;
-    }
-    catch {
-      return null
-    }
+    return this.tokenHandler.verify(this.tokenHandler.readTokenFromHeader(request)) as User;
   }
 }

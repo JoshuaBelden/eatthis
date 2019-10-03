@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify'
 import IAccountRepository from '../data/IAccountRepository'
-import SERVICE_IDENTIFIERS from '../dependencies/serviceIdentifiers'
+import { serviceIdentity } from '../dependency.config'
 import Result from '../models/result'
 import User from '../models/user'
 import AuthenticationService from '../services/authenticationService'
@@ -12,21 +12,22 @@ export default class AccountController {
   private authenticatonService: AuthenticationService
 
   constructor(
-    @inject(SERVICE_IDENTIFIERS.IAccountRepository) repo: IAccountRepository,
-    @inject(SERVICE_IDENTIFIERS.AuthenticationService) authenticatonService: AuthenticationService) {
+    @inject(serviceIdentity.IAccountRepository) repo: IAccountRepository,
+    @inject(serviceIdentity.AuthenticationService) authenticatonService: AuthenticationService) {
     this.accountRepository = repo
     this.authenticatonService = authenticatonService
   }
 
   public async loginAsync(email: string, password: string): Promise<Result<any>> {
     try {
+
       const user = await this.accountRepository.loginAsync(email, password)
       if (!user) {
         return new Result<any>(false, null, "User not found.")
       }
-      
-      const token = this.authenticatonService.createToken(user)
-      return new Result<any>(true, token)
+
+      return new Result<any>(true, this.authenticatonService.authorizeUser(user))
+
     } catch (error) {
       return new Result<any>(false, null, error)
     }
@@ -34,8 +35,9 @@ export default class AccountController {
 
   public async registerAsync(user: User): Promise<Result<User>> {
     try {
-      const result = await this.accountRepository.registerAsync(user)
-      return new Result<User>(true, result)
+      
+      return new Result<User>(true, await this.accountRepository.registerAsync(user))
+
     } catch (error) {
         return new Result<User>(false, null, error)
     }

@@ -1,7 +1,7 @@
 import * as express from 'express'
 import { inject, injectable } from 'inversify'
 import RecipeController from '../controllers/recipeController'
-import SERVICE_IDENTIFIERS from '../dependencies/serviceIdentifiers'
+import { serviceIdentity } from '../dependency.config'
 import AuthenticationService from '../services/authenticationService'
 import ModelBinder from '../services/modelBinder'
 import IRoute from './iRoute'
@@ -14,9 +14,9 @@ export default class RecipeRoute implements IRoute {
   private modelBinder: ModelBinder
 
   constructor(
-    @inject(SERVICE_IDENTIFIERS.RecipeController) recipeController: RecipeController,
-    @inject(SERVICE_IDENTIFIERS.AuthenticationService) authenticationService: AuthenticationService,
-    @inject(SERVICE_IDENTIFIERS.ModelBinder) modelBinder: ModelBinder) {
+    @inject(serviceIdentity.RecipeController) recipeController: RecipeController,
+    @inject(serviceIdentity.AuthenticationService) authenticationService: AuthenticationService,
+    @inject(serviceIdentity.ModelBinder) modelBinder: ModelBinder) {
     this.recipeController = recipeController
     this.authenticationService = authenticationService
     this.modelBinder = modelBinder

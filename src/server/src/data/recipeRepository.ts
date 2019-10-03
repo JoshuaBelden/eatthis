@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import * as Mongo from 'mongodb'
-import SERVICE_IDENTIFIERS from '../dependencies/serviceIdentifiers';
+import { serviceIdentity } from '../dependency.config'
 import config from '../environments/config'
 import { Recipe } from '../models/recipe';
 import RandomNumberGenerator from '../services/randomNumberGenerator';
@@ -16,7 +16,7 @@ export default class RecipeRepository implements IRecipeRepository {
     private randomNumberGenerator: RandomNumberGenerator
 
     public constructor(
-        @inject(SERVICE_IDENTIFIERS.RandomNumberGenerator) randomNumberGenerator: RandomNumberGenerator) {
+        @inject(serviceIdentity.RandomNumberGenerator) randomNumberGenerator: RandomNumberGenerator) {
         this.randomNumberGenerator = randomNumberGenerator
     }
 

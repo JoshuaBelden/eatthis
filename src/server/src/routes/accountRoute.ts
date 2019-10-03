@@ -1,7 +1,7 @@
 import * as express from 'express'
 import { inject, injectable } from 'inversify'
 import AccountController from '../controllers/accountController'
-import SERVICE_IDENTIFIERS from '../dependencies/serviceIdentifiers'
+import { serviceIdentity } from '../dependency.config'
 import ModelBinder from '../services/modelBinder'
 import IRoute from './iRoute'
 
@@ -11,8 +11,9 @@ export default class AccountRoute implements IRoute {
   private accountController: AccountController
   private modelBinder: ModelBinder
 
-  constructor(@inject(SERVICE_IDENTIFIERS.AccountController) accountController: AccountController,
-    @inject(SERVICE_IDENTIFIERS.ModelBinder) modelBinder: ModelBinder) {
+  constructor(
+    @inject(serviceIdentity.AccountController) accountController: AccountController,
+    @inject(serviceIdentity.ModelBinder) modelBinder: ModelBinder) {
     this.accountController = accountController
     this.modelBinder = modelBinder
   }
@@ -33,9 +34,8 @@ export default class AccountRoute implements IRoute {
     app
       .route('/account/login')
       .post(async (request, response) => {
-        const email = request.body.email
-        const password = request.body.password
-        const result = await this.accountController.loginAsync(email, password)
+        const result = await this.accountController.loginAsync(request.body.email, request.body.password)
+
         return result.success
           ? response.status(201).send(result.value)
           : response.status(500).send(result.error)

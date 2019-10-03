@@ -1,7 +1,6 @@
 import Application from './application'
-import container from './dependencies/dependency.config'
-import SERVICE_IDENTIFIERS from './dependencies/serviceIdentifiers'
+import { container, serviceIdentity } from './dependency.config'
 
 container
-    .get<Application>(SERVICE_IDENTIFIERS.Application)
+    .get<Application>(serviceIdentity.Application)
     .listen(process.env.PORT)

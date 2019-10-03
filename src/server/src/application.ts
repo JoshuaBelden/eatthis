@@ -2,14 +2,14 @@ import * as bodyParser from 'body-parser'
 import * as cors from "cors";
 import * as express from 'express'
 import { injectable, multiInject } from 'inversify'
-import SERVICE_IDENTIFIERS from './dependencies/serviceIdentifiers'
+import { serviceIdentity } from './dependency.config'
 import IRoute from './routes/iRoute'
 
 @injectable()
 export default class Application {
   public listener: express.Application
 
-  public constructor(@multiInject(SERVICE_IDENTIFIERS.Routes) routes: Array<IRoute>) {
+  public constructor(@multiInject(serviceIdentity.Routes) routes: Array<IRoute>) {
     this.listener = express()
     this.listener.use(bodyParser.json())
     this.listener.use(cors())
