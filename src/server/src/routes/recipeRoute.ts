@@ -1,7 +1,7 @@
 import * as express from 'express'
 import { inject, injectable } from 'inversify'
 import RecipeController from '../controllers/recipeController'
-import { serviceIdentity } from '../dependency.config'
+import dependencyIdentifiers from '../dependencyIdentifiers'
 import AuthenticationService from '../services/authenticationService'
 import ModelBinder from '../services/modelBinder'
 import IRoute from './iRoute'
@@ -14,9 +14,9 @@ export default class RecipeRoute implements IRoute {
   private modelBinder: ModelBinder
 
   constructor(
-    @inject(serviceIdentity.RecipeController) recipeController: RecipeController,
-    @inject(serviceIdentity.AuthenticationService) authenticationService: AuthenticationService,
-    @inject(serviceIdentity.ModelBinder) modelBinder: ModelBinder) {
+    @inject(dependencyIdentifiers.RecipeController) recipeController: RecipeController,
+    @inject(dependencyIdentifiers.AuthenticationService) authenticationService: AuthenticationService,
+    @inject(dependencyIdentifiers.ModelBinder) modelBinder: ModelBinder) {
     this.recipeController = recipeController
     this.authenticationService = authenticationService
     this.modelBinder = modelBinder
@@ -24,20 +24,33 @@ export default class RecipeRoute implements IRoute {
 
   public configure(app: express.Application): void {
 
+    // GET USER'S RECIPES
+    app
+      .route('/recipe')
+      .get(async (request, response) => {
+        const authResult = this.authenticationService.getAuthorizedUser(request)
+        if (!authResult.success) {
+          return response.status(401).send(authResult.error)
+        }
+
+        const result = await this.recipeController.getAsync(authResult.value.id)
+        return result.success
+          ? response.status(200).send(result.value)
+          : response.status(500).send(result.error)
+      })
+
     // CREATE RECIPE
     app
       .route('/recipe')
       .post(async (request, response) => {
 
-        const user = this.authenticationService.getAuthorizedUser(request)
-        if (!user) {
-          return response.status(401).send()
+        const authResult = this.authenticationService.getAuthorizedUser(request)
+        if (!authResult.success) {
+          return response.status(401).send(authResult.error)
         }
 
-        const result = await this.recipeController.createAsync(
-          this.modelBinder.getRecipe(user.id, request.body)
-        )
-
+        const recipe = this.modelBinder.getRecipe(authResult.value.id, request.body)
+        const result = await this.recipeController.createAsync(recipe)
         return result.success
           ? response.status(201).send(result.value)
           : response.status(500).send(result.error)

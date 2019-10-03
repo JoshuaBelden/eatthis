@@ -7,6 +7,7 @@ import AccountRepository from './data/accountRepository'
 import IAccountRepository from './data/IAccountRepository'
 import IRecipeRepository from './data/iRecipeRepository'
 import RecipeRepository from './data/recipeRepository'
+import dependencyIdentifiers from './dependencyIdentifiers'
 import config from './environments/config'
 import AccountRoute from './routes/accountRoute'
 import IRoute from './routes/iRoute'
@@ -16,77 +17,56 @@ import ModelBinder from './services/modelBinder'
 import RandomNumberGenerator from './services/randomNumberGenerator'
 import TokenHandler from './services/tokenHandler'
 
-export const serviceIdentity = {
-    
-    // SERVICES
-    AuthenticationService: Symbol("AuthenticationService"),
-    TokenHandler: Symbol("TokenHandler"),
-    RandomNumberGenerator: Symbol("RandomNumberGenerator"),
-    ModelBinder: Symbol("ModelBinder"),
-
-    // REPOSITORIES
-    IAccountRepository: Symbol("IAccountRepository"),
-    IRecipeRepository: Symbol("IRecipeRepository"),
-
-    // CONTROLLERS
-    AccountController: Symbol("AccountController"),
-    RecipeController: Symbol("RecipeController"),
-
-    // ROUTES
-    Routes: Symbol("Routes"),
-
-    // APPLICATION
-    Application: Symbol("Application"),
-}
-
-export const container = new Container()
+const container = new Container()
 
 // REGISTER SERVICES
 container
-    .bind<RandomNumberGenerator>(serviceIdentity.RandomNumberGenerator)
+    .bind<RandomNumberGenerator>(dependencyIdentifiers.RandomNumberGenerator)
     .to(RandomNumberGenerator)
 
 container
-    .bind<TokenHandler>(serviceIdentity.TokenHandler)
+    .bind<TokenHandler>(dependencyIdentifiers.TokenHandler)
     .toConstructor(TokenHandler)
     .onActivation(context => new TokenHandler(config.security.secret, config.security.tokenExpiration))
 
 container
-    .bind<AuthenticationService>(serviceIdentity.AuthenticationService)
+    .bind<AuthenticationService>(dependencyIdentifiers.AuthenticationService)
     .to(AuthenticationService)
 
 container
-    .bind<ModelBinder>(serviceIdentity.ModelBinder)
+    .bind<ModelBinder>(dependencyIdentifiers.ModelBinder)
     .to(ModelBinder)
 
 // REGISTER REPOSITORIES
 container
-    .bind<IAccountRepository>(serviceIdentity.IAccountRepository)
+    .bind<IAccountRepository>(dependencyIdentifiers.IAccountRepository)
     .to(AccountRepository)
 
 container
-    .bind<IRecipeRepository>(serviceIdentity.IRecipeRepository)
+    .bind<IRecipeRepository>(dependencyIdentifiers.IRecipeRepository)
     .to(RecipeRepository)
 
 // REGISTER CONTROLLERS
 container
-    .bind<AccountController>(serviceIdentity.AccountController)
+    .bind<AccountController>(dependencyIdentifiers.AccountController)
     .to(AccountController)
 
 container
-    .bind<RecipeController>(serviceIdentity.RecipeController)
+    .bind<RecipeController>(dependencyIdentifiers.RecipeController)
     .to(RecipeController)
 
 // REGISTER ROUTES
 container
-    .bind<IRoute>(serviceIdentity.Routes)
+    .bind<IRoute>(dependencyIdentifiers.Routes)
     .to(AccountRoute)
 
 container
-    .bind<IRoute>(serviceIdentity.Routes)
+    .bind<IRoute>(dependencyIdentifiers.Routes)
     .to(RecipeRoute)
 
 // REGISTER APPLICATION
 container
-    .bind<Application>(serviceIdentity.Application)
+    .bind<Application>(dependencyIdentifiers.Application)
     .to(Application)
+
+export default container

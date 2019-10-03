@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import * as Mongo from 'mongodb'
-import { serviceIdentity } from '../dependency.config'
+import serviceIdentity from '../dependencyIdentifiers'
 import config from '../environments/config'
 import { Recipe } from '../models/recipe';
 import RandomNumberGenerator from '../services/randomNumberGenerator';
@@ -38,7 +38,7 @@ export default class RecipeRepository implements IRecipeRepository {
                 const recipes = await client
                     .db(dbName)
                     .collection(collectionName)
-                    .find<Recipe>({ id: userId })
+                    .find<Recipe>({ userId })
                     .toArray()
 
                 if (!recipes) {

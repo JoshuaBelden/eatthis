@@ -1,6 +1,8 @@
 import { Request } from 'express'
 import { inject, injectable } from 'inversify'
-import { serviceIdentity } from '../dependency.config'
+import dependencyIdentifiers from '../dependencyIdentifiers'
+import AuthToken from '../models/authToken'
+import Result from '../models/result'
 import User from '../models/user'
 import TokenHandler from './tokenHandler'
 
@@ -10,21 +12,24 @@ export default class AuthenticationService {
   private tokenHandler: TokenHandler
 
   public constructor(
-    @inject(serviceIdentity.TokenHandler) tokenHandler: TokenHandler) {
+    @inject(dependencyIdentifiers.TokenHandler) tokenHandler: TokenHandler) {
     this.tokenHandler = tokenHandler
   }
-  
-  public authorizeUser(user: User): object {
-    return {
-      expiresIn: this.tokenHandler.tokenExpiration,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      token: this.tokenHandler.sign(user),
-    };
+
+  public authorizeUser(user: User): Result<AuthToken> {
+    return new Result<AuthToken>(true, new AuthToken(
+      this.tokenHandler.tokenExpiration,
+      user.firstName,
+      user.lastName,
+      user.email,
+      this.tokenHandler.sign(user)))
   }
 
-  public getAuthorizedUser(request: Request): User {
-    return this.tokenHandler.verify(this.tokenHandler.readTokenFromHeader(request)) as User;
+  public getAuthorizedUser(request: Request): Result<User> {
+    try {
+      return new Result<User>(true, this.tokenHandler.verify(this.tokenHandler.readTokenFromHeader(request)) as User);
+    } catch (error) {
+      return new Result<User>(false, null, error)
+    }
   }
 }
