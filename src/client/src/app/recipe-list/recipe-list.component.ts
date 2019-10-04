@@ -9,11 +9,21 @@ import { Recipe } from '../models/recipe';
 })
 export class RecipeListComponent implements OnInit {
 
-  recipes: Array<Recipe> = []
+  allRecipes: Array<Recipe>;
+  displayedRecipes: Array<Recipe>;
 
   constructor(private recipeService: RecipeService) { }
 
   async ngOnInit() {
-    this.recipes = await this.recipeService.getAsync();
+    this.allRecipes = this.displayedRecipes = await this.recipeService.getAsync();
+  }
+
+  async search(keyword) {
+    if (!keyword) {
+      this.displayedRecipes = this.allRecipes;
+      return;
+    } else {
+      this.displayedRecipes = this.allRecipes.filter(recipe => recipe.title.includes(keyword));
+    }
   }
 }

@@ -1,7 +1,9 @@
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgModule } from '@angular/core';
 
 import { AccountComponent } from './account/account.component';
@@ -19,23 +21,27 @@ import { RecipeListComponent } from './recipe-list/recipe-list.component';
 import { RecipeService } from './services/recipe.service';
 import { RegisterComponent } from './register/register.component';
 import { UnauthenticatedGuard } from './guards/unauthenticated.guard';
+import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    NavigationComponent,
-    DashboardComponent,
     AccountComponent,
-    RegisterComponent,
+    AppComponent,
+    DashboardComponent,
     LoginComponent,
     LogoutComponent,
-    RecipeListComponent
+    NavigationComponent,
+    RecipeListComponent,
+    RegisterComponent,
+    RecipeDetailComponent,
   ],
   imports: [
-    BrowserModule,
+    AngularFontAwesomeModule,
     AppRoutingModule,
+    BrowserModule,
     FormsModule,
     HttpClientModule,
+    NgbModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

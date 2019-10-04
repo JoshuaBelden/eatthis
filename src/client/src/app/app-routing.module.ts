@@ -9,12 +9,18 @@ import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { UnauthenticatedGuard } from './guards/unauthenticated.guard';
 import { RecipeListComponent } from './recipe-list/recipe-list.component';
+import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
   {
     path: 'recipes',
     component: RecipeListComponent,
+    canActivate: [UnauthenticatedGuard]
+  },
+  {
+    path: 'recipes/:recipeId',
+    component: RecipeDetailComponent,
     canActivate: [UnauthenticatedGuard]
   },
   {

@@ -7,8 +7,8 @@
         <div class="navbar-nav">
             <a class="nav-item nav-link" [routerLink]="['/']" [routerLinkActive]="['active']">Dashboard</a>
             <a class="nav-item nav-link" href="#">Friends</a>
-            <a class="nav-item nav-link" [routerLink]="['/recipes']">Recipes</a>
-            <a class="nav-item nav-link" href="#">Meal Planner</a>
+            <a class="nav-item nav-link" [routerLink]="['/recipes']" [routerLinkActive]="['active']">Recipes</a>
+            <a class="nav-item nav-link" href="#">Meals</a>
             <a *ngIf="!isLoggedIn" class="nav-item nav-link" [routerLink]="['/login']">Login</a>
             <a *ngIf="isLoggedIn" class="nav-item nav-link" [routerLink]="['/account']" [routerLinkActive]="['active']">{{authenticatedUser.email}}</a>
             <a *ngIf="isLoggedIn" class="nav-item nav-link" [routerLink]="['/logout']">Logout</a>
