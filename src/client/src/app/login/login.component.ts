@@ -12,7 +12,7 @@ import { NgForm } from '@angular/forms';
 export class LoginComponent implements OnInit {
 
   loginUser = new LoginUser();
-  errors: string[];
+  errors: string[] = [];
 
   constructor(private authService: AuthService, private router: Router) {
   }
@@ -25,7 +25,9 @@ export class LoginComponent implements OnInit {
       await this.authService.login(this.loginUser.email, this.loginUser.password);
       this.router.navigate(['/']);
     } catch (error) {
-      console.log(error);
+      if (error.status === 401) {
+        this.errors.push('That username or password is incorrect.');
+      }
     }
   }
 }

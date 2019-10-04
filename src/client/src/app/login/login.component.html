@@ -28,10 +28,8 @@
                 <button class="btn btn-default" [routerLink]="['/']">Cancel</button>
                 <a href="#" [routerLink]="['/register']">or create an account</a>
             </div>
-            <div *ngIf="errors" class="alert alert-danger mt-3">
-                <ul>
-                    <li *ngFor="let error of errors">{{error}}</li>
-                </ul>
+            <div *ngIf="errors && errors.length > 0" class="alert alert-danger mt-3">
+                <div *ngFor="let error of errors">{{error}}</div>
             </div>
         </form>
     </article>
