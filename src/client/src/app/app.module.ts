@@ -4,20 +4,21 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { NavigationComponent } from './navigation/navigation.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { AccountComponent } from './account/account.component';
-import { AuthInterceptorService } from './services/authInterceptor.service';
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
 import { AuthenticatedGuard } from './guards/authenticated.guard';
+import { AuthInterceptorService } from './services/authInterceptor.service';
 import { AuthService } from './services/auth.service';
-import { NotificationService } from './services/notification.service';
-import { UnauthenticatedGuard } from './guards/unauthenticated.guard';
-import { RegisterComponent } from './register/register.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
+import { NavigationComponent } from './navigation/navigation.component';
+import { NotificationService } from './services/notification.service';
 import { RecipeListComponent } from './recipe-list/recipe-list.component';
+import { RecipeService } from './services/recipe.service';
+import { RegisterComponent } from './register/register.component';
+import { UnauthenticatedGuard } from './guards/unauthenticated.guard';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { RecipeListComponent } from './recipe-list/recipe-list.component';
   },
     AuthenticatedGuard,
     AuthService,
+    RecipeService,
     NotificationService,
     UnauthenticatedGuard],
   bootstrap: [AppComponent]
