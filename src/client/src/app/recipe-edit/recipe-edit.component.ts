@@ -13,7 +13,7 @@ import { concat } from 'rxjs/operators';
 })
 export class RecipeEditComponent implements OnInit {
 
-  recipeId;
+  recipe: Recipe;
   recipeForm;
 
   constructor(
@@ -32,17 +32,17 @@ export class RecipeEditComponent implements OnInit {
     });
 
     this.route.paramMap.subscribe(async params => {
-      this.recipeId = params.get('recipeId');
-      if (!this.recipeId) {
+      const recipeId = params.get('recipeId');
+      if (!recipeId) {
         return;
       }
 
-      const recipe = await this.recipeService.getAsync(this.recipeId);
+      this.recipe = await this.recipeService.getAsync(recipeId);
       this.recipeForm = this.formBuilder.group({
-        title: recipe.title,
-        description: recipe.description,
-        ingredients: this.ingredientParser.toString(recipe.ingredients),
-        preparation: recipe.preparation,
+        title: this.recipe.title,
+        description: this.recipe.description,
+        ingredients: this.ingredientParser.toString(this.recipe.ingredients),
+        preparation: this.recipe.preparation,
       });
     });
   }
@@ -50,7 +50,7 @@ export class RecipeEditComponent implements OnInit {
   async onSubmit(recipeData) {
     try {
       const recipe: Recipe = {
-        id: this.recipeId,
+        id: this.recipe.id,
         userId: '',
         title: recipeData.title,
         description: recipeData.description,
@@ -62,6 +62,5 @@ export class RecipeEditComponent implements OnInit {
     } catch (error) {
 
     }
-    this.recipeForm.reset();
   }
 }

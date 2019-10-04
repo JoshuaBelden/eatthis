@@ -1,10 +1,8 @@
 import { Ingredient } from '../models/ingredient';
-import { stringify } from 'querystring';
-import { concat } from 'rxjs';
 
 export class IngredientParser {
     public parse(ingredients: string): Array<Ingredient> {
-        return [];
+        return ingredients.split('\r\n').map(line => this.parseIngredient(line));
     }
 
     public toString(ingredients: Array<Ingredient>): string {
@@ -18,5 +16,16 @@ export class IngredientParser {
                 .filter(item => item)
                 .join(' '))
             .join('\r\n');
+    }
+
+    private parseIngredient(line: string): Ingredient {
+        return {
+            id: '',
+            name: '',
+            quantity: 0,
+            unit: '',
+            preparation: '',
+            purpose: ''
+        };
     }
 }

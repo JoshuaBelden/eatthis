@@ -1,5 +1,6 @@
 <div class="d-flex flex-row justify-content-between m-1">
 
+  <!-- Page Header, Search, and Command Bar -->
   <div class="input-group m-1">
     <div class="input-group-prepend">
       <span class="input-group-text" id="search-addon">
@@ -15,6 +16,7 @@
   </div>
 </div>
 
+<!-- Recipe List -->
 <div class="d-flex flex-wrap">
 
   <div *ngFor="let recipe of displayedRecipes" class="card border m-1 flex-fill" style="width: 18rem;">
@@ -32,7 +34,7 @@
       <p class="card-text">{{recipe.description}}</p>
       <hr class="my-4">
       <a href="#" class="btn btn-light" [routerLink]="['/recipes', recipe.id]">
-        <fa name="eye"></fa>
+        <fa name="book"></fa> read more
       </a>
     </div>
   </div>

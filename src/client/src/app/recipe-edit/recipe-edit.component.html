@@ -29,5 +29,13 @@
         </label>
         <textarea id="preparation" rows="6`" class="form-control" formControlName="preparation"></textarea>
     </div>
-    <button class="btn btn-primary" type="submit">Save</button>
+    <button class="btn btn-primary m-1" type="submit">
+        <fa name="save"></fa> Save
+    </button>
+
+    <button class="btn btn-danger m-1" type="submit" formaction="delete">
+        <fa name="x"></fa> Delete
+    </button>
+
+    <a href="#" class="btn btn-light m-1" [routerLink]="['/recipes', recipe ?recipe.id : 0]">Nevermind</a>
 </form>
