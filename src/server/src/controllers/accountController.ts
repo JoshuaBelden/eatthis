@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify'
-import IAccountRepository from '../data/IAccountRepository'
+import AccountRepository from '../data/AccountRepository'
 import dependencyIdentifiers from '../dependencyIdentifiers'
 import AuthToken from '../models/authToken'
 import Result from '../models/result'
@@ -9,11 +9,11 @@ import AuthenticationService from '../services/authenticationService'
 @injectable()
 export default class AccountController {
 
-  private accountRepository: IAccountRepository
+  private accountRepository: AccountRepository
   private authenticatonService: AuthenticationService
 
   constructor(
-    @inject(dependencyIdentifiers.IAccountRepository) repo: IAccountRepository,
+    @inject(dependencyIdentifiers.AccountRepository) repo: AccountRepository,
     @inject(dependencyIdentifiers.AuthenticationService) authenticatonService: AuthenticationService) {
     this.accountRepository = repo
     this.authenticatonService = authenticatonService

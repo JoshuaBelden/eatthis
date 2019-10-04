@@ -4,14 +4,13 @@ import dependencyIdentifiers from '../dependencyIdentifiers'
 import config from '../environments/config'
 import User from '../models/user'
 import RandomNumberGenerator from '../services/randomNumberGenerator'
-import IAccountRepository from './IAccountRepository'
 
 const url = 'mongodb://localhost:27017'
 const dbName = config.database.name
 const collectionName = 'users'
 
 @injectable()
-export default class AccountRepository implements IAccountRepository {
+export default class AccountRepository {
 
     private randomNumberGenerator: RandomNumberGenerator
 

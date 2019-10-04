@@ -72,7 +72,6 @@ export class AuthService {
     sessionStorage.setItem('user-first-name', response.firstName);
     sessionStorage.setItem('user-last-name', response.lastName);
     sessionStorage.setItem('user-email', response.email);
-    console.log(response);
   }
 
   private removeAuthenticatedUser() {

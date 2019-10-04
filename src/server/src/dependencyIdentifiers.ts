@@ -7,8 +7,8 @@ export default {
     ModelBinder: Symbol("ModelBinder"),
 
     // REPOSITORIES
-    IAccountRepository: Symbol("IAccountRepository"),
-    IRecipeRepository: Symbol("IRecipeRepository"),
+    AccountRepository: Symbol("AccountRepository"),
+    RecipeRepository: Symbol("RecipeRepository"),
 
     // CONTROLLERS
     AccountController: Symbol("AccountController"),

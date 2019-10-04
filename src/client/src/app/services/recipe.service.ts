@@ -13,8 +13,18 @@ export class RecipeService {
     private http: HttpClient
   ) { }
 
-  async getAsync(): Promise<Array<Recipe>> {
-    const result = await this.http.get<Array<Recipe>>(`${environment.apiEndpoint}/recipe`).toPromise();
+  async getAsync(recipeId: string): Promise<Recipe> {
+    const result = await this.http.get<Recipe>(`${environment.apiEndpoint}/recipe/${recipeId}`).toPromise();
+    return result;
+  }
+
+  async getForUserAsync(): Promise<Array<Recipe>> {
+    const result = await this.http.get<Array<Recipe>>(`${environment.apiEndpoint}/recipes/user`).toPromise();
+    return result;
+  }
+
+  async createAsync(recipe: Recipe): Promise<Recipe> {
+    const result = await this.http.post<Recipe>(`${environment.apiEndpoint}/recipe`, recipe).toPromise();
     return result;
   }
 }

@@ -4,8 +4,6 @@ import Application from './application'
 import AccountController from './controllers/accountController'
 import RecipeController from './controllers/recipeController'
 import AccountRepository from './data/accountRepository'
-import IAccountRepository from './data/IAccountRepository'
-import IRecipeRepository from './data/iRecipeRepository'
 import RecipeRepository from './data/recipeRepository'
 import dependencyIdentifiers from './dependencyIdentifiers'
 import config from './environments/config'
@@ -39,11 +37,11 @@ container
 
 // REGISTER REPOSITORIES
 container
-    .bind<IAccountRepository>(dependencyIdentifiers.IAccountRepository)
+    .bind<AccountRepository>(dependencyIdentifiers.AccountRepository)
     .to(AccountRepository)
 
 container
-    .bind<IRecipeRepository>(dependencyIdentifiers.IRecipeRepository)
+    .bind<RecipeRepository>(dependencyIdentifiers.RecipeRepository)
     .to(RecipeRepository)
 
 // REGISTER CONTROLLERS

@@ -1,6 +1,6 @@
 import { Request } from 'express'
 import { inject, injectable } from 'inversify'
-import IRecipeRepository from '../data/iRecipeRepository'
+import RecipeRepository from '../data/RecipeRepository'
 import dependencyIdentifiers from '../dependencyIdentifiers'
 import { Recipe } from '../models/recipe'
 import Result from '../models/result'
@@ -9,17 +9,23 @@ import AuthenticatoinService from '../services/authenticationService'
 @injectable()
 export default class RecipeController {
 
-    private recipeRepository: IRecipeRepository
-    private authenticationService: AuthenticatoinService
+    private recipeRepository: RecipeRepository
 
     constructor(
-        @inject(dependencyIdentifiers.IRecipeRepository) repo: IRecipeRepository,
-        @inject(dependencyIdentifiers.AuthenticationService) authenticationService: AuthenticatoinService) {
+        @inject(dependencyIdentifiers.RecipeRepository) repo: RecipeRepository) {
         this.recipeRepository = repo
-        this.authenticationService = authenticationService
     }
 
-    public async getAsync(userId: string) : Promise<Result<Array<Recipe>>> {
+    public async getAsync(userId: string, recipeId: string): Promise<Result<Recipe>> {
+        try {
+            return new Result<Recipe>(true, await this.recipeRepository.getAsync(userId, recipeId))
+        }
+        catch (error) {
+            return new Result<Recipe>(false, null, error)
+        }
+    }
+
+    public async getForUserAsync(userId: string) : Promise<Result<Array<Recipe>>> {
         try {
             return new Result<Array<Recipe>>(true, await this.recipeRepository.getByUserIdAsync(userId))
         }

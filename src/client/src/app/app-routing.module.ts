@@ -10,9 +10,16 @@ import { LogoutComponent } from './logout/logout.component';
 import { UnauthenticatedGuard } from './guards/unauthenticated.guard';
 import { RecipeListComponent } from './recipe-list/recipe-list.component';
 import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
+import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
+import { WelcomeComponent } from './welcome/welcome.component';
 
 const routes: Routes = [
-  { path: '', component: DashboardComponent },
+  { path: '', component: WelcomeComponent },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [UnauthenticatedGuard]
+  },
   {
     path: 'recipes',
     component: RecipeListComponent,
@@ -21,6 +28,11 @@ const routes: Routes = [
   {
     path: 'recipes/:recipeId',
     component: RecipeDetailComponent,
+    canActivate: [UnauthenticatedGuard]
+  },
+  {
+    path: 'recipes/edit/:recipeId',
+    component: RecipeEditComponent,
     canActivate: [UnauthenticatedGuard]
   },
   {

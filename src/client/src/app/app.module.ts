@@ -5,6 +5,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AccountComponent } from './account/account.component';
 import { AppComponent } from './app.component';
@@ -22,6 +23,9 @@ import { RecipeService } from './services/recipe.service';
 import { RegisterComponent } from './register/register.component';
 import { UnauthenticatedGuard } from './guards/unauthenticated.guard';
 import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
+import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
+import { IngredientParser } from './services/ingredientParser.service';
+import { WelcomeComponent } from './welcome/welcome.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +38,8 @@ import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
     RecipeListComponent,
     RegisterComponent,
     RecipeDetailComponent,
+    RecipeEditComponent,
+    WelcomeComponent,
   ],
   imports: [
     AngularFontAwesomeModule,
@@ -42,6 +48,7 @@ import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
     FormsModule,
     HttpClientModule,
     NgbModule,
+    ReactiveFormsModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
@@ -51,6 +58,7 @@ import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
     AuthenticatedGuard,
     AuthService,
     RecipeService,
+    IngredientParser,
     NotificationService,
     UnauthenticatedGuard],
   bootstrap: [AppComponent]

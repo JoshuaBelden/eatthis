@@ -24,16 +24,31 @@ export default class RecipeRoute implements IRoute {
 
   public configure(app: express.Application): void {
 
-    // GET USER'S RECIPES
+    // GET A RECIPE
     app
-      .route('/recipe')
+      .route('/recipe/:recipeId')
       .get(async (request, response) => {
         const authResult = this.authenticationService.getAuthorizedUser(request)
         if (!authResult.success) {
           return response.status(401).send(authResult.error)
         }
 
-        const result = await this.recipeController.getAsync(authResult.value.id)
+        const result = await this.recipeController.getAsync(authResult.value.id, request.params['recipeId'])
+        return result.success
+          ? response.status(200).send(result.value)
+          : response.status(500).send(result.error)
+      })
+
+    // GET USER'S RECIPES
+    app
+      .route('/recipes/user')
+      .get(async (request, response) => {
+        const authResult = this.authenticationService.getAuthorizedUser(request)
+        if (!authResult.success) {
+          return response.status(401).send(authResult.error)
+        }
+
+        const result = await this.recipeController.getForUserAsync(authResult.value.id)
         return result.success
           ? response.status(200).send(result.value)
           : response.status(500).send(result.error)
