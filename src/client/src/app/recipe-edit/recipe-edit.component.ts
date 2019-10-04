@@ -27,6 +27,7 @@ export class RecipeEditComponent implements OnInit {
     this.recipeForm = this.formBuilder.group({
       title: '',
       description: '',
+      imageUrl: '',
       ingredients: '',
       preparation: '',
     });
@@ -41,6 +42,7 @@ export class RecipeEditComponent implements OnInit {
       this.recipeForm = this.formBuilder.group({
         title: this.recipe.title,
         description: this.recipe.description,
+        imageUrl: this.recipe.imageUrl,
         ingredients: this.ingredientParser.toString(this.recipe.ingredients),
         preparation: this.recipe.preparation,
       });
@@ -54,6 +56,7 @@ export class RecipeEditComponent implements OnInit {
         userId: '',
         title: recipeData.title,
         description: recipeData.description,
+        imageUrl: recipeData.imageUrl,
         preparation: recipeData.preparation,
         ingredients: this.ingredientParser.parse(recipeData.ingredients),
         yield: ''

@@ -21,6 +21,7 @@ export default class ModelBinder {
       userId: userId,
       title: body.title,
       description: body.description,
+      imageUrl: body.imageUrl,
       preparation: body.preparation,
       yield: body.yield,
       ingredients: body.ingredients.map(i => {
