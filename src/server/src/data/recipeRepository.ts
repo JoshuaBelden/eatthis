@@ -86,7 +86,7 @@ export default class RecipeRepository {
         })
     }
 
-    public createAsync(recipe: Recipe): Promise<Recipe> {
+    public createAsync(userId: string, recipe: Recipe): Promise<Recipe> {
         return new Promise((resolve, reject) => {
 
             const options = {
@@ -100,6 +100,7 @@ export default class RecipeRepository {
                         return reject(connectError)
                     }
 
+                    recipe.userId = userId
                     recipe.id = this.randomNumberGenerator.generateGuid()
                     recipe.ingredients = recipe.ingredients.map(i => {
                         i.id = this.randomNumberGenerator.generateGuid()
@@ -119,7 +120,7 @@ export default class RecipeRepository {
         })
     }
 
-    public updateAsync(recipe: Recipe): Promise<Recipe> {
+    public updateAsync(userId: string, recipe: Recipe): Promise<Recipe> {
         return new Promise((resolve, reject) => {
 
             const options = {
@@ -137,7 +138,10 @@ export default class RecipeRepository {
                     await client
                         .db(dbName)
                         .collection(collectionName)
-                        .findOneAndReplace({ id: recipe.id }, recipe)
+                        .findOneAndReplace({ 
+                            id: recipe.id,
+                            userId
+                        }, recipe)
 
                     resolve(recipe)
                 }
@@ -148,7 +152,7 @@ export default class RecipeRepository {
         })
     }
 
-    public deleteAsync(id: string): Promise<void> {
+    public deleteAsync(userId: string, id: string): Promise<void> {
         return new Promise((resolve, reject) => {
 
             const options = {
@@ -166,7 +170,10 @@ export default class RecipeRepository {
                     await client
                         .db(dbName)
                         .collection(collectionName)
-                        .findOneAndDelete({ id: id })
+                        .findOneAndDelete({
+                            id,
+                            userId
+                        })
 
                     resolve()
                 }

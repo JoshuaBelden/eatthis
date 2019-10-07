@@ -65,7 +65,7 @@ export default class RecipeRoute implements IRoute {
         }
 
         const recipe = this.modelBinder.getRecipe(authResult.value.id, request.body)
-        const result = await this.recipeController.createAsync(recipe)
+        const result = await this.recipeController.createAsync(authResult.value.id, recipe)
         return result.success
           ? response.status(201).send(result.value)
           : response.status(500).send(result.error)
@@ -80,7 +80,7 @@ export default class RecipeRoute implements IRoute {
         }
 
         const recipe = this.modelBinder.getRecipe(authResult.value.id, request.body)
-        const result = await this.recipeController.updateAsync(recipe)
+        const result = await this.recipeController.updateAsync(authResult.value.id, recipe)
         return result.success
           ? response.status(200).send(result.value)
           : response.status(500).send(result.error)
@@ -94,7 +94,7 @@ export default class RecipeRoute implements IRoute {
           return response.status(401).send(authResult.error)
         }
 
-        const result = await this.recipeController.deleteAsync(request.params.id)
+        const result = await this.recipeController.deleteAsync(authResult.value.id, request.params.id)
         return result.success
           ? response.status(204).send(result.value)
           : response.status(500).send(result.error)
