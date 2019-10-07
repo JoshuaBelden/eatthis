@@ -41,4 +41,20 @@ export default class RecipeController {
             return new Result<Recipe>(false, null, error)
         }
     }
+
+    public async updateAsync(recipe: Recipe) : Promise<Result<Recipe>> {
+        try {
+            return new Result<Recipe>(true, await this.recipeRepository.updateAsync(recipe))
+        } catch (error) {
+            return new Result<Recipe>(false, null, error)
+        }
+    }
+
+    public async deleteAsync(id: string) : Promise<Result<void>> {
+        try {
+            return new Result<void>(true, await this.recipeRepository.deleteAsync(id))
+        } catch (error) {
+            return new Result<void>(false, null, error)
+        }
+    }
 }

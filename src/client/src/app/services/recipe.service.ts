@@ -27,4 +27,13 @@ export class RecipeService {
     const result = await this.http.post<Recipe>(`${environment.apiEndpoint}/recipe`, recipe).toPromise();
     return result;
   }
+
+  async updateAsync(recipe: Recipe): Promise<Recipe> {
+    const result = await this.http.put<Recipe>(`${environment.apiEndpoint}/recipe`, recipe).toPromise();
+    return result;
+  }
+
+  async deleteAsync(id: string): Promise<void> {
+    await this.http.delete(`${environment.apiEndpoint}/recipe/${id}`).toPromise();
+  }
 }

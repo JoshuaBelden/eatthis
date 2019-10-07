@@ -54,7 +54,7 @@ export default class RecipeRoute implements IRoute {
           : response.status(500).send(result.error)
       })
 
-    // CREATE RECIPE
+    // RECIPE EDITS
     app
       .route('/recipe')
       .post(async (request, response) => {
@@ -68,6 +68,35 @@ export default class RecipeRoute implements IRoute {
         const result = await this.recipeController.createAsync(recipe)
         return result.success
           ? response.status(201).send(result.value)
+          : response.status(500).send(result.error)
+      })
+
+    app
+      .route('/recipe')
+      .put(async (request, response) => {
+        const authResult = this.authenticationService.getAuthorizedUser(request)
+        if (!authResult.success) {
+          return response.status(401).send(authResult.error)
+        }
+
+        const recipe = this.modelBinder.getRecipe(authResult.value.id, request.body)
+        const result = await this.recipeController.updateAsync(recipe)
+        return result.success
+          ? response.status(200).send(result.value)
+          : response.status(500).send(result.error)
+      })
+
+    app
+      .route('/recipe/:id')
+      .delete(async (request, response) => {
+        const authResult = this.authenticationService.getAuthorizedUser(request)
+        if (!authResult.success) {
+          return response.status(401).send(authResult.error)
+        }
+
+        const result = await this.recipeController.deleteAsync(request.params.id)
+        return result.success
+          ? response.status(204).send(result.value)
           : response.status(500).send(result.error)
       })
   }

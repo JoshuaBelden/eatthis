@@ -109,4 +109,62 @@ export default class RecipeRepository {
             })
         })
     }
+
+    public updateAsync(recipe: Recipe): Promise<Recipe> {
+        return new Promise((resolve, reject) => {
+
+            const options = {
+                useNewUrlParser: true,
+                useUnifiedTopology: true
+            }
+
+            Mongo.MongoClient.connect(url, options, async (connectError, client) => {
+                try {
+
+                    if (connectError) {
+                        return reject(connectError)
+                    }
+
+                    await client
+                        .db(dbName)
+                        .collection(collectionName)
+                        .findOneAndReplace({ id: recipe.id }, recipe)
+
+                    resolve(recipe)
+                }
+                catch (error) {
+                    reject(error)
+                }
+            })
+        })
+    }
+
+    public deleteAsync(id: string): Promise<void> {
+        return new Promise((resolve, reject) => {
+
+            const options = {
+                useNewUrlParser: true,
+                useUnifiedTopology: true
+            }
+
+            Mongo.MongoClient.connect(url, options, async (connectError, client) => {
+                try {
+
+                    if (connectError) {
+                        return reject(connectError)
+                    }
+
+                    await client
+                        .db(dbName)
+                        .collection(collectionName)
+                        .findOneAndDelete({ id: id })
+
+                    resolve()
+                }
+                catch (error) {
+                    reject(error)
+                }
+            })
+        })
+    }
 }

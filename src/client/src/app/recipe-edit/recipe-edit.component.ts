@@ -1,10 +1,11 @@
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { IngredientParser } from '../services/ingredientParser.service';
 import { Recipe } from '../models/recipe';
 import { RecipeService } from '../services/recipe.service';
 import { concat } from 'rxjs/operators';
+import { Result } from '../models/result';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -13,11 +14,13 @@ import { concat } from 'rxjs/operators';
 })
 export class RecipeEditComponent implements OnInit {
 
-  recipe: Recipe;
+  recipeId: string;
   recipeForm;
+  result: Result<Recipe>;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private formBuilder: FormBuilder,
     private ingredientParser: IngredientParser,
     private recipeService: RecipeService
@@ -25,6 +28,7 @@ export class RecipeEditComponent implements OnInit {
 
   ngOnInit() {
     this.recipeForm = this.formBuilder.group({
+      id: '',
       title: '',
       description: '',
       imageUrl: '',
@@ -33,27 +37,27 @@ export class RecipeEditComponent implements OnInit {
     });
 
     this.route.paramMap.subscribe(async params => {
-      const recipeId = params.get('recipeId');
-      if (!recipeId) {
+      this.recipeId = params.get('recipeId');
+      if (!this.recipeId) {
         return;
       }
 
-      this.recipe = await this.recipeService.getAsync(recipeId);
+      const recipe = await this.recipeService.getAsync(this.recipeId)
       this.recipeForm = this.formBuilder.group({
-        title: this.recipe.title,
-        description: this.recipe.description,
-        imageUrl: this.recipe.imageUrl,
-        ingredients: this.ingredientParser.toString(this.recipe.ingredients),
-        preparation: this.recipe.preparation,
+        id: recipe.id,
+        title: recipe.title,
+        description: recipe.description,
+        imageUrl: recipe.imageUrl,
+        ingredients: this.ingredientParser.toString(recipe.ingredients),
+        preparation: recipe.preparation,
       });
     });
   }
 
   async onSubmit(recipeData) {
     try {
-      const recipe: Recipe = {
-        id: this.recipe.id,
-        userId: '',
+      let recipe: Recipe = {
+        id: recipeData.id,
         title: recipeData.title,
         description: recipeData.description,
         imageUrl: recipeData.imageUrl,
@@ -61,9 +65,34 @@ export class RecipeEditComponent implements OnInit {
         ingredients: this.ingredientParser.parse(recipeData.ingredients),
         yield: ''
       };
-      await this.recipeService.createAsync(recipe);
-    } catch (error) {
 
+      if (recipe.id) {
+        recipe = await this.recipeService.updateAsync(recipe);
+      } else {
+        recipe = await this.recipeService.createAsync(recipe);
+      }
+
+      this.recipeForm = this.formBuilder.group({
+        id: recipe.id,
+        title: recipe.title,
+        description: recipe.description,
+        imageUrl: recipe.imageUrl,
+        ingredients: this.ingredientParser.toString(recipe.ingredients),
+        preparation: recipe.preparation,
+      });
+
+      this.result = new Result<Recipe>(true, recipe);
+    } catch (error) {
+      this.result = new Result<Recipe>(false, null, error);
+    }
+  }
+
+  async onDelete(id: string) {
+    try {
+      await this.recipeService.deleteAsync(id);
+      this.router.navigate(['/recipes']);
+    } catch (error) {
+      this.result = new Result<Recipe>(false, null, error);
     }
   }
 }
