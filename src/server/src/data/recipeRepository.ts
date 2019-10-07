@@ -28,23 +28,26 @@ export default class RecipeRepository {
             }
 
             Mongo.MongoClient.connect(url, options, async (connectError, client) => {
+                try {
+                    if (connectError) {
+                        reject(connectError)
+                        return
+                    }
 
-                if (connectError) {
-                    reject(connectError)
-                    return
+                    const recipe = await client
+                        .db(dbName)
+                        .collection(collectionName)
+                        .findOne<Recipe>({ id: recipeId, userId })
+
+                    if (!recipe) {
+                        resolve(null)
+                        return
+                    }
+
+                    resolve(recipe)
+                } catch (error) {
+                    reject(error)
                 }
-
-                const recipe = await client
-                    .db(dbName)
-                    .collection(collectionName)
-                    .findOne<Recipe>({ id: recipeId, userId })
-
-                if (!recipe) {
-                    resolve(null)
-                    return
-                }
-
-                resolve(recipe)
             })
         })
     }
@@ -58,24 +61,27 @@ export default class RecipeRepository {
             }
 
             Mongo.MongoClient.connect(url, options, async (connectError, client) => {
+                try {
+                    if (connectError) {
+                        reject(connectError)
+                        return
+                    }
 
-                if (connectError) {
-                    reject(connectError)
-                    return
+                    const recipes = await client
+                        .db(dbName)
+                        .collection(collectionName)
+                        .find<Recipe>({ userId })
+                        .toArray()
+
+                    if (!recipes) {
+                        resolve(null)
+                        return
+                    }
+
+                    resolve(recipes)
+                } catch (error) {
+                    reject(error)
                 }
-
-                const recipes = await client
-                    .db(dbName)
-                    .collection(collectionName)
-                    .find<Recipe>({ userId })
-                    .toArray()
-
-                if (!recipes) {
-                    resolve(null)
-                    return
-                }
-
-                resolve(recipes)
             })
         })
     }
@@ -89,23 +95,26 @@ export default class RecipeRepository {
             }
 
             Mongo.MongoClient.connect(url, options, async (connectError, client) => {
+                try {
+                    if (connectError) {
+                        return reject(connectError)
+                    }
 
-                if (connectError) {
-                    return reject(connectError)
+                    recipe.id = this.randomNumberGenerator.generateGuid()
+                    recipe.ingredients = recipe.ingredients.map(i => {
+                        i.id = this.randomNumberGenerator.generateGuid()
+                        return i
+                    })
+
+                    await client
+                        .db(dbName)
+                        .collection(collectionName)
+                        .insertOne(recipe)
+
+                    resolve(recipe)
+                } catch (error) {
+                    reject(error)
                 }
-
-                recipe.id = this.randomNumberGenerator.generateGuid()
-                recipe.ingredients = recipe.ingredients.map(i => {
-                    i.id = this.randomNumberGenerator.generateGuid()
-                    return i
-                })
-
-                await client
-                    .db(dbName)
-                    .collection(collectionName)
-                    .insertOne(recipe)
-
-                resolve(recipe)
             })
         })
     }

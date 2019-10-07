@@ -1,10 +1,8 @@
-import { Request } from 'express'
 import { inject, injectable } from 'inversify'
 import RecipeRepository from '../data/RecipeRepository'
 import dependencyIdentifiers from '../dependencyIdentifiers'
 import { Recipe } from '../models/recipe'
 import Result from '../models/result'
-import AuthenticatoinService from '../services/authenticationService'
 
 @injectable()
 export default class RecipeController {
