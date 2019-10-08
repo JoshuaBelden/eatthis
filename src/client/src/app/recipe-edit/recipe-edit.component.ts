@@ -1,10 +1,11 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { ErrorMessage } from 'ng-bootstrap-form-validation/lib/Models/error-message';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+
 import { IngredientParser } from '../services/ingredientParser.service';
 import { Recipe } from '../models/recipe';
 import { RecipeService } from '../services/recipe.service';
-import { concat } from 'rxjs/operators';
 import { Result } from '../models/result';
 
 @Component({
@@ -18,6 +19,13 @@ export class RecipeEditComponent implements OnInit {
   recipeForm;
   result: Result<Recipe>;
 
+  customErrorMessages: ErrorMessage[] = [
+    {
+      error: 'required',
+      format: (label, error) => `${label} is required!`
+    }
+  ];
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -27,14 +35,7 @@ export class RecipeEditComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.recipeForm = this.formBuilder.group({
-      id: '',
-      title: '',
-      description: '',
-      imageUrl: '',
-      ingredients: '',
-      preparation: '',
-    });
+    this.recipeForm = this.createFormGroup();
 
     this.route.paramMap.subscribe(async params => {
       this.recipeId = params.get('recipeId');
@@ -42,15 +43,8 @@ export class RecipeEditComponent implements OnInit {
         return;
       }
 
-      const recipe = await this.recipeService.getAsync(this.recipeId)
-      this.recipeForm = this.formBuilder.group({
-        id: recipe.id,
-        title: recipe.title,
-        description: recipe.description,
-        imageUrl: recipe.imageUrl,
-        ingredients: this.ingredientParser.toString(recipe.ingredients),
-        preparation: recipe.preparation,
-      });
+      const recipe = await this.recipeService.getAsync(this.recipeId);
+      this.recipeForm = this.createFormGroup(recipe);
     });
   }
 
@@ -72,14 +66,7 @@ export class RecipeEditComponent implements OnInit {
         recipe = await this.recipeService.createAsync(recipe);
       }
 
-      this.recipeForm = this.formBuilder.group({
-        id: recipe.id,
-        title: recipe.title,
-        description: recipe.description,
-        imageUrl: recipe.imageUrl,
-        ingredients: this.ingredientParser.toString(recipe.ingredients),
-        preparation: recipe.preparation,
-      });
+      // this.recipeForm = this.createFormGroup(recipe);
 
       this.result = new Result<Recipe>(true, recipe);
     } catch (error) {
@@ -94,5 +81,19 @@ export class RecipeEditComponent implements OnInit {
     } catch (error) {
       this.result = new Result<Recipe>(false, null, error);
     }
+  }
+
+  createFormGroup(recipe?: Recipe) {
+    return this.formBuilder.group({
+      id: recipe ? recipe.id : '',
+      title: new FormControl(recipe ? recipe.title : '', [
+        Validators.required,
+        Validators.maxLength(100)
+      ]),
+      description: recipe ? recipe.description : '',
+      imageUrl: recipe ? recipe.imageUrl : '',
+      ingredients: this.ingredientParser.toString(recipe ? recipe.ingredients : []),
+      preparation: recipe ? recipe.preparation : '',
+    });
   }
 }

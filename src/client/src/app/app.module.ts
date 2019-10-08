@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgBootstrapFormValidationModule } from 'ng-bootstrap-form-validation';
 
 import { AccountComponent } from './account/account.component';
 import { AppComponent } from './app.component';
@@ -49,6 +50,8 @@ import { WelcomeComponent } from './welcome/welcome.component';
     HttpClientModule,
     NgbModule,
     ReactiveFormsModule,
+    NgBootstrapFormValidationModule.forRoot(),
+    NgBootstrapFormValidationModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
