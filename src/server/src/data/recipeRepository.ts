@@ -102,10 +102,6 @@ export default class RecipeRepository {
 
                     recipe.userId = userId
                     recipe.id = this.randomNumberGenerator.generateGuid()
-                    recipe.ingredients = recipe.ingredients.map(i => {
-                        i.id = this.randomNumberGenerator.generateGuid()
-                        return i
-                    })
 
                     await client
                         .db(dbName)
