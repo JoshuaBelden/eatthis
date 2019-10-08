@@ -33,6 +33,10 @@ export default class RecipeController {
     }
 
     public async createAsync(userId: string, recipe: Recipe) : Promise<Result<Recipe>> {
+        if (recipe.title.length === 0) {
+            return new Result<Recipe>(false, null, 'Recipe title is required.')
+        }
+
         try {
             return new Result<Recipe>(true, await this.recipeRepository.createAsync(userId, recipe))
         } catch (error) {
