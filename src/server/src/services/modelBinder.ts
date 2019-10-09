@@ -1,4 +1,6 @@
 import { injectable } from 'inversify'
+import moment = require('moment')
+import Meal from '../models/meal'
 import { Recipe } from '../models/recipe'
 import User from '../models/user'
 
@@ -33,6 +35,15 @@ export default class ModelBinder {
           ingredient: i.ingredient,
         }
       })
+    }
+  }
+
+  public getMeal(userId: string, body: any): Meal {
+    return {
+      id: body.id,
+      userId: userId,
+      recipeId: body.recipeId,
+      occurs: new Date(moment(body.occurs).utc().toISOString()),
     }
   }
 }

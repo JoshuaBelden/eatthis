@@ -7,6 +7,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgBootstrapFormValidationModule } from 'ng-bootstrap-form-validation';
+import { NgDragDropModule } from 'ng-drag-drop';
 
 import { AccountComponent } from './account/account.component';
 import { AppComponent } from './app.component';
@@ -15,17 +16,19 @@ import { AuthenticatedGuard } from './guards/authenticated.guard';
 import { AuthInterceptorService } from './services/authInterceptor.service';
 import { AuthService } from './services/auth.service';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { IngredientParser } from './services/ingredientParser.service';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
+import { MealPlannerComponent } from './meal-planner/meal-planner.component';
+import { MealService } from './services/meal.service';
 import { NavigationComponent } from './navigation/navigation.component';
 import { NotificationService } from './services/notification.service';
+import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
+import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
 import { RecipeListComponent } from './recipe-list/recipe-list.component';
 import { RecipeService } from './services/recipe.service';
 import { RegisterComponent } from './register/register.component';
 import { UnauthenticatedGuard } from './guards/unauthenticated.guard';
-import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
-import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
-import { IngredientParser } from './services/ingredientParser.service';
 import { WelcomeComponent } from './welcome/welcome.component';
 
 @NgModule({
@@ -41,6 +44,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
     RecipeDetailComponent,
     RecipeEditComponent,
     WelcomeComponent,
+    MealPlannerComponent,
   ],
   imports: [
     AngularFontAwesomeModule,
@@ -52,6 +56,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
     ReactiveFormsModule,
     NgBootstrapFormValidationModule.forRoot(),
     NgBootstrapFormValidationModule,
+    NgDragDropModule.forRoot(),
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
@@ -60,6 +65,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
   },
     AuthenticatedGuard,
     AuthService,
+    MealService,
     RecipeService,
     IngredientParser,
     NotificationService,

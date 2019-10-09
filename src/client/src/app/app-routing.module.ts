@@ -2,15 +2,16 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AccountComponent } from './account/account.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { RegisterComponent } from './register/register.component';
 import { AuthenticatedGuard } from './guards/authenticated.guard';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
-import { UnauthenticatedGuard } from './guards/unauthenticated.guard';
-import { RecipeListComponent } from './recipe-list/recipe-list.component';
+import { MealPlannerComponent } from './meal-planner/meal-planner.component';
 import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
+import { RecipeListComponent } from './recipe-list/recipe-list.component';
+import { RegisterComponent } from './register/register.component';
+import { UnauthenticatedGuard } from './guards/unauthenticated.guard';
 import { WelcomeComponent } from './welcome/welcome.component';
 
 const routes: Routes = [
@@ -33,6 +34,11 @@ const routes: Routes = [
   {
     path: 'recipes/edit/:recipeId',
     component: RecipeEditComponent,
+    canActivate: [UnauthenticatedGuard]
+  },
+  {
+    path: 'meals',
+    component: MealPlannerComponent,
     canActivate: [UnauthenticatedGuard]
   },
   {

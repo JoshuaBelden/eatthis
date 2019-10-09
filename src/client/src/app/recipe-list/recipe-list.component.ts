@@ -23,7 +23,8 @@ export class RecipeListComponent implements OnInit {
       this.displayedRecipes = this.allRecipes;
       return;
     } else {
-      this.displayedRecipes = this.allRecipes.filter(recipe => recipe.title.includes(keyword));
+      const expression = new RegExp(keyword, 'i');
+      this.displayedRecipes = this.allRecipes.filter(recipe => recipe.title.match(expression));
     }
   }
 }
