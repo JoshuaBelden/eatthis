@@ -30,7 +30,7 @@
         {{recipe.title}}
       </a>
     </h6>
-    <div class="card-body">
+    <div class="card-body flex-fill">
       <p class="card-text">{{recipe.description.substr(0, 250)}}</p>
       <hr class="my-4">
       <a href="#" class="btn btn-light" [routerLink]="['/recipes', recipe.id]">

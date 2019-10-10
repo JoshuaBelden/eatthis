@@ -90,10 +90,10 @@ export class RecipeEditComponent implements OnInit {
         Validators.required,
         Validators.maxLength(100)
       ]),
-      description: recipe ? recipe.description : '',
+      description: new FormControl(recipe ? recipe.description : '', [Validators.required]),
       imageUrl: recipe ? recipe.imageUrl : '',
-      ingredients: this.ingredientParser.toString(recipe ? recipe.ingredients : []),
-      preparation: recipe ? recipe.preparation : '',
+      ingredients: new FormControl(this.ingredientParser.toString(recipe ? recipe.ingredients : []), [Validators.required]),
+      preparation: new FormControl(recipe ? recipe.preparation : '', [Validators.required]),
     });
   }
 }
