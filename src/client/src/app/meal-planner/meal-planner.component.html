@@ -11,6 +11,10 @@
             <input type="text" #searchKeywords class="form-control" placeholder="recipe search" aria-label="recipe search" aria-describedby="search-addon" (keyup)="search(searchKeywords.value)">
         </div>
 
+        <div *ngIf="!displayedRecipes">
+            Search for a recipe and drag it to the day you want to make it.
+        </div>
+
         <div *ngFor="let recipe of displayedRecipes" class="card m-1">
             <div class="card-body" draggable [dragData]="{ recipeId: recipe.id }">
                 {{recipe.title}}
