@@ -148,4 +148,36 @@ export default class MealRepository {
             })
         })
     }
+
+    public deleteForRecipeAsync(userId: string, recipeId: string): Promise<void> {
+        return new Promise((resolve, reject) => {
+
+            const options = {
+                useNewUrlParser: true,
+                useUnifiedTopology: true
+            }
+
+            Mongo.MongoClient.connect(url, options, async (connectError, client) => {
+                try {
+
+                    if (connectError) {
+                        return reject(connectError)
+                    }
+
+                    await client
+                        .db(dbName)
+                        .collection(collectionName)
+                        .findOneAndDelete({
+                            recipeId,
+                            userId
+                        })
+
+                    resolve()
+                }
+                catch (error) {
+                    reject(error)
+                }
+            })
+        })
+    }
 }

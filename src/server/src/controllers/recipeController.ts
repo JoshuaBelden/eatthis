@@ -1,4 +1,5 @@
 import { inject, injectable } from 'inversify'
+import MealRepository from '../data/mealRepository'
 import RecipeRepository from '../data/RecipeRepository'
 import dependencyIdentifiers from '../dependencyIdentifiers'
 import { Recipe } from '../models/recipe'
@@ -8,10 +9,13 @@ import Result from '../models/result'
 export default class RecipeController {
 
     private recipeRepository: RecipeRepository
+    private mealRepository: MealRepository
 
     constructor(
-        @inject(dependencyIdentifiers.RecipeRepository) repo: RecipeRepository) {
-        this.recipeRepository = repo
+        @inject(dependencyIdentifiers.RecipeRepository) recipeRepository: RecipeRepository,
+        @inject(dependencyIdentifiers.MealRepository) mealRepository: MealRepository) {
+        this.recipeRepository = recipeRepository
+        this.mealRepository = mealRepository
     }
 
     public async getAsync(userId: string, recipeId: string): Promise<Result<Recipe>> {
@@ -54,6 +58,7 @@ export default class RecipeController {
 
     public async deleteAsync(userId: string, id: string) : Promise<Result<void>> {
         try {
+            await this.mealRepository.deleteForRecipeAsync(userId, id)
             return new Result<void>(true, await this.recipeRepository.deleteAsync(userId, id))
         } catch (error) {
             return new Result<void>(false, null, error)
