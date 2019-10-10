@@ -1,17 +1,16 @@
 import { inject, injectable } from 'inversify';
-import { Moment } from 'moment';
 import * as Mongo from 'mongodb'
 import serviceIdentity from '../dependencyIdentifiers'
 import config from '../environments/config'
-import Meal from '../models/meal';
+import Grocery from '../models/grocery';
 import RandomNumberGenerator from '../services/randomNumberGenerator';
 
 const url = 'mongodb://localhost:27017'
 const dbName = config.database.name
-const collectionName = 'meals'
+const collectionName = 'groceries'
 
 @injectable()
-export default class MealRepository {
+export default class GroceryRepository {
 
     private randomNumberGenerator: RandomNumberGenerator
 
@@ -20,8 +19,8 @@ export default class MealRepository {
         this.randomNumberGenerator = randomNumberGenerator
     }
 
-    public async getAsync(userId: string, startDate: Date, endDate: Date): Promise<Array<Meal>> {
-        return new Promise<Array<Meal>>((resolve, reject) => {
+    public async getAsync(userId: string, groceryId: string): Promise<Grocery> {
+        return new Promise<Grocery>((resolve, reject) => {
 
             const options = {
                 useNewUrlParser: true,
@@ -35,19 +34,17 @@ export default class MealRepository {
                         return
                     }
 
-                    const meals = await client
+                    const grocery = await client
                         .db(dbName)
                         .collection(collectionName)
-                        .find<Meal>({
-                            userId,
-                            occurs: {
-                                "$gte": startDate,
-                                "$lte": endDate
-                            }
-                        })
-                        .toArray()
+                        .findOne<Grocery>({ id: groceryId, userId })
 
-                    resolve(meals)
+                    if (!grocery) {
+                        resolve(null)
+                        return
+                    }
+
+                    resolve(grocery)
                 } catch (error) {
                     reject(error)
                 }
@@ -55,7 +52,41 @@ export default class MealRepository {
         })
     }
 
-    public async createAsync(userId: string, meal: Meal): Promise<Meal> {
+    public async getByUserIdAsync(userId: string): Promise<Array<Grocery>> {
+        return new Promise<Array<Grocery>>((resolve, reject) => {
+
+            const options = {
+                useNewUrlParser: true,
+                useUnifiedTopology: true
+            }
+
+            Mongo.MongoClient.connect(url, options, async (connectError, client) => {
+                try {
+                    if (connectError) {
+                        reject(connectError)
+                        return
+                    }
+
+                    const grocerys = await client
+                        .db(dbName)
+                        .collection(collectionName)
+                        .find<Grocery>({ userId })
+                        .toArray()
+
+                    if (!grocerys) {
+                        resolve(null)
+                        return
+                    }
+
+                    resolve(grocerys)
+                } catch (error) {
+                    reject(error)
+                }
+            })
+        })
+    }
+
+    public async createAsync(userId: string, grocery: Grocery): Promise<Grocery> {
         return new Promise((resolve, reject) => {
 
             const options = {
@@ -69,15 +100,15 @@ export default class MealRepository {
                         return reject(connectError)
                     }
 
-                    meal.userId = userId
-                    meal.id = this.randomNumberGenerator.generateGuid()
+                    grocery.userId = userId
+                    grocery.id = this.randomNumberGenerator.generateGuid()
 
                     await client
                         .db(dbName)
                         .collection(collectionName)
-                        .insertOne(meal)
+                        .insertOne(grocery)
 
-                    resolve(meal)
+                    resolve(grocery)
                 } catch (error) {
                     reject(error)
                 }
@@ -85,7 +116,7 @@ export default class MealRepository {
         })
     }
 
-    public async updateAsync(userId: string, meal: Meal): Promise<Meal> {
+    public async updateAsync(userId: string, grocery: Grocery): Promise<Grocery> {
         return new Promise((resolve, reject) => {
 
             const options = {
@@ -104,11 +135,11 @@ export default class MealRepository {
                         .db(dbName)
                         .collection(collectionName)
                         .findOneAndReplace({
-                            id: meal.id,
+                            id: grocery.id,
                             userId
-                        }, meal)
+                        }, grocery)
 
-                    resolve(meal)
+                    resolve(grocery)
                 }
                 catch (error) {
                     reject(error)
@@ -137,38 +168,6 @@ export default class MealRepository {
                         .collection(collectionName)
                         .findOneAndDelete({
                             id,
-                            userId
-                        })
-
-                    resolve()
-                }
-                catch (error) {
-                    reject(error)
-                }
-            })
-        })
-    }
-
-    public async deleteForRecipeAsync(userId: string, recipeId: string): Promise<void> {
-        return new Promise((resolve, reject) => {
-
-            const options = {
-                useNewUrlParser: true,
-                useUnifiedTopology: true
-            }
-
-            Mongo.MongoClient.connect(url, options, async (connectError, client) => {
-                try {
-
-                    if (connectError) {
-                        return reject(connectError)
-                    }
-
-                    await client
-                        .db(dbName)
-                        .collection(collectionName)
-                        .findOneAndDelete({
-                            recipeId,
                             userId
                         })
 

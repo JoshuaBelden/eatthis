@@ -10,11 +10,13 @@ export default {
     AccountRepository: Symbol("AccountRepository"),
     RecipeRepository: Symbol("RecipeRepository"),
     MealRepository: Symbol("MealRepository"),
+    GroceryRepository: Symbol("GroceryRepository"),
 
     // CONTROLLERS
     AccountController: Symbol("AccountController"),
     RecipeController: Symbol("RecipeController"),
     MealController: Symbol("MealController"),
+    GroceryController: Symbol("GroceryController"),
 
     // ROUTES
     Routes: Symbol("Routes"),

@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify'
 import MealRepository from '../data/mealRepository'
 import RecipeRepository from '../data/RecipeRepository'
 import dependencyIdentifiers from '../dependencyIdentifiers'
-import { Recipe } from '../models/recipe'
+import Recipe from '../models/recipe'
 import Result from '../models/result'
 
 @injectable()

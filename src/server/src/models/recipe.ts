@@ -1,12 +1,12 @@
-import { Ingredient } from './ingredient';
+import Ingredient from './ingredient';
 
-export interface Recipe {
-    id: string
-    userId: string
-    title: string
-    description: string
-    imageUrl: string
-    preparation: string
-    yield: string
-    ingredients: Array<Ingredient>
+export default class Recipe {
+    public id: string
+    public userId: string
+    public title: string
+    public description: string
+    public imageUrl: string
+    public preparation: string
+    public yield: string
+    public ingredients: Array<Ingredient>
 }

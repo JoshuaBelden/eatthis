@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import * as Mongo from 'mongodb'
 import serviceIdentity from '../dependencyIdentifiers'
 import config from '../environments/config'
-import { Recipe } from '../models/recipe';
+import Recipe from '../models/recipe';
 import RandomNumberGenerator from '../services/randomNumberGenerator';
 
 const url = 'mongodb://localhost:27017'
@@ -19,7 +19,7 @@ export default class RecipeRepository {
         this.randomNumberGenerator = randomNumberGenerator
     }
 
-    public getAsync(userId: string, recipeId: string): Promise<Recipe> {
+    public async getAsync(userId: string, recipeId: string): Promise<Recipe> {
         return new Promise<Recipe>((resolve, reject) => {
 
             const options = {
@@ -52,7 +52,7 @@ export default class RecipeRepository {
         })
     }
 
-    public getByUserIdAsync(userId: string): Promise<Array<Recipe>> {
+    public async getByUserIdAsync(userId: string): Promise<Array<Recipe>> {
         return new Promise<Array<Recipe>>((resolve, reject) => {
 
             const options = {
@@ -86,7 +86,7 @@ export default class RecipeRepository {
         })
     }
 
-    public createAsync(userId: string, recipe: Recipe): Promise<Recipe> {
+    public async createAsync(userId: string, recipe: Recipe): Promise<Recipe> {
         return new Promise((resolve, reject) => {
 
             const options = {
@@ -116,7 +116,7 @@ export default class RecipeRepository {
         })
     }
 
-    public updateAsync(userId: string, recipe: Recipe): Promise<Recipe> {
+    public async updateAsync(userId: string, recipe: Recipe): Promise<Recipe> {
         return new Promise((resolve, reject) => {
 
             const options = {
@@ -148,7 +148,7 @@ export default class RecipeRepository {
         })
     }
 
-    public deleteAsync(userId: string, id: string): Promise<void> {
+    public async deleteAsync(userId: string, id: string): Promise<void> {
         return new Promise((resolve, reject) => {
 
             const options = {

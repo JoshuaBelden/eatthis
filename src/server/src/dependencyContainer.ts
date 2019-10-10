@@ -2,12 +2,14 @@ import { Container } from 'inversify'
 import "reflect-metadata"
 import Application from './application'
 import AccountController from './controllers/accountController'
+import MealController from './controllers/mealController'
 import RecipeController from './controllers/recipeController'
 import AccountRepository from './data/accountRepository'
 import MealRepository from './data/mealRepository'
 import RecipeRepository from './data/recipeRepository'
 import dependencyIdentifiers from './dependencyIdentifiers'
 import config from './environments/config'
+import Meal from './models/meal'
 import AccountRoute from './routes/accountRoute'
 import IRoute from './routes/iRoute'
 import MealRoute from './routes/mealRoute'
@@ -16,8 +18,9 @@ import AuthenticationService from './services/authenticationService'
 import ModelBinder from './services/modelBinder'
 import RandomNumberGenerator from './services/randomNumberGenerator'
 import TokenHandler from './services/tokenHandler'
-import MealController from './controllers/mealController'
-import Meal from './models/meal'
+import GroceryRepository from './data/groceryRepository'
+import GroceryController from './controllers/groceryController'
+import GroceryRoute from './routes/groceryRoute'
 
 const container = new Container()
 
@@ -48,9 +51,13 @@ container
     .bind<RecipeRepository>(dependencyIdentifiers.RecipeRepository)
     .to(RecipeRepository)
 
-    container
+container
     .bind<MealRepository>(dependencyIdentifiers.MealRepository)
     .to(MealRepository)
+
+container
+    .bind<GroceryRepository>(dependencyIdentifiers.GroceryRepository)
+    .to(GroceryRepository)
 
 // REGISTER CONTROLLERS
 container
@@ -65,6 +72,10 @@ container
     .bind<MealController>(dependencyIdentifiers.MealController)
     .to(MealController)
 
+container
+    .bind<GroceryController>(dependencyIdentifiers.GroceryController)
+    .to(GroceryController)
+
 // REGISTER ROUTES
 container
     .bind<IRoute>(dependencyIdentifiers.Routes)
@@ -77,6 +88,10 @@ container
 container
     .bind<IRoute>(dependencyIdentifiers.Routes)
     .to(MealRoute)
+
+container
+    .bind<IRoute>(dependencyIdentifiers.Routes)
+    .to(GroceryRoute)
 
 // REGISTER APPLICATION
 container

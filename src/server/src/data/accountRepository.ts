@@ -19,7 +19,7 @@ export default class AccountRepository {
         this.randomNumberGenerator = randomNumberGenerator
     }
 
-    public loginAsync(email: string, password: string): Promise<User> {
+    public async loginAsync(email: string, password: string): Promise<User> {
         return new Promise<User>((resolve, reject) => {
 
             const options = {
@@ -60,7 +60,7 @@ export default class AccountRepository {
         })
     }
     
-    public registerAsync(user: User) : Promise<User> {
+    public async registerAsync(user: User) : Promise<User> {
         return new Promise((resolve, reject) => {
 
             const options = {
