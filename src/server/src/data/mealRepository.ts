@@ -75,7 +75,12 @@ export default class MealRepository {
                     await client
                         .db(dbName)
                         .collection(collectionName)
-                        .insertOne(meal)
+                        .insertOne({
+                            id: meal.id,
+                            userId: meal.userId,
+                            recipeId: meal.recipeId,
+                            occurs: new Date(meal.occurs.toISOString()),
+                        })
 
                     resolve(meal)
                 } catch (error) {
@@ -106,7 +111,12 @@ export default class MealRepository {
                         .findOneAndReplace({
                             id: meal.id,
                             userId
-                        }, meal)
+                        }, {
+                            id: meal.id,
+                            userId: meal.userId,
+                            recipeId: meal.recipeId,
+                            occurs: new Date(meal.occurs.toISOString()),
+                        })
 
                     resolve(meal)
                 }

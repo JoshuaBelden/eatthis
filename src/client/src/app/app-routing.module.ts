@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AccountComponent } from './account/account.component';
 import { AuthenticatedGuard } from './guards/authenticated.guard';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { GroceryListComponent } from './grocery-list/grocery-list.component';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { MealPlannerComponent } from './meal-planner/meal-planner.component';
@@ -39,6 +40,11 @@ const routes: Routes = [
   {
     path: 'meals',
     component: MealPlannerComponent,
+    canActivate: [UnauthenticatedGuard]
+  },
+  {
+    path: 'groceries',
+    component: GroceryListComponent,
     canActivate: [UnauthenticatedGuard]
   },
   {

@@ -106,7 +106,13 @@ export default class GroceryRepository {
                     await client
                         .db(dbName)
                         .collection(collectionName)
-                        .insertOne(grocery)
+                        .insertOne({
+                            id: grocery.id,
+                            userId: grocery.userId,
+                            startDate: new Date(grocery.startDate.toISOString()),
+                            stopDate: new Date(grocery.stopDate.toISOString()),
+                            groceryItems: grocery.groceryItems
+                        })
 
                     resolve(grocery)
                 } catch (error) {
@@ -137,7 +143,13 @@ export default class GroceryRepository {
                         .findOneAndReplace({
                             id: grocery.id,
                             userId
-                        }, grocery)
+                        }, {
+                            id: grocery.id,
+                            userId: grocery.userId,
+                            startDate: new Date(grocery.startDate.toISOString()),
+                            stopDate: new Date(grocery.stopDate.toISOString()),
+                            groceryItems: grocery.groceryItems
+                        })
 
                     resolve(grocery)
                 }

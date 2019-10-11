@@ -30,6 +30,7 @@ import { RecipeService } from './services/recipe.service';
 import { RegisterComponent } from './register/register.component';
 import { UnauthenticatedGuard } from './guards/unauthenticated.guard';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { GroceryListComponent } from './grocery-list/grocery-list.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
     RecipeEditComponent,
     WelcomeComponent,
     MealPlannerComponent,
+    GroceryListComponent,
   ],
   imports: [
     AngularFontAwesomeModule,
