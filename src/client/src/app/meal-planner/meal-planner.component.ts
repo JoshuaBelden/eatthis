@@ -123,7 +123,7 @@ export class MealPlannerComponent implements OnInit {
   }
 
   async getMeals(start: Moment.Moment, stop: Moment.Moment) {
-    const meals = await this.mealService.getAsync(start, stop);
+    const meals = await this.mealService.getAsync(start.toDate(), stop.toDate());
     return meals.map(m => {
       const recipe = this.allRecipes.find(r => r.id === m.recipeId);
       return {
@@ -145,7 +145,7 @@ export class MealPlannerComponent implements OnInit {
       id: '',
       userId: '',
       recipeId,
-      occurs
+      occurs: occurs.toDate()
     });
   }
 

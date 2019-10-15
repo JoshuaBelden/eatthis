@@ -1,4 +1,5 @@
 import { inject, injectable } from 'inversify';
+import * as Moment from 'moment'
 import * as Mongo from 'mongodb'
 import serviceIdentity from '../dependencyIdentifiers'
 import config from '../environments/config'
@@ -102,17 +103,13 @@ export default class GroceryRepository {
 
                     grocery.userId = userId
                     grocery.id = this.randomNumberGenerator.generateGuid()
+                    grocery.startDate = new Date(Moment(grocery.startDate).toISOString())
+                    grocery.stopDate = new Date(Moment(grocery.stopDate).toISOString())
 
                     await client
                         .db(dbName)
                         .collection(collectionName)
-                        .insertOne({
-                            id: grocery.id,
-                            userId: grocery.userId,
-                            startDate: new Date(grocery.startDate.toISOString()),
-                            stopDate: new Date(grocery.stopDate.toISOString()),
-                            groceryItems: grocery.groceryItems
-                        })
+                        .insertOne(grocery)
 
                     resolve(grocery)
                 } catch (error) {
@@ -137,19 +134,16 @@ export default class GroceryRepository {
                         return reject(connectError)
                     }
 
+                    grocery.startDate = new Date(Moment(grocery.startDate).toISOString())
+                    grocery.stopDate = new Date(Moment(grocery.stopDate).toISOString())
+                    
                     await client
                         .db(dbName)
                         .collection(collectionName)
                         .findOneAndReplace({
                             id: grocery.id,
                             userId
-                        }, {
-                            id: grocery.id,
-                            userId: grocery.userId,
-                            startDate: new Date(grocery.startDate.toISOString()),
-                            stopDate: new Date(grocery.stopDate.toISOString()),
-                            groceryItems: grocery.groceryItems
-                        })
+                        }, grocery)
 
                     resolve(grocery)
                 }

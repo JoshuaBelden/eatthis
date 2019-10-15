@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { Moment } from 'moment';
+import * as Moment from 'moment'
 import * as Mongo from 'mongodb'
 import serviceIdentity from '../dependencyIdentifiers'
 import config from '../environments/config'
@@ -71,16 +71,12 @@ export default class MealRepository {
 
                     meal.userId = userId
                     meal.id = this.randomNumberGenerator.generateGuid()
+                    meal.occurs = new Date(Moment(meal.occurs).toISOString())
 
                     await client
                         .db(dbName)
                         .collection(collectionName)
-                        .insertOne({
-                            id: meal.id,
-                            userId: meal.userId,
-                            recipeId: meal.recipeId,
-                            occurs: new Date(meal.occurs.toISOString()),
-                        })
+                        .insertOne(meal)
 
                     resolve(meal)
                 } catch (error) {
@@ -105,18 +101,14 @@ export default class MealRepository {
                         return reject(connectError)
                     }
 
+                    meal.occurs = new Date(Moment(meal.occurs).toISOString())
                     await client
                         .db(dbName)
                         .collection(collectionName)
                         .findOneAndReplace({
                             id: meal.id,
                             userId
-                        }, {
-                            id: meal.id,
-                            userId: meal.userId,
-                            recipeId: meal.recipeId,
-                            occurs: new Date(meal.occurs.toISOString()),
-                        })
+                        }, meal)
 
                     resolve(meal)
                 }

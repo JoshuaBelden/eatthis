@@ -1,1 +1,12 @@
-<p>grocery-list works!</p>
+<div class="d-flex flex-row justify-content-between m-1">
+
+</div>
+
+<!-- Grocery List -->
+<div class="d-flex flex-wrap">
+
+    <div *ngFor="let grocery of groceries">
+        {{grocery.startDate | moment:'MM/DD/YYYY'}}
+    </div>
+
+</div>

@@ -1,5 +1,4 @@
 import { inject, injectable } from 'inversify'
-import { Moment } from 'moment'
 import MealRepository from '../data/MealRepository'
 import dependencyIdentifiers from '../dependencyIdentifiers'
 import Meal from '../models/meal'

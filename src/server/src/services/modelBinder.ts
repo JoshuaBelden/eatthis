@@ -1,5 +1,4 @@
 import { injectable } from 'inversify'
-import Moment = require('moment')
 import Grocery from '../models/grocery'
 import Meal from '../models/meal'
 import Recipe from '../models/recipe'
@@ -44,7 +43,7 @@ export default class ModelBinder {
       id: body.id,
       userId: userId,
       recipeId: body.recipeId,
-      occurs: Moment(body.occurs),
+      occurs: body.occurs,
     }
   }
 
@@ -52,9 +51,9 @@ export default class ModelBinder {
     return {
       id: body.id,
       userId: userId,
-      startDate: Moment(body.startDate),
-      stopDate: Moment(body.stopDate),
-      groceryItems: body.groceryItems,
+      startDate: body.startDate,
+      stopDate: body.stopDate,
+      recipes: body.recipes,
     }
   }
 }

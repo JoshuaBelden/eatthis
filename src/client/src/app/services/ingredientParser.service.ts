@@ -11,11 +11,7 @@ export class IngredientParser {
     public toString(ingredients: Array<Ingredient>): string {
         return ingredients
             .map(ingredient => [
-                ingredient.line || '',
-                // ingredient.unit || '',
-                // ingredient.name || '',
-                // ingredient.preparation || '',
-                // ingredient.purpose || ''
+                ingredient.line || ''
             ]
             .filter(item => item)
             .join(' '))

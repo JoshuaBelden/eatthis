@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
 import { Meal } from '../models/meal';
-import { Moment } from 'moment';
+import * as Moment from 'moment';
 
 @Injectable()
 export class MealService {
@@ -11,8 +11,10 @@ export class MealService {
     private http: HttpClient
   ) { }
 
-  async getAsync(startDate: Moment, stopDate: Moment): Promise<Array<Meal>> {
-    const url = `${environment.apiEndpoint}/meals/${startDate.format('YYYY-MM-DD')}/${stopDate.format('YYYY-MM-DD')}`;
+  async getAsync(startDate: Date, stopDate: Date): Promise<Array<Meal>> {
+    const formattedStartDate = Moment(startDate).format('YYYY-MM-DD');
+    const formattedStopDate = Moment(stopDate).format('YYYY-MM-DD');
+    const url = `${environment.apiEndpoint}/meals/${formattedStartDate}/${formattedStopDate}`;
     const result = await this.http.get<Array<Meal>>(url).toPromise();
     return result;
   }

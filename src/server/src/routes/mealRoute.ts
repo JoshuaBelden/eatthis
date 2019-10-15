@@ -1,6 +1,5 @@
 import * as express from 'express'
 import { inject, injectable } from 'inversify'
-import * as Moment from 'moment'
 
 import MealController from '../controllers/mealController'
 import dependencyIdentifiers from '../dependencyIdentifiers'
@@ -35,8 +34,8 @@ export default class MealRoute implements IRoute {
           return response.status(401).send(authResult.error)
         }
 
-        const startDate = Moment(request.params['startDate']).utc().toDate()
-        const stopDate = Moment(request.params['stopDate']).utc().toDate()
+        const startDate = new Date(request.params['startDate'])
+        const stopDate = new Date(request.params['stopDate'])
 
         const result = await this.mealController.getAsync(authResult.value.id, startDate, stopDate)
         return result.success

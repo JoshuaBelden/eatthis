@@ -1,6 +1,5 @@
 import { inject, injectable } from 'inversify'
 import GroceryRepository from '../data/GroceryRepository'
-import MealRepository from '../data/mealRepository'
 import dependencyIdentifiers from '../dependencyIdentifiers'
 import Grocery from '../models/grocery'
 import Result from '../models/result'
