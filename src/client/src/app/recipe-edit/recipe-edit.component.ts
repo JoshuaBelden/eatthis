@@ -3,10 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { ErrorMessage } from 'ng-bootstrap-form-validation/lib/Models/error-message';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
-import { IngredientParser } from '../services/ingredientParser.service';
 import { Recipe } from '../models/recipe';
 import { RecipeService } from '../services/recipe.service';
 import { Result } from '../models/result';
+import { Ingredient } from '../models/ingredient';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -30,7 +30,6 @@ export class RecipeEditComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private formBuilder: FormBuilder,
-    private ingredientParser: IngredientParser,
     private recipeService: RecipeService
   ) { }
 
@@ -56,7 +55,7 @@ export class RecipeEditComponent implements OnInit {
         description: recipeData.description,
         imageUrl: recipeData.imageUrl,
         preparation: recipeData.preparation,
-        ingredients: this.ingredientParser.parse(recipeData.ingredients),
+        ingredients: this.ParseIngredientString(recipeData.ingredients),
         yield: ''
       };
 
@@ -65,9 +64,6 @@ export class RecipeEditComponent implements OnInit {
       } else {
         recipe = await this.recipeService.createAsync(recipe);
       }
-
-      // this.recipeForm = this.createFormGroup(recipe);
-
       this.result = new Result<Recipe>(true, recipe);
     } catch (error) {
       this.result = new Result<Recipe>(false, null, error);
@@ -92,8 +88,34 @@ export class RecipeEditComponent implements OnInit {
       ]),
       description: new FormControl(recipe ? recipe.description : '', [Validators.required]),
       imageUrl: recipe ? recipe.imageUrl : '',
-      ingredients: new FormControl(this.ingredientParser.toString(recipe ? recipe.ingredients : []), [Validators.required]),
+      ingredients: new FormControl(this.ConvertIngredientsToText(recipe ? recipe.ingredients : []), [Validators.required]),
       preparation: new FormControl(recipe ? recipe.preparation : '', [Validators.required]),
     });
+  }
+
+  private ConvertIngredientsToText(ingredients: Array<Ingredient>): string {
+    return ingredients
+      .map(ingredient => [
+        ingredient.line || ''
+      ]
+        .filter(item => item)
+        .join(' '))
+      .join('\r\n');
+  }
+
+  private ParseIngredientString(ingredients: string): Array<Ingredient> {
+    return ingredients
+      .split('\n')
+      .map(line => line.replace('\r', ''))
+      .map(line => this.parseLine(line));
+  }
+
+  private parseLine(line: string): Ingredient {
+    return {
+      line,
+      quantity: 0,
+      unit: '',
+      ingredient: ''
+    };
   }
 }

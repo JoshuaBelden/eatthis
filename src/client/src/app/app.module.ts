@@ -22,7 +22,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { GroceryListComponent } from './grocery-list/grocery-list.component';
 import { GroceryService } from './services/grocery.service';
-import { IngredientParser } from './services/ingredientParser.service';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { MealPlannerComponent } from './meal-planner/meal-planner.component';
@@ -81,7 +80,6 @@ import { WelcomeComponent } from './welcome/welcome.component';
     GroceryService,
     MealService,
     RecipeService,
-    IngredientParser,
     NotificationService,
     UnauthenticatedGuard],
   bootstrap: [AppComponent]
