@@ -79,7 +79,7 @@
                                 <div *ngIf="week.monday.meals">
                                     <div *ngFor="let meal of week.monday.meals" class="label-calendar-item">
                                         {{meal.title}}
-                                        <fa name="trash" class="text-danger" (click)="onRemoveMeal(meal.id)"></fa>
+                                        <fa name="trash" class="text-danger pointer" (click)="onRemoveMeal(meal.id)"></fa>
                                     </div>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@
                                 <div *ngIf="week.tuesday.meals">
                                     <div *ngFor="let meal of week.tuesday.meals" class="label-calendar-item">
                                         {{meal.title}}
-                                        <fa name="trash" class="text-danger" (click)="onRemoveMeal(meal.id)"></fa>
+                                        <fa name="trash" class="text-danger pointer" (click)="onRemoveMeal(meal.id)"></fa>
                                     </div>
                                 </div>
                             </div>
@@ -105,7 +105,7 @@
                                 <div *ngIf="week.wednesday.meals">
                                     <div *ngFor="let meal of week.wednesday.meals" class="label-calendar-item">
                                         {{meal.title}}
-                                        <fa name="trash" class="text-danger" (click)="onRemoveMeal(meal.id)"></fa>
+                                        <fa name="trash" class="text-danger pointer" (click)="onRemoveMeal(meal.id)"></fa>
                                     </div>
                                 </div>
                             </div>
@@ -118,7 +118,7 @@
                                 <div *ngIf="week.thursday.meals">
                                     <div *ngFor="let meal of week.thursday.meals" class="label-calendar-item">
                                         {{meal.title}}
-                                        <fa name="trash" class="text-danger" (click)="onRemoveMeal(meal.id)"></fa>
+                                        <fa name="trash" class="text-danger pointer" (click)="onRemoveMeal(meal.id)"></fa>
                                     </div>
                                 </div>
                             </div>
@@ -131,7 +131,7 @@
                                 <div *ngIf="week.friday.meals">
                                     <div *ngFor="let meal of week.friday.meals" class="label-calendar-item">
                                         {{meal.title}}
-                                        <fa name="trash" class="text-danger" (click)="onRemoveMeal(meal.id)"></fa>
+                                        <fa name="trash" class="text-danger pointer" (click)="onRemoveMeal(meal.id)"></fa>
                                     </div>
                                 </div>
                             </div>
@@ -144,7 +144,7 @@
                                 <div *ngIf="week.saturday.meals">
                                     <div *ngFor="let meal of week.saturday.meals" class="label-calendar-item">
                                         {{meal.title}}
-                                        <fa name="trash" class="text-danger" (click)="onRemoveMeal(meal.id)"></fa>
+                                        <fa name="trash" class="text-danger pointer" (click)="onRemoveMeal(meal.id)"></fa>
                                     </div>
                                 </div>
                             </div>
@@ -157,7 +157,7 @@
                                 <div *ngIf="week.sunday.meals">
                                     <div *ngFor="let meal of week.sunday.meals" class="label-calendar-item">
                                         {{meal.title}}
-                                        <fa name="trash" class="text-danger" (click)="onRemoveMeal(meal.id)"></fa>
+                                        <fa name="trash" class="text-danger pointer" (click)="onRemoveMeal(meal.id)"></fa>
                                     </div>
                                 </div>
                             </div>
@@ -178,7 +178,7 @@
                 <input #stopDate type="date" aria-label="Stop" class="form-control">
                 <div class="input-group-append">
                     <button type="button" class="btn btn-primary" (click)="createGroceryList(startDate.value, stopDate.value)">
-                        <fa name="plus"></fa>
+                        <fa name="plus" class="pointer"></fa>
                     </button>
                 </div>
             </div>

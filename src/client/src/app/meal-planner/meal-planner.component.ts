@@ -121,7 +121,7 @@ export class MealPlannerComponent implements OnInit {
   }
 
   async onRecipeDrop(date: Moment.Moment, data: any) {
-    this.createMeal(date, data.dragData.recipeId);
+    await this.createMeal(date, data.dragData.recipeId);
     this.meals = await this.getMeals(this.selectedDate, Moment(this.selectedDate).add(4, 'weeks'));
     this.buildCalendar(this.selectedDate, this.meals);
   }
@@ -139,13 +139,13 @@ export class MealPlannerComponent implements OnInit {
   }
 
   async onRemoveMeal(mealId: string) {
-    this.deleteMeal(mealId);
+    await this.deleteMeal(mealId);
     this.meals = await this.getMeals(this.selectedDate, Moment(this.selectedDate).add(4, 'weeks'));
     this.buildCalendar(this.selectedDate, this.meals);
   }
 
-  createMeal(occurs: Moment.Moment, recipeId: string) {
-    this.mealService.createAsync({
+  async createMeal(occurs: Moment.Moment, recipeId: string) {
+    await this.mealService.createAsync({
       id: '',
       userId: '',
       recipeId,
@@ -153,8 +153,8 @@ export class MealPlannerComponent implements OnInit {
     });
   }
 
-  deleteMeal(mealId: string) {
-    this.mealService.deleteAsync(mealId);
+  async deleteMeal(mealId: string) {
+    await this.mealService.deleteAsync(mealId);
   }
 
   async createGroceryList(startDateString: string, stopDateString: string) {
