@@ -53,7 +53,7 @@ export default class ModelBinder {
       userId: userId,
       startDate: body.startDate,
       stopDate: body.stopDate,
-      recipes: body.recipes,
+      items: body.items,
     }
   }
 }

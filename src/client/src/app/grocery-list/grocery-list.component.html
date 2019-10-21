@@ -1,12 +1,45 @@
-<div class="d-flex flex-row justify-content-between m-1">
+<div class="grocery-list-container row">
 
-</div>
+    <div class="recipe-search-container col-md-3">
 
-<!-- Grocery List -->
-<div class="d-flex flex-wrap">
+        <div>
+            <h4>Lists</h4>
+            <div *ngFor="let grocery of groceries">
+                <a [routerLink]="" (click)="onSelectGrocery(grocery)">{{grocery.startDate | moment:'MM-DD-YYYY'}} - {{grocery.stopDate | moment:'MM-DD-YYYY'}}</a>
+                <fa name="trash" class="text-danger" (click)="onDelete(selectedGrocery.id)"></fa>
+            </div>
+        </div>
 
-    <div *ngFor="let grocery of groceries">
-        {{grocery.startDate | moment:'MM/DD/YYYY'}}
+    </div>
+
+    <div *ngIf="selectedGrocery" class="grocery-edit-container col-md-9">
+
+        <div class="d-flex flex-row justify-content-between">
+
+            <div class="d-flex flex-wrap">
+                <div class="m-1">
+                    <h5>Produce</h5>
+                    <div *ngFor="let groceryItem of selectedGrocery.items">
+                        <input #picked type="checkbox" [checked]="groceryItem.picked" (change)="onPickGroceryItem(selectedGrocery.id, groceryItem, picked.checked)">
+                        {{groceryItem.ingredient}}
+                        <fa name="trash" class="text-danger" (click)="onDeleteGroceryItem(selectedGrocery.id, groceryItem.id)"></fa>
+                    </div>
+                    
+                    
+                    <div>
+                        <div class="input-group m-1">
+                            <input #line type="text" class="form-control" placeholder="add ingredient" aria-label="add ingredients" aria-describedby="search-addon">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary">
+                                    <fa name="plus" (click)="onCreateGroceryItem(selectedGrocery.id, line.value);"></fa>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>

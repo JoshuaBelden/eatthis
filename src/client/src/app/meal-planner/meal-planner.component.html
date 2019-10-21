@@ -37,6 +37,7 @@
                 <h1 class="display-5">{{selectedDate.format('MMMM')}}</h1>
             </div>
             <div class="col">
+
             </div>
         </div>
 
@@ -164,6 +165,23 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <!-- Create Grocery List -->
+        <div class="row">
+            <h5>Create a grocery list</h5>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Start and Stop Date</span>
+                </div>
+                <input #startDate type="date" aria-label="Start" class="form-control">
+                <input #stopDate type="date" aria-label="Stop" class="form-control">
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-primary" (click)="createGroceryList(startDate.value, stopDate.value)">
+                        <fa name="plus"></fa>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

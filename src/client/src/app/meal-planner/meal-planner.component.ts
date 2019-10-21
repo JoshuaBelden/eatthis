@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import * as Moment from 'moment';
+import { Router } from '@angular/router';
 
-import { Recipe } from '../models/recipe';
-import { RecipeService } from '../services/recipe.service';
+import { GroceryService } from '../services/grocery.service';
 import { Meal } from '../models/meal';
 import { MealService } from '../services/meal.service';
+import { Recipe } from '../models/recipe';
+import { RecipeService } from '../services/recipe.service';
 
 @Component({
   selector: 'app-meal-planner',
@@ -23,7 +25,9 @@ export class MealPlannerComponent implements OnInit {
 
   constructor(
     private recipeService: RecipeService,
-    private mealService: MealService) {
+    private mealService: MealService,
+    private groceryService: GroceryService,
+    private router: Router) {
   }
 
   async ngOnInit() {
@@ -151,5 +155,12 @@ export class MealPlannerComponent implements OnInit {
 
   deleteMeal(mealId: string) {
     this.mealService.deleteAsync(mealId);
+  }
+
+  async createGroceryList(startDateString: string, stopDateString: string) {
+    const startDate = Moment(startDateString).toDate();
+    const stopDate = Moment(stopDateString).toDate();
+    await this.groceryService.createAsync(startDate, stopDate);
+    this.router.navigate(['/groceries']);
   }
 }

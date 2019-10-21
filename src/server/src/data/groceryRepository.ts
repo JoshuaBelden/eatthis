@@ -4,6 +4,7 @@ import * as Mongo from 'mongodb'
 import serviceIdentity from '../dependencyIdentifiers'
 import config from '../environments/config'
 import Grocery from '../models/grocery';
+import { GroceryItem } from '../models/groceryItem';
 import RandomNumberGenerator from '../services/randomNumberGenerator';
 
 const url = 'mongodb://localhost:27017'
@@ -105,6 +106,9 @@ export default class GroceryRepository {
                     grocery.id = this.randomNumberGenerator.generateGuid()
                     grocery.startDate = new Date(Moment(grocery.startDate).toISOString())
                     grocery.stopDate = new Date(Moment(grocery.stopDate).toISOString())
+                    for (const groceryItem of grocery.items) {
+                        groceryItem.id = this.randomNumberGenerator.generateGuid()
+                    }
 
                     await client
                         .db(dbName)
@@ -113,41 +117,6 @@ export default class GroceryRepository {
 
                     resolve(grocery)
                 } catch (error) {
-                    reject(error)
-                }
-            })
-        })
-    }
-
-    public async updateAsync(userId: string, grocery: Grocery): Promise<Grocery> {
-        return new Promise((resolve, reject) => {
-
-            const options = {
-                useNewUrlParser: true,
-                useUnifiedTopology: true
-            }
-
-            Mongo.MongoClient.connect(url, options, async (connectError, client) => {
-                try {
-
-                    if (connectError) {
-                        return reject(connectError)
-                    }
-
-                    grocery.startDate = new Date(Moment(grocery.startDate).toISOString())
-                    grocery.stopDate = new Date(Moment(grocery.stopDate).toISOString())
-                    
-                    await client
-                        .db(dbName)
-                        .collection(collectionName)
-                        .findOneAndReplace({
-                            id: grocery.id,
-                            userId
-                        }, grocery)
-
-                    resolve(grocery)
-                }
-                catch (error) {
                     reject(error)
                 }
             })
@@ -180,6 +149,104 @@ export default class GroceryRepository {
                     resolve()
                 }
                 catch (error) {
+                    reject(error)
+                }
+            })
+        })
+    }
+
+    public async createGroceryItemAsync(userId: string, grocery: Grocery, groceryItem: GroceryItem): Promise<GroceryItem> {
+        return new Promise((resolve, reject) => {
+
+            const options = {
+                useNewUrlParser: true,
+                useUnifiedTopology: true
+            }
+
+            Mongo.MongoClient.connect(url, options, async (connectError, client) => {
+                try {
+                    if (connectError) {
+                        return reject(connectError)
+                    }
+
+                    groceryItem.id = this.randomNumberGenerator.generateGuid()
+                    grocery.items.push(groceryItem)
+
+                    await client
+                        .db(dbName)
+                        .collection(collectionName)
+                        .findOneAndReplace({
+                            id: grocery.id,
+                            userId
+                        }, grocery)
+
+                    resolve(groceryItem)
+                } catch (error) {
+                    reject(error)
+                }
+            })
+        })
+    }
+    
+    public async updateGroceryItemAsync(userId: string, grocery: Grocery, groceryItem: GroceryItem): Promise<GroceryItem> {
+        return new Promise((resolve, reject) => {
+
+            const options = {
+                useNewUrlParser: true,
+                useUnifiedTopology: true
+            }
+
+            Mongo.MongoClient.connect(url, options, async (connectError, client) => {
+                try {
+                    if (connectError) {
+                        return reject(connectError)
+                    }
+
+                    grocery.items = grocery.items.filter(gi => gi.id !== groceryItem.id)
+                    grocery.items.push(groceryItem)
+
+                    await client
+                        .db(dbName)
+                        .collection(collectionName)
+                        .findOneAndReplace({
+                            id: grocery.id,
+                            userId
+                        }, grocery)
+
+                    resolve(groceryItem)
+                } catch (error) {
+                    reject(error)
+                }
+            })
+        })
+    }
+
+    public async deleteGroceryItemAsync(userId: string, grocery: Grocery, groceryItemId: string): Promise<void> {
+        return new Promise((resolve, reject) => {
+
+            const options = {
+                useNewUrlParser: true,
+                useUnifiedTopology: true
+            }
+
+            Mongo.MongoClient.connect(url, options, async (connectError, client) => {
+                try {
+                    if (connectError) {
+                        return reject(connectError)
+                    }
+
+                    grocery.items = grocery.items.filter(groceryItem => groceryItem.id !== groceryItemId)
+
+                    await client
+                        .db(dbName)
+                        .collection(collectionName)
+                        .findOneAndReplace({
+                            id: grocery.id,
+                            userId
+                        }, grocery)
+
+                    resolve()
+                } catch (error) {
                     reject(error)
                 }
             })

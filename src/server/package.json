@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run clean && tsc",
     "clean": "rimraf dist",
-    "start": "npm run build && cross-env PORT=3000 node --inspect ./dist/server.js",
+    "start": "npm run build && cross-env PORT=2407 node --inspect ./dist/server.js",
     "lint": "tslint ./src/**/*.ts ./test/**/*.spec.ts",
     "lint:fix": "tslint --fix ./src/**/*.ts ./test/**/*.spec.ts -t verbose",
     "test": "cross-env NODE_ENV=test mocha --reporter spec test/**/*.spec.ts ",
