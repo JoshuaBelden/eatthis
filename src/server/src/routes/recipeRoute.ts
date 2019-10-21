@@ -24,7 +24,6 @@ export default class RecipeRoute implements IRoute {
 
   public configure(app: express.Application): void {
 
-    // GET A RECIPE
     app
       .route('/recipe/:recipeId')
       .get(async (request, response) => {
@@ -39,7 +38,6 @@ export default class RecipeRoute implements IRoute {
           : response.status(500).send(result.error);
       });
 
-    // GET USER'S RECIPES
     app
       .route('/recipes/user')
       .get(async (request, response) => {
@@ -54,7 +52,6 @@ export default class RecipeRoute implements IRoute {
           : response.status(500).send(result.error);
       });
 
-    // RECIPE EDITS
     app
       .route('/recipe')
       .post(async (request, response) => {
@@ -69,6 +66,26 @@ export default class RecipeRoute implements IRoute {
         return result.success
           ? response.status(201).send(result.value)
           : response.status(500).send(result.error);
+      });
+
+    app
+      .route('/recipes')
+      .post(async (request, response) => {
+
+        const authResult = this.authenticationService.getAuthorizedUser(request);
+        if (!authResult.success) {
+          return response.status(401).send(authResult.error);
+        }
+
+        const result = [];
+        const recipes = this.modelBinder.getRecipes(authResult.value.id, request.body);
+
+        for(const recipe of recipes) {
+          result.push(await this.recipeController.createAsync(authResult.value.id, recipe));
+        }
+        return result.every(r => r.success)
+          ? response.status(201).send(result)
+          : response.status(500).send(result);
       });
 
     app

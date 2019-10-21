@@ -38,6 +38,10 @@ export default class ModelBinder {
     };
   }
 
+  public getRecipes(userId: string, body: any): Array<Recipe> {
+    return body.map(item => this.getRecipe(userId, item));
+  }
+
   public getMeal(userId: string, body: any): Meal {
     return {
       id: body.id,
