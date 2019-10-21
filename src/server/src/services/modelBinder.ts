@@ -1,8 +1,8 @@
-import { injectable } from 'inversify'
-import Grocery from '../models/grocery'
-import Meal from '../models/meal'
-import Recipe from '../models/recipe'
-import User from '../models/user'
+import { injectable } from 'inversify';
+import Grocery from '../models/grocery';
+import Meal from '../models/meal';
+import Recipe from '../models/recipe';
+import User from '../models/user';
 
 @injectable()
 export default class ModelBinder {
@@ -14,13 +14,13 @@ export default class ModelBinder {
       lastName: body.lastName,
       email: body.email,
       password: body.password
-    }
+    };
   }
 
   public getRecipe(userId: string, body: any): Recipe {
     return {
       id: body.id,
-      userId: userId,
+      userId,
       title: body.title,
       description: body.description,
       imageUrl: body.imageUrl,
@@ -33,27 +33,27 @@ export default class ModelBinder {
           quantity: i.quantity,
           unit: i.unit,
           ingredient: i.ingredient,
-        }
+        };
       })
-    }
+    };
   }
 
   public getMeal(userId: string, body: any): Meal {
     return {
       id: body.id,
-      userId: userId,
+      userId,
       recipeId: body.recipeId,
       occurs: body.occurs,
-    }
+    };
   }
 
   public getGrocery(userId: string, body: any): Grocery {
     return {
       id: body.id,
-      userId: userId,
+      userId,
       startDate: body.startDate,
       stopDate: body.stopDate,
       items: body.items,
-    }
+    };
   }
 }

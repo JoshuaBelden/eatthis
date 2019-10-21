@@ -1,21 +1,21 @@
-import * as express from 'express'
-import { inject, injectable } from 'inversify'
-import AccountController from '../controllers/accountController'
-import dependencyIdentifiers from '../dependencyIdentifiers'
-import ModelBinder from '../services/modelBinder'
-import IRoute from './iRoute'
+import * as express from 'express';
+import { inject, injectable } from 'inversify';
+import AccountController from '../controllers/accountController';
+import dependencyIdentifiers from '../dependencyIdentifiers';
+import ModelBinder from '../services/modelBinder';
+import IRoute from './iRoute';
 
 @injectable()
 export default class AccountRoute implements IRoute {
 
-  private accountController: AccountController
-  private modelBinder: ModelBinder
+  private accountController: AccountController;
+  private modelBinder: ModelBinder;
 
   constructor(
     @inject(dependencyIdentifiers.AccountController) accountController: AccountController,
     @inject(dependencyIdentifiers.ModelBinder) modelBinder: ModelBinder) {
-    this.accountController = accountController
-    this.modelBinder = modelBinder
+    this.accountController = accountController;
+    this.modelBinder = modelBinder;
   }
 
   public configure(app: express.Application): void {
@@ -23,22 +23,22 @@ export default class AccountRoute implements IRoute {
     app
       .route('/account/register')
       .post(async (request, response) => {
-        const user = this.modelBinder.getUser(request.body)
-        const result = await this.accountController.registerAsync(user)
+        const user = this.modelBinder.getUser(request.body);
+        const result = await this.accountController.registerAsync(user);
 
         return result.success
           ? response.status(201).send(result.value)
-          : response.status(500).send(result.error)
-      })
+          : response.status(500).send(result.error);
+      });
 
     app
       .route('/account/login')
       .post(async (request, response) => {
-        const result = await this.accountController.loginAsync(request.body.email, request.body.password)
+        const result = await this.accountController.loginAsync(request.body.email, request.body.password);
 
         return result.success
           ? response.status(201).send(result.value)
-          : response.status(401).send(result.error)
-      })
+          : response.status(401).send(result.error);
+      });
   }
 }

@@ -1,23 +1,23 @@
 import { inject, injectable } from 'inversify';
-import * as Moment from 'moment'
-import * as Mongo from 'mongodb'
-import serviceIdentity from '../dependencyIdentifiers'
-import config from '../environments/config'
+import * as Moment from 'moment';
+import * as Mongo from 'mongodb';
+import serviceIdentity from '../dependencyIdentifiers';
+import config from '../environments/config';
 import Meal from '../models/meal';
 import RandomNumberGenerator from '../services/randomNumberGenerator';
 
-const url = 'mongodb://localhost:27017'
-const dbName = config.database.name
-const collectionName = 'meals'
+const url = 'mongodb://localhost:27017';
+const dbName = config.database.name;
+const collectionName = 'meals';
 
 @injectable()
 export default class MealRepository {
 
-    private randomNumberGenerator: RandomNumberGenerator
+    private randomNumberGenerator: RandomNumberGenerator;
 
     public constructor(
         @inject(serviceIdentity.RandomNumberGenerator) randomNumberGenerator: RandomNumberGenerator) {
-        this.randomNumberGenerator = randomNumberGenerator
+        this.randomNumberGenerator = randomNumberGenerator;
     }
 
     public async getAsync(userId: string, startDate: Date, endDate: Date): Promise<Array<Meal>> {
@@ -26,13 +26,13 @@ export default class MealRepository {
             const options = {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
-            }
+            };
 
             Mongo.MongoClient.connect(url, options, async (connectError, client) => {
                 try {
                     if (connectError) {
-                        reject(connectError)
-                        return
+                        reject(connectError);
+                        return;
                     }
 
                     const meals = await client
@@ -41,18 +41,18 @@ export default class MealRepository {
                         .find<Meal>({
                             userId,
                             occurs: {
-                                "$gte": startDate,
-                                "$lte": endDate
+                                $gte: startDate,
+                                $lte: endDate
                             }
                         })
-                        .toArray()
+                        .toArray();
 
-                    resolve(meals)
+                    resolve(meals);
                 } catch (error) {
-                    reject(error)
+                    reject(error);
                 }
-            })
-        })
+            });
+        });
     }
 
     public async createAsync(userId: string, meal: Meal): Promise<Meal> {
@@ -61,29 +61,29 @@ export default class MealRepository {
             const options = {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
-            }
+            };
 
             Mongo.MongoClient.connect(url, options, async (connectError, client) => {
                 try {
                     if (connectError) {
-                        return reject(connectError)
+                        return reject(connectError);
                     }
 
-                    meal.userId = userId
-                    meal.id = this.randomNumberGenerator.generateGuid()
-                    meal.occurs = new Date(Moment(meal.occurs).toISOString())
+                    meal.userId = userId;
+                    meal.id = this.randomNumberGenerator.generateGuid();
+                    meal.occurs = new Date(Moment(meal.occurs).toISOString());
 
                     await client
                         .db(dbName)
                         .collection(collectionName)
-                        .insertOne(meal)
+                        .insertOne(meal);
 
-                    resolve(meal)
+                    resolve(meal);
                 } catch (error) {
-                    reject(error)
+                    reject(error);
                 }
-            })
-        })
+            });
+        });
     }
 
     public async deleteAsync(userId: string, id: string): Promise<void> {
@@ -92,13 +92,13 @@ export default class MealRepository {
             const options = {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
-            }
+            };
 
             Mongo.MongoClient.connect(url, options, async (connectError, client) => {
                 try {
 
                     if (connectError) {
-                        return reject(connectError)
+                        return reject(connectError);
                     }
 
                     await client
@@ -107,15 +107,14 @@ export default class MealRepository {
                         .findOneAndDelete({
                             id,
                             userId
-                        })
+                        });
 
-                    resolve()
+                    resolve();
+                } catch (error) {
+                    reject(error);
                 }
-                catch (error) {
-                    reject(error)
-                }
-            })
-        })
+            });
+        });
     }
 
     public async deleteForRecipeAsync(userId: string, recipeId: string): Promise<void> {
@@ -124,13 +123,13 @@ export default class MealRepository {
             const options = {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
-            }
+            };
 
             Mongo.MongoClient.connect(url, options, async (connectError, client) => {
                 try {
 
                     if (connectError) {
-                        return reject(connectError)
+                        return reject(connectError);
                     }
 
                     await client
@@ -139,14 +138,13 @@ export default class MealRepository {
                         .findOneAndDelete({
                             recipeId,
                             userId
-                        })
+                        });
 
-                    resolve()
+                    resolve();
+                } catch (error) {
+                    reject(error);
                 }
-                catch (error) {
-                    reject(error)
-                }
-            })
-        })
+            });
+        });
     }
 }

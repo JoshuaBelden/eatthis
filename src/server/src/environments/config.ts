@@ -1,2 +1,2 @@
-import { default as devConfig } from './dev'
-export default devConfig
+import { default as devConfig } from './dev';
+export default devConfig;

@@ -1,26 +1,26 @@
 export default {
-    
+
     // SERVICES
-    AuthenticationService: Symbol("AuthenticationService"),
-    TokenHandler: Symbol("TokenHandler"),
-    RandomNumberGenerator: Symbol("RandomNumberGenerator"),
-    ModelBinder: Symbol("ModelBinder"),
+    AuthenticationService: Symbol('AuthenticationService'),
+    TokenHandler: Symbol('TokenHandler'),
+    RandomNumberGenerator: Symbol('RandomNumberGenerator'),
+    ModelBinder: Symbol('ModelBinder'),
 
     // REPOSITORIES
-    AccountRepository: Symbol("AccountRepository"),
-    RecipeRepository: Symbol("RecipeRepository"),
-    MealRepository: Symbol("MealRepository"),
-    GroceryRepository: Symbol("GroceryRepository"),
+    AccountRepository: Symbol('AccountRepository'),
+    RecipeRepository: Symbol('RecipeRepository'),
+    MealRepository: Symbol('MealRepository'),
+    GroceryRepository: Symbol('GroceryRepository'),
 
     // CONTROLLERS
-    AccountController: Symbol("AccountController"),
-    RecipeController: Symbol("RecipeController"),
-    MealController: Symbol("MealController"),
-    GroceryController: Symbol("GroceryController"),
+    AccountController: Symbol('AccountController'),
+    RecipeController: Symbol('RecipeController'),
+    MealController: Symbol('MealController'),
+    GroceryController: Symbol('GroceryController'),
 
     // ROUTES
-    Routes: Symbol("Routes"),
+    Routes: Symbol('Routes'),
 
     // APPLICATION
-    Application: Symbol("Application"),
-}
+    Application: Symbol('Application'),
+};

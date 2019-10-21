@@ -1,22 +1,22 @@
-import { inject, injectable } from "inversify"
-import * as Mongo from 'mongodb'
-import dependencyIdentifiers from '../dependencyIdentifiers'
-import config from '../environments/config'
-import User from '../models/user'
-import RandomNumberGenerator from '../services/randomNumberGenerator'
+import { inject, injectable } from 'inversify';
+import * as Mongo from 'mongodb';
+import dependencyIdentifiers from '../dependencyIdentifiers';
+import config from '../environments/config';
+import User from '../models/user';
+import RandomNumberGenerator from '../services/randomNumberGenerator';
 
-const url = 'mongodb://localhost:27017'
-const dbName = config.database.name
-const collectionName = 'users'
+const url = 'mongodb://localhost:27017';
+const dbName = config.database.name;
+const collectionName = 'users';
 
 @injectable()
 export default class AccountRepository {
 
-    private randomNumberGenerator: RandomNumberGenerator
+    private randomNumberGenerator: RandomNumberGenerator;
 
     public constructor(
         @inject(dependencyIdentifiers.RandomNumberGenerator) randomNumberGenerator: RandomNumberGenerator) {
-        this.randomNumberGenerator = randomNumberGenerator
+        this.randomNumberGenerator = randomNumberGenerator;
     }
 
     public async loginAsync(email: string, password: string): Promise<User> {
@@ -25,28 +25,28 @@ export default class AccountRepository {
             const options = {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
-            }
+            };
 
             Mongo.MongoClient.connect(url, options, async (connectError, client) => {
 
                 if (connectError) {
-                    reject(connectError)
-                    return
+                    reject(connectError);
+                    return;
                 }
 
                 const user = await client
                     .db(dbName)
                     .collection(collectionName)
-                    .findOne({ "email": email })
+                    .findOne({ email });
 
                 if (!user) {
-                    resolve(null)
-                    return
+                    resolve(null);
+                    return;
                 }
 
                 if (user.password !== password) {
-                    resolve(null)
-                    return
+                    resolve(null);
+                    return;
                 }
 
                 resolve({
@@ -55,35 +55,35 @@ export default class AccountRepository {
                     id: user.id,
                     lastName: user.lastName,
                     password: user.password
-                })
-            })
-        })
+                });
+            });
+        });
     }
-    
-    public async registerAsync(user: User) : Promise<User> {
+
+    public async registerAsync(user: User): Promise<User> {
         return new Promise((resolve, reject) => {
 
             const options = {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
-            }
+            };
 
             Mongo.MongoClient.connect(url, options, async (connectError, client) => {
 
                 if (connectError) {
-                    reject(connectError)
-                    return
+                    reject(connectError);
+                    return;
                 }
 
-                user.id = this.randomNumberGenerator.generateGuid()
+                user.id = this.randomNumberGenerator.generateGuid();
 
                 await client
                     .db(dbName)
                     .collection(collectionName)
-                    .insertOne(user)
+                    .insertOne(user);
 
-                resolve(user)
-            })
-        })
+                resolve(user);
+            });
+        });
     }
 }

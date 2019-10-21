@@ -1,5 +1,5 @@
-import * as express from 'express'
+import * as express from 'express';
 
 export default interface IRoute {
-  configure(app: express.Application): void
+  configure(app: express.Application): void;
 }

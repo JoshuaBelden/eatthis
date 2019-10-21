@@ -1,22 +1,22 @@
 import { inject, injectable } from 'inversify';
-import * as Mongo from 'mongodb'
-import serviceIdentity from '../dependencyIdentifiers'
-import config from '../environments/config'
+import * as Mongo from 'mongodb';
+import serviceIdentity from '../dependencyIdentifiers';
+import config from '../environments/config';
 import Recipe from '../models/recipe';
 import RandomNumberGenerator from '../services/randomNumberGenerator';
 
-const url = 'mongodb://localhost:27017'
-const dbName = config.database.name
-const collectionName = 'recipes'
+const url = 'mongodb://localhost:27017';
+const dbName = config.database.name;
+const collectionName = 'recipes';
 
 @injectable()
 export default class RecipeRepository {
 
-    private randomNumberGenerator: RandomNumberGenerator
+    private randomNumberGenerator: RandomNumberGenerator;
 
     public constructor(
         @inject(serviceIdentity.RandomNumberGenerator) randomNumberGenerator: RandomNumberGenerator) {
-        this.randomNumberGenerator = randomNumberGenerator
+        this.randomNumberGenerator = randomNumberGenerator;
     }
 
     public async getAsync(userId: string, recipeId: string): Promise<Recipe> {
@@ -25,31 +25,31 @@ export default class RecipeRepository {
             const options = {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
-            }
+            };
 
             Mongo.MongoClient.connect(url, options, async (connectError, client) => {
                 try {
                     if (connectError) {
-                        reject(connectError)
-                        return
+                        reject(connectError);
+                        return;
                     }
 
                     const recipe = await client
                         .db(dbName)
                         .collection(collectionName)
-                        .findOne<Recipe>({ id: recipeId, userId })
+                        .findOne<Recipe>({ id: recipeId, userId });
 
                     if (!recipe) {
-                        resolve(null)
-                        return
+                        resolve(null);
+                        return;
                     }
 
-                    resolve(recipe)
+                    resolve(recipe);
                 } catch (error) {
-                    reject(error)
+                    reject(error);
                 }
-            })
-        })
+            });
+        });
     }
 
     public async getByUserIdAsync(userId: string): Promise<Array<Recipe>> {
@@ -58,32 +58,32 @@ export default class RecipeRepository {
             const options = {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
-            }
+            };
 
             Mongo.MongoClient.connect(url, options, async (connectError, client) => {
                 try {
                     if (connectError) {
-                        reject(connectError)
-                        return
+                        reject(connectError);
+                        return;
                     }
 
                     const recipes = await client
                         .db(dbName)
                         .collection(collectionName)
                         .find<Recipe>({ userId })
-                        .toArray()
+                        .toArray();
 
                     if (!recipes) {
-                        resolve(null)
-                        return
+                        resolve(null);
+                        return;
                     }
 
-                    resolve(recipes)
+                    resolve(recipes);
                 } catch (error) {
-                    reject(error)
+                    reject(error);
                 }
-            })
-        })
+            });
+        });
     }
 
     public async createAsync(userId: string, recipe: Recipe): Promise<Recipe> {
@@ -92,28 +92,28 @@ export default class RecipeRepository {
             const options = {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
-            }
+            };
 
             Mongo.MongoClient.connect(url, options, async (connectError, client) => {
                 try {
                     if (connectError) {
-                        return reject(connectError)
+                        return reject(connectError);
                     }
 
-                    recipe.userId = userId
-                    recipe.id = this.randomNumberGenerator.generateGuid()
+                    recipe.userId = userId;
+                    recipe.id = this.randomNumberGenerator.generateGuid();
 
                     await client
                         .db(dbName)
                         .collection(collectionName)
-                        .insertOne(recipe)
+                        .insertOne(recipe);
 
-                    resolve(recipe)
+                    resolve(recipe);
                 } catch (error) {
-                    reject(error)
+                    reject(error);
                 }
-            })
-        })
+            });
+        });
     }
 
     public async updateAsync(userId: string, recipe: Recipe): Promise<Recipe> {
@@ -122,30 +122,29 @@ export default class RecipeRepository {
             const options = {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
-            }
+            };
 
             Mongo.MongoClient.connect(url, options, async (connectError, client) => {
                 try {
 
                     if (connectError) {
-                        return reject(connectError)
+                        return reject(connectError);
                     }
 
                     await client
                         .db(dbName)
                         .collection(collectionName)
-                        .findOneAndReplace({ 
+                        .findOneAndReplace({
                             id: recipe.id,
                             userId
-                        }, recipe)
+                        }, recipe);
 
-                    resolve(recipe)
+                    resolve(recipe);
+                } catch (error) {
+                    reject(error);
                 }
-                catch (error) {
-                    reject(error)
-                }
-            })
-        })
+            });
+        });
     }
 
     public async deleteAsync(userId: string, id: string): Promise<void> {
@@ -154,13 +153,13 @@ export default class RecipeRepository {
             const options = {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
-            }
+            };
 
             Mongo.MongoClient.connect(url, options, async (connectError, client) => {
                 try {
 
                     if (connectError) {
-                        return reject(connectError)
+                        return reject(connectError);
                     }
 
                     await client
@@ -169,14 +168,13 @@ export default class RecipeRepository {
                         .findOneAndDelete({
                             id,
                             userId
-                        })
+                        });
 
-                    resolve()
+                    resolve();
+                } catch (error) {
+                    reject(error);
                 }
-                catch (error) {
-                    reject(error)
-                }
-            })
-        })
+            });
+        });
     }
 }
