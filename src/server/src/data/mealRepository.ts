@@ -86,39 +86,6 @@ export default class MealRepository {
         })
     }
 
-    public async updateAsync(userId: string, meal: Meal): Promise<Meal> {
-        return new Promise((resolve, reject) => {
-
-            const options = {
-                useNewUrlParser: true,
-                useUnifiedTopology: true
-            }
-
-            Mongo.MongoClient.connect(url, options, async (connectError, client) => {
-                try {
-
-                    if (connectError) {
-                        return reject(connectError)
-                    }
-
-                    meal.occurs = new Date(Moment(meal.occurs).toISOString())
-                    await client
-                        .db(dbName)
-                        .collection(collectionName)
-                        .findOneAndReplace({
-                            id: meal.id,
-                            userId
-                        }, meal)
-
-                    resolve(meal)
-                }
-                catch (error) {
-                    reject(error)
-                }
-            })
-        })
-    }
-
     public async deleteAsync(userId: string, id: string): Promise<void> {
         return new Promise((resolve, reject) => {
 

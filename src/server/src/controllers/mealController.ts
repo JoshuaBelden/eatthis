@@ -32,14 +32,6 @@ export default class MealController {
         }
     }
 
-    public async updateAsync(userId: string, meal: Meal) : Promise<Result<Meal>> {
-        try {
-            return new Result<Meal>(true, await this.mealRepository.updateAsync(userId, meal))
-        } catch (error) {
-            return new Result<Meal>(false, null, error)
-        }
-    }
-
     public async deleteAsync(userId: string, id: string) : Promise<Result<void>> {
         try {
             return new Result<void>(true, await this.mealRepository.deleteAsync(userId, id))

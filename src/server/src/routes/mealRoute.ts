@@ -61,21 +61,6 @@ export default class MealRoute implements IRoute {
       })
 
     app
-      .route('/meal')
-      .put(async (request, response) => {
-        const authResult = this.authenticationService.getAuthorizedUser(request)
-        if (!authResult.success) {
-          return response.status(401).send(authResult.error)
-        }
-
-        const meal = this.modelBinder.getMeal(authResult.value.id, request.body)
-        const result = await this.mealController.updateAsync(authResult.value.id, meal)
-        return result.success
-          ? response.status(200).send(result.value)
-          : response.status(500).send(result.error)
-      })
-
-    app
       .route('/meal/:id')
       .delete(async (request, response) => {
         const authResult = this.authenticationService.getAuthorizedUser(request)
