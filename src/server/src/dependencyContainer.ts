@@ -22,6 +22,7 @@ import RecipeController from './controllers/recipeController';
 import RecipeRepository from './repositories/recipeRepository';
 import RecipeRoute from './routes/recipeRoute';
 import TokenHandler from './services/tokenHandler';
+import DepartmentRepository from './repositories/departmentRepository';
 
 const container = new Container();
 
@@ -51,6 +52,10 @@ container
 container
     .bind<AccountRepository>(dependencyIdentifiers.AccountRepository)
     .to(AccountRepository);
+
+container
+    .bind<DepartmentRepository>(dependencyIdentifiers.DepartmentRepository)
+    .to(DepartmentRepository);
 
 container
     .bind<RecipeRepository>(dependencyIdentifiers.RecipeRepository)

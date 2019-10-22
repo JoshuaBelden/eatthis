@@ -9,6 +9,7 @@ export default {
 
     // REPOSITORIES
     AccountRepository: Symbol('AccountRepository'),
+    DepartmentRepository: Symbol('DepartmentRepository'),
     RecipeRepository: Symbol('RecipeRepository'),
     MealRepository: Symbol('MealRepository'),
     GroceryRepository: Symbol('GroceryRepository'),

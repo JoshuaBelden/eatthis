@@ -8,18 +8,22 @@ import GroceryItem from '../models/groceryItem';
 import Result from '../models/result';
 import Meal from '../models/meal';
 import Ingredient from '../models/ingredient';
+import DepartmentRepository from '../repositories/departmentRepository';
 
 @injectable()
 export default class GroceryController {
 
+    private departmentRepository: DepartmentRepository;
     private groceryRepository: GroceryRepository;
     private mealRepository: MealRepository;
     private recipeRepository: RecipeRepository;
 
     constructor(
+        @inject(dependencyIdentifiers.DepartmentRepository) departmentRepository: DepartmentRepository,
         @inject(dependencyIdentifiers.GroceryRepository) groceryRepository: GroceryRepository,
         @inject(dependencyIdentifiers.MealRepository) mealRepository: MealRepository,
         @inject(dependencyIdentifiers.RecipeRepository) recipeRepository: RecipeRepository) {
+        this.departmentRepository = departmentRepository;
         this.groceryRepository = groceryRepository;
         this.mealRepository = mealRepository;
         this.recipeRepository = recipeRepository;
@@ -115,7 +119,7 @@ export default class GroceryController {
             if (!groceryItems.has(ingredient.ingredient)) {
                 groceryItems.set(ingredient.ingredient, {
                     id: '',
-                    department: '',
+                    department: this.departmentRepository.getDepartment(userId, ingredient.ingredient),
                     ingredient: ingredient.ingredient,
                     unit: ingredient.unit,
                     quantity: ingredient.quantity,

@@ -6,6 +6,7 @@ import dependencyIdentifiers from '../dependencyIdentifiers';
 import AuthenticationService from '../services/authenticationService';
 import ModelBinder from '../services/modelBinder';
 import IRoute from './iRoute';
+import * as Moment from 'moment';
 
 @injectable()
 export default class MealRoute implements IRoute {
@@ -34,8 +35,8 @@ export default class MealRoute implements IRoute {
           return response.status(401).send(authResult.error);
         }
 
-        const startDate = new Date(request.params.startDate);
-        const stopDate = new Date(request.params.stopDate);
+        const startDate = Moment(request.params.startDate).toDate();
+        const stopDate = Moment(request.params.stopDate).toDate();
 
         const result = await this.mealController.getAsync(authResult.value.id, startDate, stopDate);
         return result.success
