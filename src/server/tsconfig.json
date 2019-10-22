@@ -8,7 +8,8 @@
       "dom"
     ],
     "types": [
-      "reflect-metadata"
+      "reflect-metadata",
+      "mocha"
     ],
     "target": "esnext",
     "module": "commonjs",
@@ -18,7 +19,7 @@
     "baseUrl": "dist"
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts", "test/services/ingredientParser.spec.ts"
   ],
   "exclude": [
     "node_modules"

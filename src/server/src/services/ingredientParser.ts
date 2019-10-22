@@ -1,10 +1,9 @@
 import Ingredient from '../models/ingredient';
 import { injectable } from 'inversify';
-import { invalid } from 'moment';
 
 @injectable()
 export default class IngredientParser {
-    private trashChars = [',', '(', ')', '[', ']', '-', '/'];
+    private trashChars = [',', '(', ')', '[', ']', '-', '\\'];
     private trashWords = ['a', 'and', 'to', 'less', 'taste', 'for', 'or', 'of', 'fresh', 'plus', 'with', 'more', 'freshly',
         'ground', 'heated', 'toasted', 'minced', 'chopped', 'finely', 'grated', 'divided', 'pressed',
         'chilled', 'shredded', 'topping', 'serving', 'thinly', 'sliced', 'peeled', 'diced', 'cored',
@@ -21,6 +20,7 @@ export default class IngredientParser {
         ['handful', ['handful']],
         ['dash', ['dash']],
         ['pinch', ['pinch']],
+        ['stick', ['stick', 'sticks']],
     ]);
 
     public parse(line: string): Ingredient {
