@@ -4,8 +4,10 @@ import MealRepository from '../repositories/MealRepository';
 import RecipeRepository from '../repositories/RecipeRepository';
 import dependencyIdentifiers from '../dependencyIdentifiers';
 import Grocery from '../models/grocery';
-import { GroceryItem } from '../models/groceryItem';
+import GroceryItem from '../models/groceryItem';
 import Result from '../models/result';
+import Meal from '../models/meal';
+import Ingredient from '../models/ingredient';
 
 @injectable()
 export default class GroceryController {
@@ -41,22 +43,8 @@ export default class GroceryController {
 
     public async createAsync(userId: string, startDate: Date, stopDate: Date): Promise<Result<Grocery>> {
         try {
-            const groceryItems: Array<GroceryItem> = [];
             const meals = await this.mealRepository.getAsync(userId, startDate, stopDate);
-            for (const meal of meals) {
-                const recipe = await this.recipeRepository.getAsync(userId, meal.recipeId);
-                for (const ingredient of recipe.ingredients) {
-                    groceryItems.push({
-                        id: '',
-                        department: '',
-                        ingredient: ingredient.line,
-                        quantity: ingredient.quantity,
-                        unit: ingredient.unit,
-                        picked: false
-                    });
-                }
-            }
-
+            const groceryItems = await this.generateGroceryItems(userId, meals);
             const grocery = new Grocery();
             grocery.userId = userId;
             grocery.startDate = startDate;
@@ -110,5 +98,34 @@ export default class GroceryController {
         } catch (error) {
             return new Result<void>(false, null, error);
         }
+    }
+
+    private async generateGroceryItems(userId: string, meals: Array<Meal>): Promise<Array<GroceryItem>> {
+        const ingredients: Array<Ingredient> = [];
+        for (const meal of meals) {
+            const recipe = await this.recipeRepository.getAsync(userId, meal.recipeId);
+            for (const ingredient of recipe.ingredients) {
+                ingredients.push(ingredient);
+            }
+        }
+
+        const groceryItems: Map<string, GroceryItem> = new Map<string, GroceryItem>();
+
+        for (const ingredient of ingredients) {
+            if (!groceryItems.has(ingredient.ingredient)) {
+                groceryItems.set(ingredient.ingredient, {
+                    id: '',
+                    department: '',
+                    ingredient: ingredient.ingredient,
+                    unit: ingredient.unit,
+                    quantity: ingredient.quantity,
+                    picked: false
+                });
+            } else {
+                groceryItems.get(ingredient.ingredient).quantity += ingredient.quantity;
+            }
+        }
+
+        return Array.from(groceryItems.values());
     }
 }

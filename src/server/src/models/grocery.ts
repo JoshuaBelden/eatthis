@@ -1,4 +1,4 @@
-import { GroceryItem } from './groceryItem';
+import GroceryItem from './groceryItem';
 
 export default class Grocery {
     public id: string;

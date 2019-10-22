@@ -23,7 +23,6 @@ export default class IngredientParser {
         ['pinch', ['pinch']],
     ]);
 
-
     public parse(line: string): Ingredient {
         if (!line) {
             throw new Error('Ingredient line cannot be empty.');

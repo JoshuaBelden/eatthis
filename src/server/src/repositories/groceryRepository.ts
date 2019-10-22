@@ -4,7 +4,7 @@ import * as Mongo from 'mongodb';
 import serviceIdentity from '../dependencyIdentifiers';
 import config from '../environments/config';
 import Grocery from '../models/grocery';
-import { GroceryItem } from '../models/groceryItem';
+import GroceryItem from '../models/groceryItem';
 import RandomNumberGenerator from '../services/randomNumberGenerator';
 
 const url = 'mongodb://localhost:27017';
