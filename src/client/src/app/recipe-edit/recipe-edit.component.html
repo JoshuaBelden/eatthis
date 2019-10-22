@@ -40,6 +40,7 @@
         </label>
         <textarea id="preparation" rows="6`" class="form-control" formControlName="preparation"></textarea>
     </div>
+
     <button class="btn btn-primary m-1" type="submit">
         <fa name="save"></fa> Save
     </button>
@@ -50,6 +51,15 @@
 
     <a href="#" class="btn btn-light m-1" [routerLink]="recipeId === '' ? ['/recipes'] : ['/recipes', recipeId]">Done</a>
 </form>
+
+<div class="m-1">&nbsp;</div>
+
+<div class="alert alert-warning font-weight-light">
+    <i>For the purposes of building a grocery list, these are the ingredients I understood.</i>
+    <div *ngFor="let ingredient of recipe.ingredients">
+        {{ingredient.quantity}} {{ingredient.unit}} {{ingredient.ingredient}}
+    </div>
+</div>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

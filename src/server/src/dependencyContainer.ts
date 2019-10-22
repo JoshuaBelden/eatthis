@@ -1,26 +1,27 @@
 import { Container } from 'inversify';
 import 'reflect-metadata';
-import Application from './application';
+
 import AccountController from './controllers/accountController';
-import MealController from './controllers/mealController';
-import RecipeController from './controllers/recipeController';
 import AccountRepository from './repositories/AccountRepository';
-import MealRepository from './repositories/MealRepository';
-import RecipeRepository from './repositories/recipeRepository';
-import dependencyIdentifiers from './dependencyIdentifiers';
-import config from './environments/config';
-import Meal from './models/meal';
 import AccountRoute from './routes/accountRoute';
-import IRoute from './routes/iRoute';
-import MealRoute from './routes/mealRoute';
-import RecipeRoute from './routes/recipeRoute';
+import Application from './application';
 import AuthenticationService from './services/authenticationService';
+import config from './environments/config';
+import dependencyIdentifiers from './dependencyIdentifiers';
+import GroceryController from './controllers/groceryController';
+import GroceryRepository from './repositories/groceryRepository';
+import GroceryRoute from './routes/groceryRoute';
+import IngredientParser from './services/ingredientParser';
+import IRoute from './routes/iRoute';
+import MealController from './controllers/mealController';
+import MealRepository from './repositories/MealRepository';
+import MealRoute from './routes/mealRoute';
 import ModelBinder from './services/modelBinder';
 import RandomNumberGenerator from './services/randomNumberGenerator';
+import RecipeController from './controllers/recipeController';
+import RecipeRepository from './repositories/recipeRepository';
+import RecipeRoute from './routes/recipeRoute';
 import TokenHandler from './services/tokenHandler';
-import GroceryRepository from './repositories/groceryRepository';
-import GroceryController from './controllers/groceryController';
-import GroceryRoute from './routes/groceryRoute';
 
 const container = new Container();
 
@@ -37,6 +38,10 @@ container
 container
     .bind<AuthenticationService>(dependencyIdentifiers.AuthenticationService)
     .to(AuthenticationService);
+
+container
+    .bind<IngredientParser>(dependencyIdentifiers.IngredientParser)
+    .to(IngredientParser);
 
 container
     .bind<ModelBinder>(dependencyIdentifiers.ModelBinder)

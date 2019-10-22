@@ -4,18 +4,22 @@ import RecipeRepository from '../repositories/RecipeRepository';
 import dependencyIdentifiers from '../dependencyIdentifiers';
 import Recipe from '../models/recipe';
 import Result from '../models/result';
+import IngredientParser from '../services/ingredientParser';
 
 @injectable()
 export default class RecipeController {
 
     private recipeRepository: RecipeRepository;
     private mealRepository: MealRepository;
+    private ingredientParser: IngredientParser;
 
     constructor(
         @inject(dependencyIdentifiers.RecipeRepository) recipeRepository: RecipeRepository,
-        @inject(dependencyIdentifiers.MealRepository) mealRepository: MealRepository) {
+        @inject(dependencyIdentifiers.MealRepository) mealRepository: MealRepository,
+        @inject(dependencyIdentifiers.IngredientParser) ingredientParser: IngredientParser) {
         this.recipeRepository = recipeRepository;
         this.mealRepository = mealRepository;
+        this.ingredientParser = ingredientParser;
     }
 
     public async getAsync(userId: string, recipeId: string): Promise<Result<Recipe>> {
@@ -40,6 +44,7 @@ export default class RecipeController {
         }
 
         try {
+            recipe.ingredients = recipe.ingredients.map(ingredient => this.ingredientParser.parse(ingredient.line));
             return new Result<Recipe>(true, await this.recipeRepository.createAsync(userId, recipe));
         } catch (error) {
             return new Result<Recipe>(false, null, error);
@@ -48,6 +53,7 @@ export default class RecipeController {
 
     public async updateAsync(userId: string, recipe: Recipe): Promise<Result<Recipe>> {
         try {
+            recipe.ingredients = recipe.ingredients.map(ingredient => this.ingredientParser.parse(ingredient.line));
             return new Result<Recipe>(true, await this.recipeRepository.updateAsync(userId, recipe));
         } catch (error) {
             return new Result<Recipe>(false, null, error);

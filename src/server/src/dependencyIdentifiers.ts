@@ -2,6 +2,7 @@ export default {
 
     // SERVICES
     AuthenticationService: Symbol('AuthenticationService'),
+    IngredientParser: Symbol('IngredientParser'),
     TokenHandler: Symbol('TokenHandler'),
     RandomNumberGenerator: Symbol('RandomNumberGenerator'),
     ModelBinder: Symbol('ModelBinder'),

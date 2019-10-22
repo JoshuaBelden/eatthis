@@ -16,6 +16,7 @@ import { Ingredient } from '../models/ingredient';
 export class RecipeEditComponent implements OnInit {
 
   recipeId: string;
+  recipe: Recipe;
   recipeForm;
   result: Result<Recipe>;
 
@@ -42,14 +43,14 @@ export class RecipeEditComponent implements OnInit {
         return;
       }
 
-      const recipe = await this.recipeService.getAsync(this.recipeId);
-      this.recipeForm = this.createFormGroup(recipe);
+      this.recipe = await this.recipeService.getAsync(this.recipeId);
+      this.recipeForm = this.createFormGroup(this.recipe);
     });
   }
 
   async onSubmit(recipeData) {
     try {
-      let recipe: Recipe = {
+      const recipe: Recipe = {
         id: recipeData.id,
         title: recipeData.title,
         description: recipeData.description,
@@ -60,9 +61,9 @@ export class RecipeEditComponent implements OnInit {
       };
 
       if (recipe.id) {
-        recipe = await this.recipeService.updateAsync(recipe);
+        this.recipe = await this.recipeService.updateAsync(recipe);
       } else {
-        recipe = await this.recipeService.createAsync(recipe);
+        this.recipe = await this.recipeService.createAsync(recipe);
       }
       this.result = new Result<Recipe>(true, recipe);
     } catch (error) {
