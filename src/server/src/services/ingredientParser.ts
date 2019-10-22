@@ -3,12 +3,9 @@ import { injectable } from 'inversify';
 
 @injectable()
 export default class IngredientParser {
-    private trashChars = [',', '(', ')', '[', ']', '-', '\\'];
-    private trashWords = ['a', 'and', 'to', 'less', 'taste', 'for', 'or', 'of', 'fresh', 'plus', 'with', 'more', 'freshly',
-        'ground', 'heated', 'toasted', 'minced', 'chopped', 'finely', 'grated', 'divided', 'pressed',
-        'chilled', 'shredded', 'topping', 'serving', 'thinly', 'sliced', 'peeled', 'diced', 'cored',
-        'julienned', 'crumbled', 'drained', 'rinsed'];
-    private cookingUnits: Map<string, Array<string>> = new Map([
+    private foodWords = ['tomato sauce', 'butter'];
+    private units: Map<string, Array<string>> = new Map([
+        ['$1 can', ['([0-9]+.ounce).*can']],
         ['tsp', ['teaspoons', 'teaspoon', 'tsp']],
         ['tbs', ['tablespoons', 'tablespoon', 'tbs']],
         ['cup', ['cups', 'cup']],
@@ -23,57 +20,71 @@ export default class IngredientParser {
         ['stick', ['stick', 'sticks']],
     ]);
 
-    public parse(line: string): Ingredient {
-        if (!line) {
+    public parse(input: string): Ingredient {
+        if (!input) {
             throw new Error('Ingredient line cannot be empty.');
         }
 
-        let ingredient = line.trim().toLowerCase();
-        ingredient = this.scrubTrashWords(ingredient);
-        ingredient = this.scrubTrashChars(ingredient);
-
-        const [quantity, quantityMatchString] = this.parseQuantity(ingredient);
-        ingredient = ingredient.replace(quantityMatchString, '').trim();
-
-        const [unit, unitMatchString] = this.parseUnit(ingredient);
-        ingredient = ingredient.replace(unitMatchString, '').trim();
+        const food = this.parseFood(input);
+        const quantity = this.parseQuantity(input);
+        const unit = this.parseUnit(input);
 
         return {
-            line,
+            line: input,
             quantity,
             unit,
-            ingredient
+            ingredient: food
         };
     }
 
-    private match(expression: string, value: string) {
-        const re = new RegExp(expression, 'i');
-        return re.exec(value);
-    }
+    private parseFood(input: string): string {
+        for (const food of this.foodWords) {
+            const match = this.match(`\\b(${food})\\b`, input);
 
-    private scrubTrashChars(value: string): string {
-        for (const char of this.trashChars) {
-            value = value.replace(char, '').trim();
+            if (!match) {
+                continue;
+            }
+
+            return food;
         }
 
-        return value;
+        return null;
     }
 
-    private scrubTrashWords(value: string): string {
-        for (const word of this.trashWords) {
-            const re = new RegExp(`(\\b${word}\\b)`, 'i');
-            value = value.replace(re, '').trim();
+    private parseQuantity(input: string): number {
+        const quantityMatch = input.match(/[-]?[0-9]+[ ,.]?[0-9]*([\/][0-9]+[,.]?[0-9]*)*/i);
+        if (!quantityMatch) {
+            return 1;
         }
 
-        return value;
+        return this.isFraction(quantityMatch[0])
+            ? this.parseFraction(quantityMatch[0])
+            : parseFloat(quantityMatch[0]);
     }
 
-    private isFraction(value: string): boolean {
-        return value.includes('/');
+    private parseUnit(input: string): string {
+        for (const set of this.units) {
+            for (const value of set[1]) {
+                const match = this.match(`(${value})`, input);
+                if (!match) {
+                    continue;
+                }
+
+                return set[0].includes('$1')
+                    ? set[0].replace('$1', match[2])
+                    : set[0];
+            }
+        }
+
+        return null;
     }
 
-    private parseFraction(value: string): number {
-        const wholeParts = value.split(' ');
+    private isFraction(input: string): boolean {
+        return input.includes('/');
+    }
+
+    private parseFraction(input: string): number {
+        const wholeParts = input.split(' ');
         let wholeResult = 0;
         let fractionString = '';
         if (wholeParts.length > 1) {
@@ -91,37 +102,8 @@ export default class IngredientParser {
         return parseFloat((wholeResult + fractionResult).toFixed(2));
     }
 
-    private parseQuantity(ingredient: string): [number, string] {
-        let quantity = 1;
-        let matchString = '';
-        const quantityMatch = ingredient.match(/[-]?[0-9]+[ ,.]?[0-9]*([\/][0-9]+[,.]?[0-9]*)*/i);
-        if (quantityMatch) {
-            if (this.isFraction(quantityMatch[0])) {
-                quantity = this.parseFraction(quantityMatch[0]);
-            } else {
-                quantity = parseFloat(quantityMatch[0]);
-            }
-            matchString = quantityMatch[0];
-        }
-
-        return [quantity, matchString];
-    }
-
-    private parseUnit(ingredient: string): [string, string] {
-        let unit = '';
-        let unitReplacedValue = '';
-        for (const set of this.cookingUnits) {
-            for (const value of set[1]) {
-                const match = this.match(`(\\b${value}\\b)`, ingredient);
-                if (!match) {
-                    continue;
-                }
-                unit = set[0];
-                unitReplacedValue = match[1];
-                break;
-            }
-        }
-
-        return [unit, unitReplacedValue];
+    private match(expression: string, value: string) {
+        const re = new RegExp(expression, 'i');
+        return re.exec(value);
     }
 }

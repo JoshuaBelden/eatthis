@@ -34,4 +34,12 @@ describe('Ingredient parser', () => {
         expect(result.unit).to.equal('stick');
         expect(result.ingredient).to.equal('butter');
     });
+
+    it('should handle certain size cans', () => {
+        const parser = new IngredientParser();
+        const result = parser.parse(('2 10-ounce cans of tomato sauce'));
+        expect(result.quantity).to.equal(2);
+        expect(result.unit).to.equal('10-ounce can');
+        expect(result.ingredient).to.equal('tomato sauce');
+    });
 });
