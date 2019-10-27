@@ -1,6 +1,8 @@
 export interface Ingredient {
-    line: string;
+    input: string;
     quantity: number;
-    unit: string;
-    ingredient: string;
+    unitOfMeasure: string;
+    name: string;
+    modifier: string;
+    preparation: string;
 }

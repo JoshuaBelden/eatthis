@@ -27,11 +27,25 @@
     </div>
 
     <div class="form-group">
-        <label for="ingredients">
-            Ingredients
-        </label>
-        <textarea id="ingredients" rows="6" class="form-control" formControlName="ingredients"></textarea>
-        <sub>1 ingredient per line</sub>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="ingredients">
+                    Ingredients
+                </label>
+                <textarea id="ingredients" rows="15" class="form-control" formControlName="ingredients"></textarea>
+                <sub>1 ingredient per line</sub>
+            </div>
+            <div class="col-md-6">
+                <label for="ingredients">
+                    What I understood
+                </label>
+                <div *ngIf="recipe" class="alert alert-warning font-weight-light">
+                    <div *ngFor="let ingredient of recipe.ingredients">
+                        {{ingredient.quantity}} {{ingredient.unitOfMeasure}} {{ingredient.modifier}} {{ingredient.name}} {{ingredient.preparation}}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="form-group">
@@ -53,13 +67,6 @@
 </form>
 
 <div class="m-1">&nbsp;</div>
-
-<div class="alert alert-warning font-weight-light">
-    <i>For the purposes of building a grocery list, these are the ingredients I understood.</i>
-    <div *ngFor="let ingredient of recipe.ingredients">
-        {{ingredient.quantity}} {{ingredient.unit}} {{ingredient.ingredient}}
-    </div>
-</div>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

@@ -1,11 +1,15 @@
 import Ingredient from '../models/ingredient';
 import { injectable } from 'inversify';
 
+import { foodWords } from '../data/foodItems';
+import { foodModifiers } from '../data/foodModifiers';
+import { foodPreparations } from '../data/foodPreparations';
+
 @injectable()
 export default class IngredientParser {
-    private foodWords = ['tomato sauce', 'butter'];
     private units: Map<string, Array<string>> = new Map([
         ['$1 can', ['([0-9]+.ounce).*can']],
+        ['$1 slice', ['([0-9]+.ounce).*slice']],
         ['tsp', ['teaspoons', 'teaspoon', 'tsp']],
         ['tbs', ['tablespoons', 'tablespoon', 'tbs']],
         ['cup', ['cups', 'cup']],
@@ -17,7 +21,9 @@ export default class IngredientParser {
         ['handful', ['handful']],
         ['dash', ['dash']],
         ['pinch', ['pinch']],
-        ['stick', ['stick', 'sticks']],
+        ['stick', ['(stick)[s]*']],
+        ['clove', ['(clove)[s]*']],
+        ['bottle', ['(bottle)[s]*']],
     ]);
 
     public parse(input: string): Ingredient {
@@ -25,30 +31,39 @@ export default class IngredientParser {
             throw new Error('Ingredient line cannot be empty.');
         }
 
-        const food = this.parseFood(input);
-        const quantity = this.parseQuantity(input);
-        const unit = this.parseUnit(input);
+        const value = input.toLowerCase();
+
+        const name = this.parseForWholeWordMatch(foodWords, value);
+        const quantity = this.parseQuantity(value);
+        const unitOfMeasure = this.parseUnit(value);
+        const modifier = this.parseForWholeWordMatch(foodModifiers, value);
+        const preparation = this.parseForWholeWordMatch(foodPreparations, value);
 
         return {
-            line: input,
+            input,
             quantity,
-            unit,
-            ingredient: food
+            unitOfMeasure,
+            name,
+            modifier,
+            preparation
         };
     }
 
-    private parseFood(input: string): string {
-        for (const food of this.foodWords) {
-            const match = this.match(`\\b(${food})\\b`, input);
-
+    private parseForWholeWordMatch(expressions: string[], input: string): string {
+        for (const expression of expressions) {
+            const match = this.match(`\\b(${expression})[s]*\\b`, input);
             if (!match) {
                 continue;
             }
 
-            return food;
+            return match[this.expressionIncludesCapture(expression) ? 2 : 1];
         }
 
         return null;
+    }
+
+    private expressionIncludesCapture(expression: string) {
+        return expression.includes('(');
     }
 
     private parseQuantity(input: string): number {

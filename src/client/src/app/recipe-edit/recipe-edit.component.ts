@@ -97,7 +97,7 @@ export class RecipeEditComponent implements OnInit {
   private ConvertIngredientsToText(ingredients: Array<Ingredient>): string {
     return ingredients
       .map(ingredient => [
-        ingredient.line || ''
+        ingredient.input || ''
       ]
         .filter(item => item)
         .join(' '))
@@ -107,16 +107,18 @@ export class RecipeEditComponent implements OnInit {
   private ParseIngredientString(ingredients: string): Array<Ingredient> {
     return ingredients
       .split('\n')
-      .map(line => line.replace('\r', ''))
-      .map(line => this.parseLine(line));
+      .map(input => input.replace('\r', ''))
+      .map(input => this.parseLine(input));
   }
 
-  private parseLine(line: string): Ingredient {
+  private parseLine(input: string): Ingredient {
     return {
-      line,
+      input,
+      name: '',
       quantity: 0,
-      unit: '',
-      ingredient: ''
+      unitOfMeasure: '',
+      modifier: '',
+      preparation: ''
     };
   }
 }

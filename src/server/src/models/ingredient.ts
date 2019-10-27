@@ -1,6 +1,8 @@
 export default class Ingredient {
-    public line: string;
+    public input: string;
     public quantity: number;
-    public unit: string;
-    public ingredient: string;
+    public unitOfMeasure: string;
+    public name: string;
+    public modifier: string;
+    public preparation: string;
 }

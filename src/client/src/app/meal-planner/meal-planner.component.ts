@@ -47,20 +47,20 @@ export class MealPlannerComponent implements OnInit {
 
   async selectToday() {
     this.selectedDate = Moment().startOf('month');
-    this.meals = await this.getMeals(this.selectedDate, Moment(this.selectedDate).add(4, 'weeks'));
+    this.meals = await this.getMeals(this.selectedDate, Moment(this.selectedDate).add(5, 'weeks'));
     this.buildCalendar(this.selectedDate, this.meals);
     console.log(this.weeks);
   }
 
   async selectNextMonth() {
     this.selectedDate = Moment(this.selectedDate).add(1, 'month');
-    this.meals = await this.getMeals(this.selectedDate, Moment(this.selectedDate).add(4, 'weeks'));
+    this.meals = await this.getMeals(this.selectedDate, Moment(this.selectedDate).add(5, 'weeks'));
     this.buildCalendar(this.selectedDate, this.meals);
   }
 
   async selectPreviousMonth() {
     this.selectedDate = Moment(this.selectedDate).subtract(1, 'month');
-    this.meals = await this.getMeals(this.selectedDate, Moment(this.selectedDate).add(4, 'weeks'));
+    this.meals = await this.getMeals(this.selectedDate, Moment(this.selectedDate).add(5, 'weeks'));
     this.buildCalendar(this.selectedDate, this.meals);
   }
 
@@ -76,6 +76,7 @@ export class MealPlannerComponent implements OnInit {
       this.addWeek(Moment(startDate).add(2, 'week'), meals),
       this.addWeek(Moment(startDate).add(3, 'week'), meals),
       this.addWeek(Moment(startDate).add(4, 'week'), meals),
+      this.addWeek(Moment(startDate).add(5, 'week'), meals),
     ];
   }
 
@@ -122,7 +123,7 @@ export class MealPlannerComponent implements OnInit {
 
   async onRecipeDrop(date: Moment.Moment, data: any) {
     await this.createMeal(date, data.dragData.recipeId);
-    this.meals = await this.getMeals(this.selectedDate, Moment(this.selectedDate).add(4, 'weeks'));
+    this.meals = await this.getMeals(this.selectedDate, Moment(this.selectedDate).add(5, 'weeks'));
     this.buildCalendar(this.selectedDate, this.meals);
   }
 
@@ -140,7 +141,7 @@ export class MealPlannerComponent implements OnInit {
 
   async onRemoveMeal(mealId: string) {
     await this.deleteMeal(mealId);
-    this.meals = await this.getMeals(this.selectedDate, Moment(this.selectedDate).add(4, 'weeks'));
+    this.meals = await this.getMeals(this.selectedDate, Moment(this.selectedDate).add(5, 'weeks'));
     this.buildCalendar(this.selectedDate, this.meals);
   }
 

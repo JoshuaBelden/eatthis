@@ -29,10 +29,12 @@ export default class ModelBinder {
       ingredients: body.ingredients.map(i => {
         return {
           id: i.id,
-          line: i.line,
+          input: i.input,
           quantity: i.quantity,
-          unit: i.unit,
-          ingredient: i.ingredient,
+          unitOfMeasure: i.unitOfMeasure,
+          name: i.name,
+          modifier: i.modifier,
+          preparation: i.preparation
         };
       })
     };

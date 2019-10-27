@@ -80,7 +80,7 @@ export default class RecipeRoute implements IRoute {
         const result = [];
         const recipes = this.modelBinder.getRecipes(authResult.value.id, request.body);
 
-        for(const recipe of recipes) {
+        for (const recipe of recipes) {
           result.push(await this.recipeController.createAsync(authResult.value.id, recipe));
         }
         return result.every(r => r.success)

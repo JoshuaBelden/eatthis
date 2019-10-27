@@ -44,7 +44,7 @@ export default class RecipeController {
         }
 
         try {
-            recipe.ingredients = recipe.ingredients.map(ingredient => this.ingredientParser.parse(ingredient.line));
+            recipe.ingredients = recipe.ingredients.map(ingredient => this.ingredientParser.parse(ingredient.input));
             return new Result<Recipe>(true, await this.recipeRepository.createAsync(userId, recipe));
         } catch (error) {
             return new Result<Recipe>(false, null, error);
@@ -53,7 +53,7 @@ export default class RecipeController {
 
     public async updateAsync(userId: string, recipe: Recipe): Promise<Result<Recipe>> {
         try {
-            recipe.ingredients = recipe.ingredients.map(ingredient => this.ingredientParser.parse(ingredient.line));
+            recipe.ingredients = recipe.ingredients.map(ingredient => this.ingredientParser.parse(ingredient.input));
             return new Result<Recipe>(true, await this.recipeRepository.updateAsync(userId, recipe));
         } catch (error) {
             return new Result<Recipe>(false, null, error);
