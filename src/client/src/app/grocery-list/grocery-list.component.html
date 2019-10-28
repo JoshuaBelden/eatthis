@@ -18,14 +18,14 @@
 
             <div class="d-flex flex-wrap">
                 <div class="m-1">
-                    <h5>Produce</h5>
-                    <div *ngFor="let groceryItem of selectedGrocery.items">
-                        <input #picked type="checkbox" [checked]="groceryItem.picked" (change)="onPickGroceryItem(selectedGrocery.id, groceryItem, picked.checked)">
-                        {{groceryItem.ingredient}}
-                        <fa name="trash" class="text-danger pointer" (click)="onDeleteGroceryItem(selectedGrocery.id, groceryItem.id)"></fa>
+                    <div *ngFor="let department of departments">
+                        <h5>{{department}}</h5>
+                        <div *ngFor="let groceryItem of getGroceryItems(department)">
+                            <input #picked type="checkbox" [checked]="groceryItem.picked" (change)="onPickGroceryItem(selectedGrocery.id, groceryItem, picked.checked)">
+                            {{groceryItem.quantity}} {{groceryItem.unit}} {{groceryItem.ingredient}}
+                            <fa name="trash" class="text-danger pointer" (click)="onDeleteGroceryItem(selectedGrocery.id, groceryItem.id)"></fa>
+                        </div>
                     </div>
-                    
-                    
                     <div>
                         <div class="input-group m-1">
                             <input #line type="text" class="form-control" placeholder="add ingredient" aria-label="add ingredients" aria-describedby="search-addon">
@@ -36,10 +36,8 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
-    </div>
 
-</div>
+    </div>

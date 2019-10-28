@@ -6,6 +6,7 @@ export default {
     TokenHandler: Symbol('TokenHandler'),
     RandomNumberGenerator: Symbol('RandomNumberGenerator'),
     ModelBinder: Symbol('ModelBinder'),
+    GroceryListbuilder: Symbol('GroceryListBuilder'),
 
     // REPOSITORIES
     AccountRepository: Symbol('AccountRepository'),

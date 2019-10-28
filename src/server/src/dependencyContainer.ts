@@ -23,6 +23,7 @@ import RecipeRepository from './repositories/recipeRepository';
 import RecipeRoute from './routes/recipeRoute';
 import TokenHandler from './services/tokenHandler';
 import DepartmentRepository from './repositories/departmentRepository';
+import GroceryListBuilder from './services/groceryListBuilder';
 
 const container = new Container();
 
@@ -47,6 +48,10 @@ container
 container
     .bind<ModelBinder>(dependencyIdentifiers.ModelBinder)
     .to(ModelBinder);
+
+container
+    .bind<GroceryListBuilder>(dependencyIdentifiers.GroceryListbuilder)
+    .to(GroceryListBuilder);
 
 // REGISTER REPOSITORIES
 container

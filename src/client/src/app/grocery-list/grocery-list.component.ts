@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { GroceryService } from '../services/grocery.service';
 import { Grocery } from '../models/grocery';
-import { listLazyRoutes } from '@angular/compiler/src/aot/lazy_routes';
 import { GroceryItem } from '../models/groceryItem';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-grocery-list',
@@ -13,6 +13,8 @@ export class GroceryListComponent implements OnInit {
 
   groceries: Array<Grocery>;
   selectedGrocery: Grocery;
+  departments: string[];
+  groupedItems: _.Dictionary<GroceryItem[]>;
 
   constructor(private groceryService: GroceryService) { }
 
@@ -22,6 +24,8 @@ export class GroceryListComponent implements OnInit {
 
   onSelectGrocery(grocery: Grocery) {
     this.selectedGrocery = grocery;
+    this.groupedItems = _.groupBy(grocery.items, item => item.department);
+    this.departments = _.keys(this.groupedItems);
   }
 
   async onDelete(groceryId: string) {
@@ -43,5 +47,9 @@ export class GroceryListComponent implements OnInit {
   async onDeleteGroceryItem(groceryId: string, groceryItemId: string) {
     await this.groceryService.deleteGroceryItemAsync(groceryId, groceryItemId);
     this.selectedGrocery.items = this.selectedGrocery.items.filter(groceryItem => groceryItem.id !== groceryItemId);
+  }
+
+  getGroceryItems(department: string) {
+    return _.get(this.groupedItems, department);
   }
 }

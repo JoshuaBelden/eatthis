@@ -8,25 +8,25 @@ import GroceryItem from '../models/groceryItem';
 import Result from '../models/result';
 import Meal from '../models/meal';
 import Ingredient from '../models/ingredient';
-import DepartmentRepository from '../repositories/departmentRepository';
+import GroceryListBuilder from '../services/groceryListBuilder';
 
 @injectable()
 export default class GroceryController {
 
-    private departmentRepository: DepartmentRepository;
     private groceryRepository: GroceryRepository;
     private mealRepository: MealRepository;
     private recipeRepository: RecipeRepository;
+    private groceryListBuilder: GroceryListBuilder;
 
     constructor(
-        @inject(dependencyIdentifiers.DepartmentRepository) departmentRepository: DepartmentRepository,
         @inject(dependencyIdentifiers.GroceryRepository) groceryRepository: GroceryRepository,
         @inject(dependencyIdentifiers.MealRepository) mealRepository: MealRepository,
-        @inject(dependencyIdentifiers.RecipeRepository) recipeRepository: RecipeRepository) {
-        this.departmentRepository = departmentRepository;
+        @inject(dependencyIdentifiers.RecipeRepository) recipeRepository: RecipeRepository,
+        @inject(dependencyIdentifiers.GroceryListbuilder) groceryListBuilder: GroceryListBuilder) {
         this.groceryRepository = groceryRepository;
         this.mealRepository = mealRepository;
         this.recipeRepository = recipeRepository;
+        this.groceryListBuilder = groceryListBuilder;
     }
 
     public async getAsync(userId: string, groceryId: string): Promise<Result<Grocery>> {
@@ -113,23 +113,6 @@ export default class GroceryController {
             }
         }
 
-        const groceryItems: Map<string, GroceryItem> = new Map<string, GroceryItem>();
-
-        for (const ingredient of ingredients) {
-            if (!groceryItems.has(ingredient.ingredient)) {
-                groceryItems.set(ingredient.ingredient, {
-                    id: '',
-                    department: this.departmentRepository.getDepartment(userId, ingredient.ingredient),
-                    ingredient: ingredient.ingredient,
-                    unit: ingredient.unit,
-                    quantity: ingredient.quantity,
-                    picked: false
-                });
-            } else {
-                groceryItems.get(ingredient.ingredient).quantity += ingredient.quantity;
-            }
-        }
-
-        return Array.from(groceryItems.values());
+        return this.groceryListBuilder.combineIngredients(userId, ingredients);
     }
 }

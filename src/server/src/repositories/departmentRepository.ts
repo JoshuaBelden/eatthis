@@ -25,6 +25,10 @@ export default class DepartmentRepository {
             {
                 department: 'dairy',
                 foodItem: 'milk'
+            },
+            {
+                department: 'boxed/canned',
+                foodItem: 'oil'
             }]
         }
     ];
@@ -33,6 +37,8 @@ export default class DepartmentRepository {
         const maps = this.departmentMaps.filter(map => map.userId === '' || map.userId === userId);
         const locations = ([] as FoodItemLocation[]).concat(...maps.map(map => map.foodItemLocations));
         const location = locations.find(l => l.foodItem === foodItem);
-        return location.department;
+        return location
+            ? location.department
+            : 'unknown';
     }
 }
