@@ -19,10 +19,10 @@
 <!-- Recipe List -->
 <div class="d-flex flex-wrap">
 
-  <div *ngFor="let recipe of displayedRecipes" class="card border m-1" style="width: 18rem;">
+  <div *ngFor="let recipe of displayedRecipes" class="card border m-1">
     <div>
       <a href="#" [routerLink]="['/recipes', recipe.id]">
-        <img src="{{recipe.imageUrl}}" class="card-img-top" alt="{{recipe.title}}" style="max-width: 17.89rem;">
+        <img src="{{recipe.imageUrl}}" class="card-img-top" alt="{{recipe.title}}">
       </a>
     </div>
     <h6 class="card-header card-title">
@@ -31,11 +31,7 @@
       </a>
     </h6>
     <div class="card-body flex-fill">
-      <p class="card-text">{{recipe.description.substr(0, 250)}}</p>
-      <hr class="my-4">
-      <a href="#" class="btn btn-light" [routerLink]="['/recipes', recipe.id]">
-        <fa name="book"></fa> read more
-      </a>
+      <p class="font-weight-light">{{recipe.description.substr(0, 250)}}...</p>
     </div>
   </div>
 

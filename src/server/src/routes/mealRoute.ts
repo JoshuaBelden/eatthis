@@ -28,7 +28,7 @@ export default class MealRoute extends BaseRoute {
       .route('/meals/:startDate/:stopDate')
       .get(async (request, response) => {
         return super.tryAction<Meal[]>(async () => {
-          const user = this.modelBinder.getUser(request.body);
+          const user = super.getAuthenticatedUser(request);
           const startDate = Moment(request.params.startDate).toDate();
           const stopDate = Moment(request.params.stopDate).toDate();
           super.buildResponse(response,
@@ -40,7 +40,7 @@ export default class MealRoute extends BaseRoute {
       .route('/meal')
       .post(async (request, response) => {
         return super.tryAction<Meal>(async () => {
-          const user = this.modelBinder.getUser(request.body);
+          const user = super.getAuthenticatedUser(request);
           const meal = this.modelBinder.getMeal(user.id, request.body);
           super.buildResponse(response,
             await this.mealController.createAsync(user.id, meal));
@@ -51,7 +51,7 @@ export default class MealRoute extends BaseRoute {
       .route('/meal/:id')
       .delete(async (request, response) => {
         return super.tryAction<void>(async () => {
-          const user = this.modelBinder.getUser(request.body);
+          const user = super.getAuthenticatedUser(request);
           super.buildResponse(response,
             await this.mealController.deleteAsync(user.id, request.params.id));
         });

@@ -15,9 +15,6 @@ export default class Application {
     @inject(dependencyIdentifiers.AuthorizationMiddleware) authorizationMiddleware: AuthorizationMiddleware,
     @multiInject(dependencyIdentifiers.Routes) routes: Array<IRoute>
   ) {
-
-    console.log('jcb-debug');
-    console.log(authorizationMiddleware);
     this.listener = express();
     this.listener.use(bodyParser.json());
     this.listener.use(cors());
