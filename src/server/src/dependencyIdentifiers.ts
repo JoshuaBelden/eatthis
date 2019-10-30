@@ -8,6 +8,9 @@ export default {
     ModelBinder: Symbol('ModelBinder'),
     GroceryListbuilder: Symbol('GroceryListBuilder'),
 
+    // MIDDLEWARE
+    AuthorizationMiddleware: Symbol('AuthorizationMiddleware'),
+
     // REPOSITORIES
     AccountRepository: Symbol('AccountRepository'),
     DepartmentRepository: Symbol('DepartmentRepository'),

@@ -1,12 +1,15 @@
-import * as express from 'express';
 import { inject, injectable } from 'inversify';
+import * as express from 'express';
+
 import AccountController from '../controllers/accountController';
+import AuthToken from '../models/authToken';
+import BaseRoute from './baseRoute';
 import dependencyIdentifiers from '../dependencyIdentifiers';
 import ModelBinder from '../services/modelBinder';
-import IRoute from './iRoute';
+import User from '../models/user';
 
 @injectable()
-export default class AccountRoute implements IRoute {
+export default class AccountRoute extends BaseRoute {
 
   private accountController: AccountController;
   private modelBinder: ModelBinder;
@@ -14,6 +17,7 @@ export default class AccountRoute implements IRoute {
   constructor(
     @inject(dependencyIdentifiers.AccountController) accountController: AccountController,
     @inject(dependencyIdentifiers.ModelBinder) modelBinder: ModelBinder) {
+    super();
     this.accountController = accountController;
     this.modelBinder = modelBinder;
   }
@@ -23,22 +27,20 @@ export default class AccountRoute implements IRoute {
     app
       .route('/account/register')
       .post(async (request, response) => {
-        const user = this.modelBinder.getUser(request.body);
-        const result = await this.accountController.registerAsync(user);
-
-        return result.success
-          ? response.status(201).send(result.value)
-          : response.status(500).send(result.error);
+        return super.tryAction<User>(async () => {
+          const user = this.modelBinder.getUser(request.body);
+          return super.buildResponse(response,
+            await this.accountController.registerAsync(user));
+        });
       });
 
     app
       .route('/account/login')
       .post(async (request, response) => {
-        const result = await this.accountController.loginAsync(request.body.email, request.body.password);
-
-        return result.success
-          ? response.status(201).send(result.value)
-          : response.status(401).send(result.error);
+        return super.tryAction<AuthToken>(async () => {
+          return super.buildResponse(response,
+            await this.accountController.loginAsync(request.body.email, request.body.password));
+        });
       });
   }
 }

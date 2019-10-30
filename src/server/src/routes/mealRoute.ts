@@ -1,78 +1,60 @@
-import * as express from 'express';
 import { inject, injectable } from 'inversify';
-
-import MealController from '../controllers/mealController';
-import dependencyIdentifiers from '../dependencyIdentifiers';
-import AuthenticationService from '../services/authenticationService';
-import ModelBinder from '../services/modelBinder';
-import IRoute from './iRoute';
+import * as express from 'express';
 import * as Moment from 'moment';
 
+import BaseRoute from './baseRoute';
+import dependencyIdentifiers from '../dependencyIdentifiers';
+import MealController from '../controllers/mealController';
+import ModelBinder from '../services/modelBinder';
+import Meal from '../models/meal';
+
 @injectable()
-export default class MealRoute implements IRoute {
+export default class MealRoute extends BaseRoute {
 
   private mealController: MealController;
-  private authenticationService: AuthenticationService;
   private modelBinder: ModelBinder;
 
   constructor(
     @inject(dependencyIdentifiers.MealController) mealController: MealController,
-    @inject(dependencyIdentifiers.AuthenticationService) authenticationService: AuthenticationService,
     @inject(dependencyIdentifiers.ModelBinder) modelBinder: ModelBinder) {
+    super();
     this.mealController = mealController;
-    this.authenticationService = authenticationService;
     this.modelBinder = modelBinder;
   }
 
   public configure(app: express.Application): void {
 
-    // GET MEALS
     app
       .route('/meals/:startDate/:stopDate')
       .get(async (request, response) => {
-        const authResult = this.authenticationService.getAuthorizedUser(request);
-        if (!authResult.success) {
-          return response.status(401).send(authResult.error);
-        }
-
-        const startDate = Moment(request.params.startDate).toDate();
-        const stopDate = Moment(request.params.stopDate).toDate();
-
-        const result = await this.mealController.getAsync(authResult.value.id, startDate, stopDate);
-        return result.success
-          ? response.status(200).send(result.value)
-          : response.status(500).send(result.error);
+        return super.tryAction<Meal[]>(async () => {
+          const user = this.modelBinder.getUser(request.body);
+          const startDate = Moment(request.params.startDate).toDate();
+          const stopDate = Moment(request.params.stopDate).toDate();
+          super.buildResponse(response,
+            await this.mealController.getAsync(user.id, startDate, stopDate));
+        });
       });
 
-    // MEAL EDITS
     app
       .route('/meal')
       .post(async (request, response) => {
-
-        const authResult = this.authenticationService.getAuthorizedUser(request);
-        if (!authResult.success) {
-          return response.status(401).send(authResult.error);
-        }
-
-        const meal = this.modelBinder.getMeal(authResult.value.id, request.body);
-        const result = await this.mealController.createAsync(authResult.value.id, meal);
-        return result.success
-          ? response.status(201).send(result.value)
-          : response.status(500).send(result.error);
+        return super.tryAction<Meal>(async () => {
+          const user = this.modelBinder.getUser(request.body);
+          const meal = this.modelBinder.getMeal(user.id, request.body);
+          super.buildResponse(response,
+            await this.mealController.createAsync(user.id, meal));
+        });
       });
 
     app
       .route('/meal/:id')
       .delete(async (request, response) => {
-        const authResult = this.authenticationService.getAuthorizedUser(request);
-        if (!authResult.success) {
-          return response.status(401).send(authResult.error);
-        }
-
-        const result = await this.mealController.deleteAsync(authResult.value.id, request.params.id);
-        return result.success
-          ? response.status(204).send(result.value)
-          : response.status(500).send(result.error);
+        return super.tryAction<void>(async () => {
+          const user = this.modelBinder.getUser(request.body);
+          super.buildResponse(response,
+            await this.mealController.deleteAsync(user.id, request.params.id));
+        });
       });
   }
 }

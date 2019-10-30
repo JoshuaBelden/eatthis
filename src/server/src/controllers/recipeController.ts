@@ -1,10 +1,11 @@
 import { inject, injectable } from 'inversify';
-import MealRepository from '../repositories/MealRepository';
-import RecipeRepository from '../repositories/RecipeRepository';
+
 import dependencyIdentifiers from '../dependencyIdentifiers';
-import Recipe from '../models/recipe';
-import Result from '../models/result';
 import IngredientParser from '../services/ingredientParser';
+import MealRepository from '../repositories/MealRepository';
+import Recipe from '../models/recipe';
+import RecipeRepository from '../repositories/RecipeRepository';
+import Result from '../models/result';
 
 @injectable()
 export default class RecipeController {
@@ -23,19 +24,11 @@ export default class RecipeController {
     }
 
     public async getAsync(userId: string, recipeId: string): Promise<Result<Recipe>> {
-        try {
-            return new Result<Recipe>(true, await this.recipeRepository.getAsync(userId, recipeId));
-        } catch (error) {
-            return new Result<Recipe>(false, null, error);
-        }
+        return new Result<Recipe>(true, await this.recipeRepository.getAsync(userId, recipeId));
     }
 
     public async getForUserAsync(userId: string): Promise<Result<Array<Recipe>>> {
-        try {
-            return new Result<Array<Recipe>>(true, await this.recipeRepository.getByUserIdAsync(userId));
-        } catch (error) {
-            return new Result<Array<Recipe>>(false, null, error);
-        }
+        return new Result<Array<Recipe>>(true, await this.recipeRepository.getByUserIdAsync(userId));
     }
 
     public async createAsync(userId: string, recipe: Recipe): Promise<Result<Recipe>> {
@@ -43,29 +36,17 @@ export default class RecipeController {
             return new Result<Recipe>(false, null, 'Recipe title is required.');
         }
 
-        try {
-            recipe.ingredients = recipe.ingredients.map(ingredient => this.ingredientParser.parse(ingredient.input));
-            return new Result<Recipe>(true, await this.recipeRepository.createAsync(userId, recipe));
-        } catch (error) {
-            return new Result<Recipe>(false, null, error);
-        }
+        recipe.ingredients = recipe.ingredients.map(ingredient => this.ingredientParser.parse(ingredient.input));
+        return new Result<Recipe>(true, await this.recipeRepository.createAsync(userId, recipe));
     }
 
     public async updateAsync(userId: string, recipe: Recipe): Promise<Result<Recipe>> {
-        try {
-            recipe.ingredients = recipe.ingredients.map(ingredient => this.ingredientParser.parse(ingredient.input));
-            return new Result<Recipe>(true, await this.recipeRepository.updateAsync(userId, recipe));
-        } catch (error) {
-            return new Result<Recipe>(false, null, error);
-        }
+        recipe.ingredients = recipe.ingredients.map(ingredient => this.ingredientParser.parse(ingredient.input));
+        return new Result<Recipe>(true, await this.recipeRepository.updateAsync(userId, recipe));
     }
 
     public async deleteAsync(userId: string, id: string): Promise<Result<void>> {
-        try {
-            await this.mealRepository.deleteForRecipeAsync(userId, id);
-            return new Result<void>(true, await this.recipeRepository.deleteAsync(userId, id));
-        } catch (error) {
-            return new Result<void>(false, null, error);
-        }
+        await this.mealRepository.deleteForRecipeAsync(userId, id);
+        return new Result<void>(true, await this.recipeRepository.deleteAsync(userId, id));
     }
 }

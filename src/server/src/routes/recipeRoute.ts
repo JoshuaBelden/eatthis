@@ -1,24 +1,23 @@
-import * as express from 'express';
 import { inject, injectable } from 'inversify';
-import RecipeController from '../controllers/recipeController';
+import * as express from 'express';
+
+import BaseRoute from './baseRoute';
 import dependencyIdentifiers from '../dependencyIdentifiers';
-import AuthenticationService from '../services/authenticationService';
 import ModelBinder from '../services/modelBinder';
-import IRoute from './iRoute';
+import RecipeController from '../controllers/recipeController';
+import Recipe from '../models/recipe';
 
 @injectable()
-export default class RecipeRoute implements IRoute {
+export default class RecipeRoute extends BaseRoute {
 
   private recipeController: RecipeController;
-  private authenticationService: AuthenticationService;
   private modelBinder: ModelBinder;
 
   constructor(
     @inject(dependencyIdentifiers.RecipeController) recipeController: RecipeController,
-    @inject(dependencyIdentifiers.AuthenticationService) authenticationService: AuthenticationService,
     @inject(dependencyIdentifiers.ModelBinder) modelBinder: ModelBinder) {
+    super();
     this.recipeController = recipeController;
-    this.authenticationService = authenticationService;
     this.modelBinder = modelBinder;
   }
 
@@ -27,94 +26,71 @@ export default class RecipeRoute implements IRoute {
     app
       .route('/recipe/:recipeId')
       .get(async (request, response) => {
-        const authResult = this.authenticationService.getAuthorizedUser(request);
-        if (!authResult.success) {
-          return response.status(401).send(authResult.error);
-        }
-
-        const result = await this.recipeController.getAsync(authResult.value.id, request.params.recipeId);
-        return result.success
-          ? response.status(200).send(result.value)
-          : response.status(500).send(result.error);
+        return super.tryAction<Recipe>(async () => {
+          const user = super.getAuthenticatedUser(request);
+          return super.buildResponse(response,
+            await this.recipeController.getAsync(user.id, request.params.recipeId));
+        });
       });
 
     app
       .route('/recipes/user')
       .get(async (request, response) => {
-        const authResult = this.authenticationService.getAuthorizedUser(request);
-        if (!authResult.success) {
-          return response.status(401).send(authResult.error);
-        }
-
-        const result = await this.recipeController.getForUserAsync(authResult.value.id);
-        return result.success
-          ? response.status(200).send(result.value)
-          : response.status(500).send(result.error);
+        return super.tryAction<Recipe[]>(async () => {
+          const user = super.getAuthenticatedUser(request);
+          return super.buildResponse(response,
+            await this.recipeController.getForUserAsync(user.id));
+        });
       });
 
     app
       .route('/recipe')
       .post(async (request, response) => {
-
-        const authResult = this.authenticationService.getAuthorizedUser(request);
-        if (!authResult.success) {
-          return response.status(401).send(authResult.error);
-        }
-
-        const recipe = this.modelBinder.getRecipe(authResult.value.id, request.body);
-        const result = await this.recipeController.createAsync(authResult.value.id, recipe);
-        return result.success
-          ? response.status(201).send(result.value)
-          : response.status(500).send(result.error);
+        return super.tryAction<Recipe>(async () => {
+          const user = super.getAuthenticatedUser(request);
+          const recipe = this.modelBinder.getRecipe(user.id, request.body);
+          return super.buildResponse(response,
+            await this.recipeController.createAsync(user.id, recipe));
+        });
       });
 
     app
       .route('/recipes')
       .post(async (request, response) => {
+        return super.tryAction<Recipe>(async () => {
+          const user = super.getAuthenticatedUser(request);
+          const result = [];
+          const recipes = this.modelBinder.getRecipes(user.id, request.body);
 
-        const authResult = this.authenticationService.getAuthorizedUser(request);
-        if (!authResult.success) {
-          return response.status(401).send(authResult.error);
-        }
+          for (const recipe of recipes) {
+            result.push(await this.recipeController.createAsync(user.id, recipe));
+          }
 
-        const result = [];
-        const recipes = this.modelBinder.getRecipes(authResult.value.id, request.body);
-
-        for (const recipe of recipes) {
-          result.push(await this.recipeController.createAsync(authResult.value.id, recipe));
-        }
-        return result.every(r => r.success)
-          ? response.status(201).send(result)
-          : response.status(500).send(result);
+          return result.every(r => r.success)
+            ? response.status(201).send(result)
+            : response.status(500).send(result);
+        });
       });
 
     app
       .route('/recipe')
       .put(async (request, response) => {
-        const authResult = this.authenticationService.getAuthorizedUser(request);
-        if (!authResult.success) {
-          return response.status(401).send(authResult.error);
-        }
-
-        const recipe = this.modelBinder.getRecipe(authResult.value.id, request.body);
-        const result = await this.recipeController.updateAsync(authResult.value.id, recipe);
-        return result.success
-          ? response.status(200).send(result.value)
-          : response.status(500).send(result.error);
+        return super.tryAction<Recipe>(async () => {
+          const user = super.getAuthenticatedUser(request);
+          const recipe = this.modelBinder.getRecipe(user.id, request.body);
+          return super.buildResponse(response,
+            await this.recipeController.updateAsync(user.id, recipe));
+        });
       });
 
     app
       .route('/recipe/:id')
       .delete(async (request, response) => {
-        const authResult = this.authenticationService.getAuthorizedUser(request);
-        if (!authResult.success) {
-          return response.status(401).send(authResult.error);
-        }
-
-        const result = await this.recipeController.deleteAsync(authResult.value.id, request.params.id);
-        return result.success
-          ? response.status(204).send(result.value)
-          : response.status(500).send(result.error);
+        return super.tryAction<void>(async () => {
+          const user = super.getAuthenticatedUser(request);
+          return super.buildResponse(response,
+            await this.recipeController.deleteAsync(user.id, request.params.id));
+        });
       });
   }
 }

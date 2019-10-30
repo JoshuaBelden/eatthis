@@ -6,9 +6,12 @@ import AccountRepository from './repositories/AccountRepository';
 import AccountRoute from './routes/accountRoute';
 import Application from './application';
 import AuthenticationService from './services/authenticationService';
+import AuthorizationMiddleware from './services/authorizationMiddleware';
 import config from './environments/config';
+import DepartmentRepository from './repositories/departmentRepository';
 import dependencyIdentifiers from './dependencyIdentifiers';
 import GroceryController from './controllers/groceryController';
+import GroceryListBuilder from './services/groceryListBuilder';
 import GroceryRepository from './repositories/groceryRepository';
 import GroceryRoute from './routes/groceryRoute';
 import IngredientParser from './services/ingredientParser';
@@ -22,8 +25,6 @@ import RecipeController from './controllers/recipeController';
 import RecipeRepository from './repositories/recipeRepository';
 import RecipeRoute from './routes/recipeRoute';
 import TokenHandler from './services/tokenHandler';
-import DepartmentRepository from './repositories/departmentRepository';
-import GroceryListBuilder from './services/groceryListBuilder';
 
 const container = new Container();
 
@@ -52,6 +53,12 @@ container
 container
     .bind<GroceryListBuilder>(dependencyIdentifiers.GroceryListbuilder)
     .to(GroceryListBuilder);
+
+// REGISTER MIDDLEWARE
+container
+    .bind<AuthorizationMiddleware>(dependencyIdentifiers.AuthorizationMiddleware)
+    .to(AuthorizationMiddleware)
+    .inSingletonScope();
 
 // REGISTER REPOSITORIES
 container

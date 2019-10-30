@@ -1,8 +1,9 @@
 import { injectable, inject } from 'inversify';
-import Ingredient from '../models/ingredient';
-import GroceryItem from '../models/groceryItem';
+
 import DepartmentRepository from '../repositories/departmentRepository';
 import dependencyIdentifiers from '../dependencyIdentifiers';
+import GroceryItem from '../models/groceryItem';
+import Ingredient from '../models/ingredient';
 
 @injectable()
 export default class GroceryListBuilder {
@@ -10,7 +11,7 @@ export default class GroceryListBuilder {
     private departmentRepository: DepartmentRepository;
 
     public constructor(
-        @inject(dependencyIdentifiers.DepartmentRepository)departmentRepository: DepartmentRepository
+        @inject(dependencyIdentifiers.DepartmentRepository) departmentRepository: DepartmentRepository
     ) {
         this.departmentRepository = departmentRepository;
     }

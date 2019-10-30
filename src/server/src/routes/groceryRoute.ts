@@ -1,22 +1,22 @@
-import * as express from 'express';
 import { inject, injectable } from 'inversify';
+import * as express from 'express';
 import * as Moment from 'moment';
-import GroceryController from '../controllers/groceryController';
+
+import BaseRoute from './baseRoute';
 import dependencyIdentifiers from '../dependencyIdentifiers';
-import AuthenticationService from '../services/authenticationService';
-import IRoute from './iRoute';
+import GroceryController from '../controllers/groceryController';
+import Grocery from '../models/grocery';
+import GroceryItem from '../models/groceryItem';
 
 @injectable()
-export default class GroceryRoute implements IRoute {
+export default class GroceryRoute extends BaseRoute {
 
   private groceryController: GroceryController;
-  private authenticationService: AuthenticationService;
 
   constructor(
-    @inject(dependencyIdentifiers.GroceryController) groceryController: GroceryController,
-    @inject(dependencyIdentifiers.AuthenticationService) authenticationService: AuthenticationService) {
+    @inject(dependencyIdentifiers.GroceryController) groceryController: GroceryController) {
+    super();
     this.groceryController = groceryController;
-    this.authenticationService = authenticationService;
   }
 
   public configure(app: express.Application): void {
@@ -24,113 +24,73 @@ export default class GroceryRoute implements IRoute {
     app
       .route('/grocery/:groceryId')
       .get(async (request, response) => {
-        const authResult = this.authenticationService.getAuthorizedUser(request);
-        if (!authResult.success) {
-          return response.status(401).send(authResult.error);
-        }
-
-        const result = await this.groceryController.getAsync(authResult.value.id, request.params.groceryId);
-        return result.success
-          ? response.status(200).send(result.value)
-          : response.status(500).send(result.error);
+        return super.tryAction<Grocery>(async () => {
+          const user = super.getAuthenticatedUser(request);
+          return super.buildResponse(response,
+            await this.groceryController.getAsync(user.id, request.params.groceryId));
+        });
       });
 
     app
       .route('/groceries/user')
       .get(async (request, response) => {
-        const authResult = this.authenticationService.getAuthorizedUser(request);
-        if (!authResult.success) {
-          return response.status(401).send(authResult.error);
-        }
-
-        const result = await this.groceryController.getForUserAsync(authResult.value.id);
-        return result.success
-          ? response.status(200).send(result.value)
-          : response.status(500).send(result.error);
+        return super.tryAction<Grocery[]>(async () => {
+          const user = super.getAuthenticatedUser(request);
+          super.buildResponse(response,
+            await this.groceryController.getForUserAsync(user.id));
+        });
       });
 
     app
       .route('/grocery')
       .post(async (request, response) => {
-
-        const authResult = this.authenticationService.getAuthorizedUser(request);
-        if (!authResult.success) {
-          return response.status(401).send(authResult.error);
-        }
-
-        const startDate = Moment(request.body.startDate).toDate();
-        const stopDate = Moment(request.body.stopDate).toDate();
-
-        const result = await this.groceryController.createAsync(authResult.value.id, startDate, stopDate);
-        return result.success
-          ? response.status(201).send(result.value)
-          : response.status(500).send(result.error);
+        return super.tryAction<Grocery>(async () => {
+          const user = super.getAuthenticatedUser(request);
+          const startDate = Moment(request.body.startDate).toDate();
+          const stopDate = Moment(request.body.stopDate).toDate();
+          return super.buildResponse(response,
+            await this.groceryController.createAsync(user.id, startDate, stopDate));
+        });
       });
 
     app
       .route('/grocery/:id')
       .delete(async (request, response) => {
-        const authResult = this.authenticationService.getAuthorizedUser(request);
-        if (!authResult.success) {
-          return response.status(401).send(authResult.error);
-        }
-
-        const result = await this.groceryController.deleteAsync(authResult.value.id, request.params.id);
-        return result.success
-          ? response.status(204).send(result.value)
-          : response.status(500).send(result.error);
+        return super.tryAction<void>(async () => {
+          const user = super.getAuthenticatedUser(request);
+          return super.buildResponse(response,
+            await this.groceryController.deleteAsync(user.id, request.params.id));
+        });
       });
 
     app
       .route('/grocery/:groceryId/')
       .post(async (request, response) => {
-        const authResult = this.authenticationService.getAuthorizedUser(request);
-        if (!authResult.success) {
-          return response.status(401).send(authResult.error);
-        }
-
-        const result = await this.groceryController.createGroceryItemAsync(
-          authResult.value.id,
-           request.params.groceryId,
-           request.body.line);
-
-        return result.success
-          ? response.status(201).send(result.value)
-          : response.status(500).send(result.error);
+        return super.tryAction<GroceryItem>(async () => {
+          const user = super.getAuthenticatedUser(request);
+          return super.buildResponse(response,
+            await this.groceryController.createGroceryItemAsync(user.id, request.params.groceryId, request.body.line));
+        });
       });
 
     app
       .route('/grocery/:groceryId/')
       .put(async (request, response) => {
-        const authResult = this.authenticationService.getAuthorizedUser(request);
-        if (!authResult.success) {
-          return response.status(401).send(authResult.error);
-        }
-
-        const groceryItem = request.body;
-
-        const result = await this.groceryController.updateGroceryItemAsync(authResult.value.id, request.params.groceryId, groceryItem);
-        return result.success
-          ? response.status(201).send(result.value)
-          : response.status(500).send(result.error);
+        return super.tryAction<GroceryItem>(async () => {
+          const user = super.getAuthenticatedUser(request);
+          super.buildResponse(response,
+            await this.groceryController.updateGroceryItemAsync(user.id, request.params.groceryId, request.body));
+        });
       });
 
     app
       .route('/grocery/:groceryId/:groceryItemId')
       .delete(async (request, response) => {
-        const authResult = this.authenticationService.getAuthorizedUser(request);
-        if (!authResult.success) {
-          return response.status(401).send(authResult.error);
-        }
-
-        const result = await this.groceryController.deleteGroceryItemAsync(
-          authResult.value.id,
-          request.params.groceryId,
-          request.params.groceryItemId);
-
-        return result.success
-          ? response.status(204).send(result.value)
-          : response.status(500).send(result.error);
+        return super.tryAction<void>(async () => {
+          const user = super.getAuthenticatedUser(request);
+          super.buildResponse(response,
+            await this.groceryController.deleteGroceryItemAsync(user.id, request.params.groceryId, request.params.groceryItemId));
+        });
       });
   }
 }
