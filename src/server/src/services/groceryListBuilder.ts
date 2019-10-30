@@ -23,7 +23,7 @@ export default class GroceryListBuilder {
             if (!groceryItems.has(ingredient.name)) {
                 groceryItems.set(ingredient.name, {
                     id: '',
-                    department: this.departmentRepository.getDepartment(userId, ingredient.name),
+                    department: this.departmentRepository.getDepartment(ingredient.name),
                     ingredient: ingredient.name,
                     unit: ingredient.unitOfMeasure,
                     quantity: ingredient.quantity,

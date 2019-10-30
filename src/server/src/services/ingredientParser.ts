@@ -1,7 +1,7 @@
 import Ingredient from '../models/ingredient';
 import { injectable } from 'inversify';
 
-import { foodWords } from '../data/foodItems';
+import { foodData } from '../data/foodData';
 import { foodModifiers } from '../data/foodModifiers';
 import { foodPreparations } from '../data/foodPreparations';
 
@@ -33,11 +33,11 @@ export default class IngredientParser {
 
         const value = input.toLowerCase();
 
-        const name = this.parseForWholeWordMatch(foodWords, value);
+        const name = this.parseForFoodItemMatch(value);
         const quantity = this.parseQuantity(value);
         const unitOfMeasure = this.parseUnit(value);
-        const modifier = this.parseForWholeWordMatch(foodModifiers, value);
-        const preparation = this.parseForWholeWordMatch(foodPreparations, value);
+        const modifier = this.parseForExpressionMatch(foodModifiers, value);
+        const preparation = this.parseForExpressionMatch(foodPreparations, value);
 
         return {
             input,
@@ -49,7 +49,20 @@ export default class IngredientParser {
         };
     }
 
-    private parseForWholeWordMatch(expressions: string[], input: string): string {
+    private parseForFoodItemMatch(input: string): string {
+        for (const foodItem of foodData) {
+            const match = this.match(`\\b(${foodItem.name})[s]*\\b`, input);
+            if (!match) {
+                continue;
+            }
+
+            return match[this.expressionIncludesCapture(foodItem.name) ? 2 : 1];
+        }
+
+        return null;
+    }
+
+    private parseForExpressionMatch(expressions: string[], input: string): string {
         for (const expression of expressions) {
             const match = this.match(`\\b(${expression})[s]*\\b`, input);
             if (!match) {

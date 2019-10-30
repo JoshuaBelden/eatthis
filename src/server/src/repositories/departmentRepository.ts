@@ -1,44 +1,24 @@
 import { injectable } from 'inversify';
-import { DepartmentMap, FoodItemLocation } from '../models/departmentMap';
+import { foodData } from '../data/foodData';
 
 @injectable()
 export default class DepartmentRepository {
-    private departmentMaps: DepartmentMap[] = [
-        {
-            userId: '',
-            foodItemLocations: [{
-                department: 'baking',
-                foodItem: 'salt'
-            },
-            {
-                department: 'baking',
-                foodItem: 'pepper'
-            },
-            {
-                department: 'baking',
-                foodItem: 'flour'
-            },
-            {
-                department: 'dairy',
-                foodItem: 'butter'
-            },
-            {
-                department: 'dairy',
-                foodItem: 'milk'
-            },
-            {
-                department: 'boxed/canned',
-                foodItem: 'oil'
-            }]
-        }
-    ];
 
-    public getDepartment(userId: string, foodItem: string): string {
-        const maps = this.departmentMaps.filter(map => map.userId === '' || map.userId === userId);
-        const locations = ([] as FoodItemLocation[]).concat(...maps.map(map => map.foodItemLocations));
-        const location = locations.find(l => l.foodItem === foodItem);
-        return location
-            ? location.department
-            : 'unknown';
+    public getDepartment(input: string): string {
+        for (const foodItem of foodData) {
+            const match = this.match(`\\b(${foodItem.name})[s]*\\b`, input);
+            if (!match) {
+                continue;
+            }
+
+            return foodItem.department;
+        }
+
+        return 'unknown';
+    }
+
+    private match(expression: string, value: string) {
+        const re = new RegExp(expression, 'i');
+        return re.exec(value);
     }
 }
