@@ -36,8 +36,8 @@ export class GroceryService {
     await this.http.delete(`${environment.apiEndpoint}/grocery/${id}`).toPromise();
   }
 
-  async createGroceryItemAsync(groceryId: string, line: string): Promise<GroceryItem> {
-    const result = await this.http.post<GroceryItem>(`${environment.apiEndpoint}/grocery/${groceryId}`, {
+  async createGroceryItemAsync(groceryId: string, line: string): Promise<Grocery> {
+    const result = await this.http.post<Grocery>(`${environment.apiEndpoint}/grocery/${groceryId}`, {
       line
     }).toPromise();
 

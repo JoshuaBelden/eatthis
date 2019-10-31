@@ -10,6 +10,7 @@ import Meal from '../models/meal';
 import MealRepository from '../repositories/MealRepository';
 import RecipeRepository from '../repositories/RecipeRepository';
 import Result from '../models/result';
+import IngredientParser from '../services/ingredientParser';
 
 @injectable()
 export default class GroceryController {
@@ -18,16 +19,19 @@ export default class GroceryController {
     private mealRepository: MealRepository;
     private recipeRepository: RecipeRepository;
     private groceryListBuilder: GroceryListBuilder;
+    private ingredientParser: IngredientParser;
 
     constructor(
         @inject(dependencyIdentifiers.GroceryRepository) groceryRepository: GroceryRepository,
         @inject(dependencyIdentifiers.MealRepository) mealRepository: MealRepository,
         @inject(dependencyIdentifiers.RecipeRepository) recipeRepository: RecipeRepository,
-        @inject(dependencyIdentifiers.GroceryListbuilder) groceryListBuilder: GroceryListBuilder) {
+        @inject(dependencyIdentifiers.GroceryListbuilder) groceryListBuilder: GroceryListBuilder,
+        @inject(dependencyIdentifiers.IngredientParser) ingredientParser: IngredientParser) {
         this.groceryRepository = groceryRepository;
         this.mealRepository = mealRepository;
         this.recipeRepository = recipeRepository;
         this.groceryListBuilder = groceryListBuilder;
+        this.ingredientParser = ingredientParser;
     }
 
     public async getAsync(userId: string, groceryId: string): Promise<Result<Grocery>> {
@@ -54,27 +58,29 @@ export default class GroceryController {
         return new Result<void>(true, await this.groceryRepository.deleteAsync(userId, id));
     }
 
-    public async createGroceryItemAsync(userId: string, groceryId: string, line: string): Promise<Result<GroceryItem>> {
+    public async createGroceryItemAsync(userId: string, groceryId: string, input: string): Promise<Result<Grocery>> {
         const grocery = await this.groceryRepository.getAsync(userId, groceryId);
-        const groceryItem = {
-            id: '',
-            department: '',
-            ingredient: line,
-            quantity: 1,
-            unit: '',
-            picked: false
-        };
-        return new Result<GroceryItem>(true, await this.groceryRepository.createGroceryItemAsync(userId, grocery, groceryItem));
+        const ingredient = this.ingredientParser.parse(input);
+        const groceryItems = await this.groceryListBuilder.combineIngredients(userId, [ingredient]);
+        grocery.items.push(...groceryItems);
+        grocery.items = this.groceryListBuilder.combineGroceryItems(grocery.items);
+
+        const update = await this.groceryRepository.updateAsync(userId, grocery);
+
+        return new Result<Grocery>(true, update);
     }
 
-    public async updateGroceryItemAsync(userId: string, groceryId: string, groceryItem: GroceryItem): Promise<Result<GroceryItem>> {
+    public async updateGroceryItemAsync(userId: string, groceryId: string, groceryItem: GroceryItem): Promise<Result<Grocery>> {
         const grocery = await this.groceryRepository.getAsync(userId, groceryId);
-        return new Result<GroceryItem>(true, await this.groceryRepository.updateGroceryItemAsync(userId, grocery, groceryItem));
+        grocery.items = grocery.items.filter(gi => gi.id !== groceryItem.id);
+        grocery.items.push(groceryItem);
+        return new Result(true, await this.groceryRepository.updateAsync(userId, grocery));
     }
 
-    public async deleteGroceryItemAsync(userId: string, groceryId: string, groceryItemId: string): Promise<Result<void>> {
+    public async deleteGroceryItemAsync(userId: string, groceryId: string, groceryItemId: string): Promise<Result<Grocery>> {
         const grocery = await this.groceryRepository.getAsync(userId, groceryId);
-        return new Result<void>(true, await this.groceryRepository.deleteGroceryItemAsync(userId, grocery, groceryItemId));
+        grocery.items = grocery.items.filter(groceryItem => groceryItem.id !== groceryItemId);
+        return new Result(true, await this.groceryRepository.updateAsync(userId, grocery));
     }
 
     private async generateGroceryItems(userId: string, meals: Array<Meal>): Promise<Array<GroceryItem>> {

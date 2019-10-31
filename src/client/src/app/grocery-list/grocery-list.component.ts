@@ -35,8 +35,8 @@ export class GroceryListComponent implements OnInit {
   }
 
   async onCreateGroceryItem(groceryId: string, line: string) {
-    const groceryItem = await this.groceryService.createGroceryItemAsync(groceryId, line);
-    this.selectedGrocery.items.push(groceryItem);
+    const grocery = await this.groceryService.createGroceryItemAsync(groceryId, line);
+    this.onSelectGrocery(grocery);
   }
 
   async onPickGroceryItem(groceryId: string, groceryItem: GroceryItem, picked: boolean) {
@@ -46,7 +46,8 @@ export class GroceryListComponent implements OnInit {
 
   async onDeleteGroceryItem(groceryId: string, groceryItemId: string) {
     await this.groceryService.deleteGroceryItemAsync(groceryId, groceryItemId);
-    this.selectedGrocery.items = this.selectedGrocery.items.filter(groceryItem => groceryItem.id !== groceryItemId);
+    this.selectedGrocery.items = this.selectedGrocery.items.filter(item => item.id !== groceryItemId);
+    this.onSelectGrocery(this.selectedGrocery);
   }
 
   getGroceryItems(department: string) {

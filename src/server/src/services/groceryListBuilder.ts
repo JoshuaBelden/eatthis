@@ -36,4 +36,16 @@ export default class GroceryListBuilder {
 
         return Array.from(groceryItems.values());
     }
+
+    public combineGroceryItems(groceryItems: GroceryItem[]) {
+        const retVal: Map<string, GroceryItem> = new Map<string, GroceryItem>();
+        for (const groceryItem of groceryItems) {
+            if (!retVal.has(groceryItem.ingredient)) {
+                retVal.set(groceryItem.ingredient, groceryItem);
+            } else {
+                retVal.get(groceryItem.ingredient).quantity += groceryItem.quantity;
+            }
+        }
+        return Array.from(retVal.values());
+    }
 }
