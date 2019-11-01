@@ -16,7 +16,6 @@ export const foodPreparations = [
     'minced',
     'rinsed',
     'sliced',
-    'sliced',
     'peeled',
     'minced',
     'ground',
