@@ -2,9 +2,9 @@ import { inject, injectable } from 'inversify';
 
 import dependencyIdentifiers from '../dependencyIdentifiers';
 import IngredientParser from '../services/ingredientParser';
-import MealRepository from '../repositories/MealRepository';
+import MealRepository from '../repositories/mealRepository';
 import Recipe from '../models/recipe';
-import RecipeRepository from '../repositories/RecipeRepository';
+import RecipeRepository from '../repositories/recipeRepository';
 import Result from '../models/result';
 
 @injectable()

@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 
-import AccountRepository from '../repositories/AccountRepository';
+import AccountRepository from '../repositories/accountRepository';
 import AuthenticationService from '../services/authenticationService';
 import AuthToken from '../models/authToken';
 import dependencyIdentifiers from '../dependencyIdentifiers';

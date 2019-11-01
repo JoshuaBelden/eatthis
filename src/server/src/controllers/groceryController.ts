@@ -7,8 +7,8 @@ import GroceryListBuilder from '../services/groceryListBuilder';
 import GroceryRepository from '../repositories/groceryRepository';
 import Ingredient from '../models/ingredient';
 import Meal from '../models/meal';
-import MealRepository from '../repositories/MealRepository';
-import RecipeRepository from '../repositories/RecipeRepository';
+import MealRepository from '../repositories/mealRepository';
+import RecipeRepository from '../repositories/recipeRepository';
 import Result from '../models/result';
 import IngredientParser from '../services/ingredientParser';
 

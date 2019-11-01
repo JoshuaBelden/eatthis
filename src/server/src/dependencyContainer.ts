@@ -2,7 +2,7 @@ import { Container } from 'inversify';
 import 'reflect-metadata';
 
 import AccountController from './controllers/accountController';
-import AccountRepository from './repositories/AccountRepository';
+import AccountRepository from './repositories/accountRepository';
 import AccountRoute from './routes/accountRoute';
 import Application from './application';
 import AuthenticationService from './services/authenticationService';
@@ -17,7 +17,7 @@ import GroceryRoute from './routes/groceryRoute';
 import IngredientParser from './services/ingredientParser';
 import IRoute from './routes/iRoute';
 import MealController from './controllers/mealController';
-import MealRepository from './repositories/MealRepository';
+import MealRepository from './repositories/mealRepository';
 import MealRoute from './routes/mealRoute';
 import ModelBinder from './services/modelBinder';
 import RandomNumberGenerator from './services/randomNumberGenerator';
