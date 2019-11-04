@@ -1,4 +1,7 @@
-export default {
+export const config = {
+    service: {
+        port: 2407
+    },
     database: {
         name: 'eatthis'
     },

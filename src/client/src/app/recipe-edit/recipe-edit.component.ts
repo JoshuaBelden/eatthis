@@ -56,8 +56,7 @@ export class RecipeEditComponent implements OnInit {
         description: recipeData.description,
         imageUrl: recipeData.imageUrl,
         preparation: recipeData.preparation,
-        ingredients: this.ParseIngredientString(recipeData.ingredients),
-        yield: ''
+        ingredients: this.ParseIngredientString(recipeData.ingredients)
       };
 
       if (recipe.id) {

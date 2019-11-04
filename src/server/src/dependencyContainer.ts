@@ -7,7 +7,7 @@ import AccountRoute from './routes/accountRoute';
 import Application from './application';
 import AuthenticationService from './services/authenticationService';
 import AuthorizationMiddleware from './services/authorizationMiddleware';
-import config from './environments/config';
+import config from './environment/environment';
 import DepartmentRepository from './repositories/departmentRepository';
 import dependencyIdentifiers from './dependencyIdentifiers';
 import GroceryController from './controllers/groceryController';

@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import * as Moment from 'moment';
 import * as Mongo from 'mongodb';
 import serviceIdentity from '../dependencyIdentifiers';
-import config from '../environments/config';
+import config from '../environment/environment';
 import Meal from '../models/meal';
 import RandomNumberGenerator from '../services/randomNumberGenerator';
 

@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import * as Mongo from 'mongodb';
 import dependencyIdentifiers from '../dependencyIdentifiers';
-import config from '../environments/config';
+import config from '../environment/environment';
 import User from '../models/user';
 import RandomNumberGenerator from '../services/randomNumberGenerator';
 

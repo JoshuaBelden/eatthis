@@ -70,3 +70,12 @@ Repositories are dedicated to updating documents and provide the following behav
 - Record identifiers are always generated at this level.
 
 Child operations on documents should be handled at the controller level and simply update documents.
+
+#### Running on the server
+
+```
+pm2 start npm --name server -- start
+
+pm2 start npm --name client -- start
+ng serve --host=157.245.169.236 --port=80
+```

@@ -7,6 +7,5 @@ export interface Recipe {
     description: string;
     imageUrl: string;
     preparation: string;
-    yield: string;
     ingredients: Array<Ingredient>;
 }
