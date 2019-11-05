@@ -8,7 +8,7 @@ export default class AuthorizationMiddleware {
 
     static AuthenticatedUserKey = 'AuthenticatedUser';
 
-    private pathIgnores = ['/account/login', '/account/register'];
+    private pathIgnores = ['/api/account/login', '/api/account/register'];
     private authenticationService: AuthenticationService;
 
     public constructor(

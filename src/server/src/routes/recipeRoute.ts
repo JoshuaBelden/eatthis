@@ -24,7 +24,7 @@ export default class RecipeRoute extends BaseRoute {
   public configure(app: express.Application): void {
 
     app
-      .route('/recipe/:recipeId')
+      .route('/api/recipe/:recipeId')
       .get(async (request, response) => {
         return super.tryAction<Recipe>(async () => {
           const user = super.getAuthenticatedUser(request);
@@ -34,7 +34,7 @@ export default class RecipeRoute extends BaseRoute {
       });
 
     app
-      .route('/recipes/user')
+      .route('/api/recipes/user')
       .get(async (request, response) => {
         return super.tryAction<Recipe[]>(async () => {
           const user = super.getAuthenticatedUser(request);
@@ -44,7 +44,7 @@ export default class RecipeRoute extends BaseRoute {
       });
 
     app
-      .route('/recipe')
+      .route('/api/recipe')
       .post(async (request, response) => {
         return super.tryAction<Recipe>(async () => {
           const user = super.getAuthenticatedUser(request);
@@ -55,7 +55,7 @@ export default class RecipeRoute extends BaseRoute {
       });
 
     app
-      .route('/recipes')
+      .route('/api/recipes')
       .post(async (request, response) => {
         return super.tryAction<Recipe>(async () => {
           const user = super.getAuthenticatedUser(request);
@@ -73,7 +73,7 @@ export default class RecipeRoute extends BaseRoute {
       });
 
     app
-      .route('/recipe')
+      .route('/api/recipe')
       .put(async (request, response) => {
         return super.tryAction<Recipe>(async () => {
           const user = super.getAuthenticatedUser(request);
@@ -84,7 +84,7 @@ export default class RecipeRoute extends BaseRoute {
       });
 
     app
-      .route('/recipe/:id')
+      .route('/api/recipe/:id')
       .delete(async (request, response) => {
         return super.tryAction<void>(async () => {
           const user = super.getAuthenticatedUser(request);

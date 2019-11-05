@@ -25,7 +25,7 @@ export default class MealRoute extends BaseRoute {
   public configure(app: express.Application): void {
 
     app
-      .route('/meals/:startDate/:stopDate')
+      .route('/api/meals/:startDate/:stopDate')
       .get(async (request, response) => {
         return super.tryAction<Meal[]>(async () => {
           const user = super.getAuthenticatedUser(request);
@@ -37,7 +37,7 @@ export default class MealRoute extends BaseRoute {
       });
 
     app
-      .route('/meal')
+      .route('/api/meal')
       .post(async (request, response) => {
         return super.tryAction<Meal>(async () => {
           const user = super.getAuthenticatedUser(request);
@@ -48,7 +48,7 @@ export default class MealRoute extends BaseRoute {
       });
 
     app
-      .route('/meal/:id')
+      .route('/api/meal/:id')
       .delete(async (request, response) => {
         return super.tryAction<void>(async () => {
           const user = super.getAuthenticatedUser(request);

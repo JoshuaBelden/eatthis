@@ -22,7 +22,7 @@ export default class GroceryRoute extends BaseRoute {
   public configure(app: express.Application): void {
 
     app
-      .route('/grocery/:groceryId')
+      .route('/api/grocery/:groceryId')
       .get(async (request, response) => {
         return super.tryAction<Grocery>(async () => {
           const user = super.getAuthenticatedUser(request);
@@ -32,7 +32,7 @@ export default class GroceryRoute extends BaseRoute {
       });
 
     app
-      .route('/groceries/user')
+      .route('/api/groceries/user')
       .get(async (request, response) => {
         return super.tryAction<Grocery[]>(async () => {
           const user = super.getAuthenticatedUser(request);
@@ -42,7 +42,7 @@ export default class GroceryRoute extends BaseRoute {
       });
 
     app
-      .route('/grocery')
+      .route('/api/grocery')
       .post(async (request, response) => {
         return super.tryAction<Grocery>(async () => {
           const user = super.getAuthenticatedUser(request);
@@ -54,7 +54,7 @@ export default class GroceryRoute extends BaseRoute {
       });
 
     app
-      .route('/grocery/:id')
+      .route('/api/grocery/:id')
       .delete(async (request, response) => {
         return super.tryAction<void>(async () => {
           const user = super.getAuthenticatedUser(request);
@@ -64,7 +64,7 @@ export default class GroceryRoute extends BaseRoute {
       });
 
     app
-      .route('/grocery/:groceryId/')
+      .route('/api/grocery/:groceryId/')
       .post(async (request, response) => {
         return super.tryAction<GroceryItem>(async () => {
           const user = super.getAuthenticatedUser(request);
@@ -74,7 +74,7 @@ export default class GroceryRoute extends BaseRoute {
       });
 
     app
-      .route('/grocery/:groceryId/')
+      .route('/api/grocery/:groceryId/')
       .put(async (request, response) => {
         return super.tryAction<GroceryItem>(async () => {
           const user = super.getAuthenticatedUser(request);
@@ -84,7 +84,7 @@ export default class GroceryRoute extends BaseRoute {
       });
 
     app
-      .route('/grocery/:groceryId/:groceryItemId')
+      .route('/api/grocery/:groceryId/:groceryItemId')
       .delete(async (request, response) => {
         return super.tryAction<void>(async () => {
           const user = super.getAuthenticatedUser(request);

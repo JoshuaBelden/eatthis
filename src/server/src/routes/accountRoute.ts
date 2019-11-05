@@ -25,7 +25,7 @@ export default class AccountRoute extends BaseRoute {
   public configure(app: express.Application): void {
 
     app
-      .route('/account/register')
+      .route('/api/account/register')
       .post(async (request, response) => {
         return super.tryAction<User>(async () => {
           const user = this.modelBinder.getUser(request.body);
@@ -35,7 +35,7 @@ export default class AccountRoute extends BaseRoute {
       });
 
     app
-      .route('/account/login')
+      .route('/api/account/login')
       .post(async (request, response) => {
         return super.tryAction<AuthToken>(async () => {
           return super.buildResponse(response,
