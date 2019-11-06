@@ -2,6 +2,8 @@
 
 Eat This! is a social recipe application that focuses on sharing recipes with friends and streamlining the grocery shopping process.
 
+Now available at https://www.eatthis.app.
+
 ## Getting Started
 
 ### Install Mongo
