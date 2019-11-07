@@ -11,27 +11,31 @@ import MealRepository from '../repositories/mealRepository';
 import RecipeRepository from '../repositories/recipeRepository';
 import Result from '../models/result';
 import IngredientParser from '../services/ingredientParser';
+import CommonItemsRepository from '../repositories/commonItemsRepository';
 
 @injectable()
 export default class GroceryController {
 
+    private commonItemsRepository: CommonItemsRepository;
+    private groceryListBuilder: GroceryListBuilder;
     private groceryRepository: GroceryRepository;
+    private ingredientParser: IngredientParser;
     private mealRepository: MealRepository;
     private recipeRepository: RecipeRepository;
-    private groceryListBuilder: GroceryListBuilder;
-    private ingredientParser: IngredientParser;
 
     constructor(
-        @inject(dependencyIdentifiers.GroceryRepository) groceryRepository: GroceryRepository,
-        @inject(dependencyIdentifiers.MealRepository) mealRepository: MealRepository,
-        @inject(dependencyIdentifiers.RecipeRepository) recipeRepository: RecipeRepository,
+        @inject(dependencyIdentifiers.CommonItemsRepository) commonItemsRepository: CommonItemsRepository,
         @inject(dependencyIdentifiers.GroceryListbuilder) groceryListBuilder: GroceryListBuilder,
-        @inject(dependencyIdentifiers.IngredientParser) ingredientParser: IngredientParser) {
+        @inject(dependencyIdentifiers.GroceryRepository) groceryRepository: GroceryRepository,
+        @inject(dependencyIdentifiers.IngredientParser) ingredientParser: IngredientParser,
+        @inject(dependencyIdentifiers.MealRepository) mealRepository: MealRepository,
+        @inject(dependencyIdentifiers.RecipeRepository) recipeRepository: RecipeRepository) {
+        this.commonItemsRepository = commonItemsRepository;
+        this.groceryListBuilder = groceryListBuilder;
         this.groceryRepository = groceryRepository;
+        this.ingredientParser = ingredientParser;
         this.mealRepository = mealRepository;
         this.recipeRepository = recipeRepository;
-        this.groceryListBuilder = groceryListBuilder;
-        this.ingredientParser = ingredientParser;
     }
 
     public async getAsync(userId: string, groceryId: string): Promise<Result<Grocery>> {
@@ -44,7 +48,9 @@ export default class GroceryController {
 
     public async createAsync(userId: string, startDate: Date, stopDate: Date): Promise<Result<Grocery>> {
         const meals = await this.mealRepository.getAsync(userId, startDate, stopDate);
-        const groceryItems = await this.generateGroceryItems(userId, meals);
+        const commonItems = await this.commonItemsRepository.getByUserIdAsync(userId);
+        const commonItemIngredients = commonItems.items.map(item => this.ingredientParser.parse(item));
+        const groceryItems = await this.generateGroceryItems(userId, meals, commonItemIngredients);
         const grocery = new Grocery();
         grocery.userId = userId;
         grocery.startDate = startDate;
@@ -83,14 +89,16 @@ export default class GroceryController {
         return new Result(true, await this.groceryRepository.updateAsync(userId, grocery));
     }
 
-    private async generateGroceryItems(userId: string, meals: Array<Meal>): Promise<Array<GroceryItem>> {
-        const ingredients: Array<Ingredient> = [];
+    private async generateGroceryItems(userId: string, meals: Array<Meal>, commonItems: Ingredient[]): Promise<Array<GroceryItem>> {
+        const ingredients: Ingredient[] = [];
         for (const meal of meals) {
             const recipe = await this.recipeRepository.getAsync(userId, meal.recipeId);
             for (const ingredient of recipe.ingredients) {
                 ingredients.push(ingredient);
             }
         }
+
+        ingredients.push(... commonItems);
 
         return this.groceryListBuilder.combineIngredients(userId, ingredients);
     }

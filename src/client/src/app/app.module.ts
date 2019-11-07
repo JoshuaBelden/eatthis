@@ -36,23 +36,26 @@ import { RecipeService } from './services/recipe.service';
 import { RegisterComponent } from './register/register.component';
 import { UnauthenticatedGuard } from './guards/unauthenticated.guard';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { SettingsCommonItemsComponent } from './settings-common-items/settings-common-items.component';
+import { CommonItemsService } from './services/comonItems.service';
 
 @NgModule({
   declarations: [
     AccountComponent,
     AppComponent,
     DashboardComponent,
+    GroceryListComponent,
     LoginComponent,
     LogoutComponent,
-    NavigationComponent,
+    MealPlannerComponent,
     MomentPipe,
-    RecipeListComponent,
-    RegisterComponent,
+    NavigationComponent,
     RecipeDetailComponent,
     RecipeEditComponent,
+    RecipeListComponent,
+    RegisterComponent,
+    SettingsCommonItemsComponent,
     WelcomeComponent,
-    MealPlannerComponent,
-    GroceryListComponent,
   ],
   imports: [
     AngularFontAwesomeModule,
@@ -77,6 +80,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
   },
     AuthenticatedGuard,
     AuthService,
+    CommonItemsService,
     GroceryService,
     MealService,
     RecipeService,

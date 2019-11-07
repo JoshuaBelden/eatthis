@@ -1,0 +1,32 @@
+<h3>
+    Settings
+    <small class="text-muted">Common Grocery Items</small>
+</h3>
+<p class="lead">
+    Configure the items that you always add to your grocery list.
+</p>
+<form [formGroup]="commonItemsForm" (validSubmit)="onSubmit(commonItemsForm.value)" novalidate>
+    <input type="hidden" id="id" />
+
+    <div *ngIf="result" class="alert alert-success" role="alert">
+        Update successful!
+    </div>
+
+    <div class="form-group" [customErrorMessages]="customErrorMessages">
+        <label for="items">
+            Items
+        </label>
+        <textarea id="items" rows="10" class="form-control" formControlName="items"></textarea>
+        <p>
+            Add one item per line
+        </p>
+    </div>
+
+    <button class="btn btn-primary m-1" type="submit">
+        <fa name="save"></fa> Save
+    </button>
+
+    <a href="#" class="btn btn-light m-1" [routerLink]="['/dashboard']">Done</a>
+</form>
+
+<div class="m-1">&nbsp;</div>

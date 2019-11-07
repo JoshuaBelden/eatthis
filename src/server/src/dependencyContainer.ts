@@ -25,6 +25,9 @@ import RecipeController from './controllers/recipeController';
 import RecipeRepository from './repositories/recipeRepository';
 import RecipeRoute from './routes/recipeRoute';
 import TokenHandler from './services/tokenHandler';
+import CommonItemsRepository from './repositories/commonItemsRepository';
+import CommonItemsController from './controllers/commonItemsController';
+import CommonItemsRoute from './routes/commonItemsRoute';
 
 const container = new Container();
 
@@ -81,6 +84,10 @@ container
     .bind<GroceryRepository>(dependencyIdentifiers.GroceryRepository)
     .to(GroceryRepository);
 
+container
+    .bind<CommonItemsRepository>(dependencyIdentifiers.CommonItemsRepository)
+    .to(CommonItemsRepository);
+
 // REGISTER CONTROLLERS
 container
     .bind<AccountController>(dependencyIdentifiers.AccountController)
@@ -98,6 +105,10 @@ container
     .bind<GroceryController>(dependencyIdentifiers.GroceryController)
     .to(GroceryController);
 
+container
+    .bind<CommonItemsController>(dependencyIdentifiers.CommonItemsController)
+    .to(CommonItemsController);
+
 // REGISTER ROUTES
 container
     .bind<IRoute>(dependencyIdentifiers.Routes)
@@ -114,6 +125,10 @@ container
 container
     .bind<IRoute>(dependencyIdentifiers.Routes)
     .to(GroceryRoute);
+
+container
+    .bind<IRoute>(dependencyIdentifiers.Routes)
+    .to(CommonItemsRoute);
 
 // REGISTER APPLICATION
 container

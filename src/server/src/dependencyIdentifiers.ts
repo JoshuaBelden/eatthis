@@ -17,12 +17,14 @@ export default {
     RecipeRepository: Symbol('RecipeRepository'),
     MealRepository: Symbol('MealRepository'),
     GroceryRepository: Symbol('GroceryRepository'),
+    CommonItemsRepository: Symbol('CommonItemsRepository'),
 
     // CONTROLLERS
     AccountController: Symbol('AccountController'),
     RecipeController: Symbol('RecipeController'),
     MealController: Symbol('MealController'),
     GroceryController: Symbol('GroceryController'),
+    CommonItemsController: Symbol('CommonItemsController'),
 
     // ROUTES
     Routes: Symbol('Routes'),
