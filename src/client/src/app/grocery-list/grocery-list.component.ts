@@ -15,6 +15,7 @@ export class GroceryListComponent implements OnInit {
   selectedGrocery: Grocery;
   departments: string[];
   groupedItems: _.Dictionary<GroceryItem[]>;
+  showPickedItems = false;
 
   constructor(private groceryService: GroceryService) { }
 
@@ -52,5 +53,9 @@ export class GroceryListComponent implements OnInit {
 
   getGroceryItems(department: string) {
     return _.get(this.groupedItems, department);
+  }
+
+  toggleShowPicked() {
+    this.showPickedItems = !this.showPickedItems;
   }
 }
