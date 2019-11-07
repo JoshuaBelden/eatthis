@@ -11,27 +11,35 @@
     </div>
 
     <div *ngIf="selectedGrocery" class="grocery-edit-container col-md-9">
-
         <div class="d-flex flex-wrap justify-content-between">
             <div *ngFor="let department of departments" class="m-2">
                 <h5>{{department}}</h5>
                 <div *ngFor="let groceryItem of getGroceryItems(department)">
-                    <input #picked type="checkbox" [checked]="groceryItem.picked" (change)="onPickGroceryItem(selectedGrocery.id, groceryItem, picked.checked)">
-                    <span [class]="groceryItem.onHandItem ? 'font-weight-light text-info' : ''">
-                        {{groceryItem.quantity}} {{groceryItem.unit}} {{groceryItem.ingredient}}
-                    </span>
-                    <fa name="trash" class="text-danger pointer" (click)="onDeleteGroceryItem(selectedGrocery.id, groceryItem.id)"></fa>
+                    <div *ngIf="showPickedItems || !groceryItem.picked">
+                        <input #picked type="checkbox" [checked]="groceryItem.picked" (change)="onPickGroceryItem(selectedGrocery.id, groceryItem, picked.checked)">
+                        <span [class]="groceryItem.onHandItem ? 'font-weight-light text-info' : ''">
+                            <span [style.text-decoration]="groceryItem.picked ? 'line-through' : ''">
+                                {{groceryItem.quantity}} {{groceryItem.unit}} {{groceryItem.ingredient}}
+                            </span>
+                        </span>
+                        <fa name="trash" class="text-danger pointer" (click)="onDeleteGroceryItem(selectedGrocery.id, groceryItem.id)"></fa>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="row">
-            <div class="input-group m-1">
-                <input #line type="text" class="form-control" placeholder="add ingredient" aria-label="add ingredients" aria-describedby="search-addon">
-                <div class="input-group-append">
-                    <button type="button" class="btn btn-primary">
-                        <fa name="plus" (click)="onCreateGroceryItem(selectedGrocery.id, line.value);"></fa>
-                    </button>
+            <div class="col-md-3">
+                <button class="btn btn-primary" (click)="toggleShowPicked()" [innerText]="showPickedItems ? 'Hide Picked' : 'Show Picked'"></button>
+            </div>
+            <div class="col-md-9">
+                <div class="input-group">
+                    <input #line type="text" class="form-control" placeholder="add ingredient" aria-label="add ingredients" aria-describedby="search-addon">
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-secondary">
+                            <fa name="plus" (click)="onCreateGroceryItem(selectedGrocery.id, line.value);"></fa>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
