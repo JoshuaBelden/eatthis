@@ -24,11 +24,6 @@ export class MealService {
     return result;
   }
 
-  async updateAsync(meal: Meal): Promise<Meal> {
-    const result = await this.http.put<Meal>(`${environment.apiEndpoint}/meal`, meal).toPromise();
-    return result;
-  }
-
   async deleteAsync(id: string): Promise<void> {
     await this.http.delete(`${environment.apiEndpoint}/meal/${id}`).toPromise();
   }
