@@ -174,8 +174,8 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">Start and Stop Date</span>
                 </div>
-                <input #startDate type="date" aria-label="Start" class="form-control">
-                <input #stopDate type="date" aria-label="Stop" class="form-control">
+                <input #startDate type="date" aria-label="Start" class="form-control" [value]="today | moment:'YYYY-MM-DD'" required>
+                <input #stopDate type="date" aria-label="Stop" class="form-control" [value]="today.add('weeks', 2) | moment:'YYYY-MM-DD'" required>
                 <div class="input-group-append">
                     <button type="button" class="btn btn-primary" (click)="createGroceryList(startDate.value, stopDate.value)">
                         <fa name="plus" class="pointer"></fa>

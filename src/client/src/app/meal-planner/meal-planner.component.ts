@@ -159,6 +159,10 @@ export class MealPlannerComponent implements OnInit {
   }
 
   async createGroceryList(startDateString: string, stopDateString: string) {
+    if (!startDateString || startDateString === '' || !stopDateString || stopDateString === '') {
+      return;
+    }
+
     const startDate = Moment(startDateString).toDate();
     const stopDate = Moment(stopDateString).toDate();
     await this.groceryService.createAsync(startDate, stopDate);
