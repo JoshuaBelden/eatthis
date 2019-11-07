@@ -12,6 +12,7 @@ import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
 import { RecipeListComponent } from './recipe-list/recipe-list.component';
 import { RegisterComponent } from './register/register.component';
+import { SettingsCommonItemsComponent } from './settings-common-items/settings-common-items.component';
 import { UnauthenticatedGuard } from './guards/unauthenticated.guard';
 import { WelcomeComponent } from './welcome/welcome.component';
 
@@ -45,6 +46,11 @@ const routes: Routes = [
   {
     path: 'groceries',
     component: GroceryListComponent,
+    canActivate: [UnauthenticatedGuard]
+  },
+  {
+    path: 'settings/commonitems',
+    component: SettingsCommonItemsComponent,
     canActivate: [UnauthenticatedGuard]
   },
   {
