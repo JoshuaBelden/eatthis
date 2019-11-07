@@ -4,5 +4,6 @@ export default class GroceryItem {
     public ingredient: string;
     public unit: string;
     public quantity: number;
+    public onHandItem: boolean;
     public picked: boolean;
 }

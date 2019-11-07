@@ -21,16 +21,20 @@ export default class GroceryListBuilder {
 
         for (const ingredient of ingredients) {
             if (!groceryItems.has(ingredient.name)) {
+                const foodItem = this.departmentRepository.matchFoodItem(ingredient.name);
                 groceryItems.set(ingredient.name, {
                     id: '',
-                    department: this.departmentRepository.getDepartment(ingredient.name),
+                    department: foodItem.department,
                     ingredient: ingredient.name,
                     unit: ingredient.unitOfMeasure,
                     quantity: ingredient.quantity,
-                    picked: false
+                    onHandItem: foodItem.onHandItem,
+                    picked: false,
                 });
             } else {
-                groceryItems.get(ingredient.name).quantity += ingredient.quantity;
+                const item = groceryItems.get(ingredient.name);
+                item.quantity += ingredient.quantity;
+                item.quantity = parseFloat(item.quantity.toFixed(2));
             }
         }
 
@@ -43,7 +47,9 @@ export default class GroceryListBuilder {
             if (!retVal.has(groceryItem.ingredient)) {
                 retVal.set(groceryItem.ingredient, groceryItem);
             } else {
-                retVal.get(groceryItem.ingredient).quantity += groceryItem.quantity;
+                const item = retVal.get(groceryItem.ingredient);
+                item.quantity += groceryItem.quantity;
+                item.quantity = parseFloat(item.quantity.toFixed(2));
             }
         }
         return Array.from(retVal.values());

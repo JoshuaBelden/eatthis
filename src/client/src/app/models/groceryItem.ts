@@ -6,4 +6,5 @@ export class GroceryItem {
     public quantity: number;
     public modifier: string;
     public picked: boolean;
+    public onHandItem: boolean;
 }
