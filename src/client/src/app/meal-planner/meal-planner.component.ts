@@ -122,19 +122,27 @@ export class MealPlannerComponent implements OnInit {
   }
 
   async onRecipeDrop(date: Moment.Moment, data: any) {
-    await this.createMeal(date, data.dragData.recipeId);
+    if (data.dragData.recipeId) {
+      await this.createMeal(date, data.dragData.recipeId);
+    }
+    if (data.dragData.meal) {
+      await this.createMeal(date, data.dragData.meal.recipeId);
+      await this.deleteMeal(data.dragData.meal.id);
+    }
     this.meals = await this.getMeals(this.selectedDate, Moment(this.selectedDate).add(5, 'weeks'));
     this.buildCalendar(this.selectedDate, this.meals);
   }
 
-  async getMeals(start: Moment.Moment, stop: Moment.Moment) {
+  async getMeals(start: Moment.Moment, stop: Moment.Moment): Promise<Meal[]> {
     const meals = await this.mealService.getAsync(start.toDate(), stop.toDate());
     return meals.map(m => {
       const recipe = this.allRecipes.find(r => r.id === m.recipeId);
       return {
         id: m.id,
+        userId: m.userId,
         occurs: m.occurs,
-        title: recipe.title
+        title: recipe ? recipe.title : 'unknown',
+        recipeId: m.recipeId
       };
     });
   }
@@ -159,6 +167,10 @@ export class MealPlannerComponent implements OnInit {
   }
 
   async createGroceryList(startDateString: string, stopDateString: string) {
+    if (!startDateString || startDateString === '' || !stopDateString || stopDateString === '') {
+      return;
+    }
+
     const startDate = Moment(startDateString).toDate();
     const stopDate = Moment(stopDateString).toDate();
     await this.groceryService.createAsync(startDate, stopDate);
