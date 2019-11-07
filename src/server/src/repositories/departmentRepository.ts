@@ -1,20 +1,20 @@
 import { injectable } from 'inversify';
-import { foodData } from '../data/foodData';
+import { foodData, FoodItem } from '../data/foodData';
 
 @injectable()
 export default class DepartmentRepository {
 
-    public getDepartment(input: string): string {
+    public matchFoodItem(input: string): FoodItem {
         for (const foodItem of foodData) {
             const match = this.match(`\\b(${foodItem.name})[s]*\\b`, input);
             if (!match) {
                 continue;
             }
 
-            return foodItem.department;
+            return foodItem;
         }
 
-        return 'unknown';
+        return new FoodItem();
     }
 
     private match(expression: string, value: string) {

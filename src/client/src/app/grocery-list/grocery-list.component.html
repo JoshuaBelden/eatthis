@@ -17,7 +17,9 @@
                 <h5>{{department}}</h5>
                 <div *ngFor="let groceryItem of getGroceryItems(department)">
                     <input #picked type="checkbox" [checked]="groceryItem.picked" (change)="onPickGroceryItem(selectedGrocery.id, groceryItem, picked.checked)">
-                    {{groceryItem.quantity}} {{groceryItem.unit}} {{groceryItem.ingredient}}
+                    <span [class]="groceryItem.onHandItem ? 'font-weight-light text-info' : ''">
+                        {{groceryItem.quantity}} {{groceryItem.unit}} {{groceryItem.ingredient}}
+                    </span>
                     <fa name="trash" class="text-danger pointer" (click)="onDeleteGroceryItem(selectedGrocery.id, groceryItem.id)"></fa>
                 </div>
             </div>
