@@ -5,7 +5,7 @@
             <h4>Lists</h4>
             <div *ngFor="let grocery of groceries">
                 <a [routerLink]="" (click)="onSelectGrocery(grocery)" class="m-1">{{grocery.startDate | moment:'MM-DD-YYYY'}} - {{grocery.stopDate | moment:'MM-DD-YYYY'}}</a>
-                <fa name="trash" class="text-danger pointer" (click)="onDelete(selectedGrocery.id)"></fa>
+                <fa name="trash" class="text-danger pointer" (click)="onDelete(grocery.id)"></fa>
             </div>
         </div>
     </div>
