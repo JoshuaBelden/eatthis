@@ -40,7 +40,7 @@ export default class CommonItemsRepository {
                         .findOne<CommonItems>({ userId });
 
                     if (!commonItems) {
-                        resolve(null);
+                        resolve();
                         return;
                     }
 

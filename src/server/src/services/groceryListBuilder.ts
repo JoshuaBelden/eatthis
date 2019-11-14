@@ -2,6 +2,7 @@ import { injectable, inject } from 'inversify';
 
 import DepartmentRepository from '../repositories/departmentRepository';
 import dependencyIdentifiers from '../dependencyIdentifiers';
+import FoodItem from '../models/foodItem';
 import GroceryItem from '../models/groceryItem';
 import Ingredient from '../models/ingredient';
 
@@ -16,12 +17,12 @@ export default class GroceryListBuilder {
         this.departmentRepository = departmentRepository;
     }
 
-    public async combineIngredients(userId: string, ingredients: Ingredient[]) {
+    public async combineIngredients(userId: string, ingredients: Ingredient[], foodData: FoodItem[]) {
         const groceryItems: Map<string, GroceryItem> = new Map<string, GroceryItem>();
 
         for (const ingredient of ingredients) {
             if (!groceryItems.has(ingredient.name)) {
-                const foodItem = this.departmentRepository.matchFoodItem(ingredient.name);
+                const foodItem = this.departmentRepository.matchFoodItem(ingredient.name, foodData);
                 groceryItems.set(ingredient.name, {
                     id: '',
                     department: foodItem.department,

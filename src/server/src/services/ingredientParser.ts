@@ -1,21 +1,23 @@
-import Ingredient from '../models/ingredient';
 import { injectable } from 'inversify';
 
-import { foodData } from '../data/foodData';
-import { foodModifiers } from '../data/foodModifiers';
-import { foodPreparations } from '../data/foodPreparations';
-
+import Ingredient from '../models/ingredient';
+import FoodItem from '../models/foodItem';
 
 @injectable()
 export default class IngredientParser {
 
-    public parse(input: string, unitsOfMeasure: Map<string, string[]>): Ingredient {
+    public parse(
+        input: string,
+        unitsOfMeasure: Map<string, string[]>,
+        foodPreparations: string[],
+        foodModifiers: string[],
+        foodData: FoodItem[]): Ingredient {
         if (!input) {
             throw new Error('Ingredient line cannot be empty.');
         }
 
         const value = input.toLowerCase();
-        const name = this.parseForFoodItemMatch(value);
+        const name = this.parseForFoodItemMatch(value, foodData);
         const quantity = this.parseQuantity(value);
         const unitOfMeasure = this.parseUnit(value, unitsOfMeasure);
         const modifier = this.parseForExpressionMatch(foodModifiers, value);
@@ -31,7 +33,7 @@ export default class IngredientParser {
         };
     }
 
-    private parseForFoodItemMatch(input: string): string {
+    private parseForFoodItemMatch(input: string, foodData: FoodItem[]): string {
         for (const foodItem of foodData) {
             const match = this.match(`\\b(${foodItem.name})[s]*\\b`, input);
             if (!match) {

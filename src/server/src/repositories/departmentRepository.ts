@@ -1,10 +1,11 @@
 import { injectable } from 'inversify';
-import { foodData, FoodItem } from '../data/foodData';
+
+import FoodItem from '../models/foodItem';
 
 @injectable()
 export default class DepartmentRepository {
 
-    public matchFoodItem(input: string): FoodItem {
+    public matchFoodItem(input: string, foodData: FoodItem[]): FoodItem {
         for (const foodItem of foodData) {
             const match = this.match(`\\b(${foodItem.name})[s]*\\b`, input);
             if (!match) {
