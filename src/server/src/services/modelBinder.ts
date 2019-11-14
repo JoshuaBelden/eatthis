@@ -1,5 +1,7 @@
 import { injectable } from 'inversify';
+
 import Grocery from '../models/grocery';
+import IDocument from '../models/document';
 import Meal from '../models/meal';
 import Recipe from '../models/recipe';
 import User from '../models/user';
@@ -60,6 +62,13 @@ export default class ModelBinder {
       startDate: body.startDate,
       stopDate: body.stopDate,
       items: body.items,
+    };
+  }
+
+  public getDocument(body: any): IDocument {
+    return {
+      contentType: body.contentType,
+      content: body.content
     };
   }
 }

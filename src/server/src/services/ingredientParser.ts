@@ -5,37 +5,19 @@ import { foodData } from '../data/foodData';
 import { foodModifiers } from '../data/foodModifiers';
 import { foodPreparations } from '../data/foodPreparations';
 
+
 @injectable()
 export default class IngredientParser {
-    private units: Map<string, Array<string>> = new Map([
-        ['$1 can', ['([0-9]+.ounce).*can']],
-        ['$1 slice', ['([0-9]+.ounce).*slice']],
-        ['tsp', ['teaspoons', 'teaspoon', 'tsp']],
-        ['tbs', ['tablespoons', 'tablespoon', 'tbs']],
-        ['cup', ['cups', 'cup']],
-        ['oz', ['ounces', 'ounce', 'oz']],
-        ['pint', ['pints', 'pint']],
-        ['qt', ['quarts', 'quart', 'qt']],
-        ['gallon', ['gallons', 'gallon']],
-        ['lb', ['pounds', 'pound', 'lb']],
-        ['handful', ['handful']],
-        ['dash', ['dash']],
-        ['pinch', ['pinch']],
-        ['stick', ['(stick)[s]*']],
-        ['clove', ['(clove)[s]*']],
-        ['bottle', ['(bottle)[s]*']],
-    ]);
 
-    public parse(input: string): Ingredient {
+    public parse(input: string, unitsOfMeasure: Map<string, string[]>): Ingredient {
         if (!input) {
             throw new Error('Ingredient line cannot be empty.');
         }
 
         const value = input.toLowerCase();
-
         const name = this.parseForFoodItemMatch(value);
         const quantity = this.parseQuantity(value);
-        const unitOfMeasure = this.parseUnit(value);
+        const unitOfMeasure = this.parseUnit(value, unitsOfMeasure);
         const modifier = this.parseForExpressionMatch(foodModifiers, value);
         const preparation = this.parseForExpressionMatch(foodPreparations, value);
 
@@ -90,8 +72,8 @@ export default class IngredientParser {
             : parseFloat(quantityMatch[0]);
     }
 
-    private parseUnit(input: string): string {
-        for (const set of this.units) {
+    private parseUnit(input: string, unitsOfMeasure: Map<string, string[]>): string {
+        for (const set of unitsOfMeasure) {
             for (const value of set[1]) {
                 const match = this.match(`(${value})`, input);
                 if (!match) {

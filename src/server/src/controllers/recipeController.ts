@@ -6,20 +6,24 @@ import MealRepository from '../repositories/mealRepository';
 import Recipe from '../models/recipe';
 import RecipeRepository from '../repositories/recipeRepository';
 import Result from '../models/result';
+import UnitsOfMeasureRepository from '../repositories/unitsOfMeasureRepository';
 
 @injectable()
 export default class RecipeController {
 
     private recipeRepository: RecipeRepository;
     private mealRepository: MealRepository;
+    private unitsOfMeasureRepository: UnitsOfMeasureRepository;
     private ingredientParser: IngredientParser;
 
     constructor(
         @inject(dependencyIdentifiers.RecipeRepository) recipeRepository: RecipeRepository,
         @inject(dependencyIdentifiers.MealRepository) mealRepository: MealRepository,
+        @inject(dependencyIdentifiers.UnitsOfMeasureRepository) unitsOfMeasureRepository: UnitsOfMeasureRepository,
         @inject(dependencyIdentifiers.IngredientParser) ingredientParser: IngredientParser) {
         this.recipeRepository = recipeRepository;
         this.mealRepository = mealRepository;
+        this.unitsOfMeasureRepository = unitsOfMeasureRepository;
         this.ingredientParser = ingredientParser;
     }
 
@@ -36,12 +40,18 @@ export default class RecipeController {
             return new Result<Recipe>(false, null, 'Recipe title is required.');
         }
 
-        recipe.ingredients = recipe.ingredients.map(ingredient => this.ingredientParser.parse(ingredient.input));
-        return new Result<Recipe>(true, await this.recipeRepository.createAsync(userId, recipe));
+        try {
+            const unitsOfMeasure = await this.unitsOfMeasureRepository.getUnitsOfMeasure();
+            recipe.ingredients = recipe.ingredients.map(ingredient => this.ingredientParser.parse(ingredient.input, unitsOfMeasure));
+            return new Result<Recipe>(true, await this.recipeRepository.createAsync(userId, recipe));
+        } catch (error) {
+            return new Result<Recipe>(false, error);
+        }
     }
 
     public async updateAsync(userId: string, recipe: Recipe): Promise<Result<Recipe>> {
-        recipe.ingredients = recipe.ingredients.map(ingredient => this.ingredientParser.parse(ingredient.input));
+        const unitsOfMeasure = await this.unitsOfMeasureRepository.getUnitsOfMeasure();
+        recipe.ingredients = recipe.ingredients.map(ingredient => this.ingredientParser.parse(ingredient.input, unitsOfMeasure));
         return new Result<Recipe>(true, await this.recipeRepository.updateAsync(userId, recipe));
     }
 

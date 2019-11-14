@@ -18,6 +18,8 @@ export default {
     MealRepository: Symbol('MealRepository'),
     GroceryRepository: Symbol('GroceryRepository'),
     CommonItemsRepository: Symbol('CommonItemsRepository'),
+    DocumentRepository: Symbol('DocumentRepository'),
+    UnitsOfMeasureRepository: Symbol('UnitsOfMeasureRepository'),
 
     // CONTROLLERS
     AccountController: Symbol('AccountController'),
@@ -25,6 +27,7 @@ export default {
     MealController: Symbol('MealController'),
     GroceryController: Symbol('GroceryController'),
     CommonItemsController: Symbol('CommonItemsController'),
+    DocumentController: Symbol('DocumentController'),
 
     // ROUTES
     Routes: Symbol('Routes'),

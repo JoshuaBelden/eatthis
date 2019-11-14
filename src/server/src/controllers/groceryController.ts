@@ -12,6 +12,7 @@ import RecipeRepository from '../repositories/recipeRepository';
 import Result from '../models/result';
 import IngredientParser from '../services/ingredientParser';
 import CommonItemsRepository from '../repositories/commonItemsRepository';
+import UnitsOfMeasureRepository from '../repositories/unitsOfMeasureRepository';
 
 @injectable()
 export default class GroceryController {
@@ -22,20 +23,23 @@ export default class GroceryController {
     private ingredientParser: IngredientParser;
     private mealRepository: MealRepository;
     private recipeRepository: RecipeRepository;
-
+    private unitsOfMeasureRepository: UnitsOfMeasureRepository;
+    
     constructor(
         @inject(dependencyIdentifiers.CommonItemsRepository) commonItemsRepository: CommonItemsRepository,
         @inject(dependencyIdentifiers.GroceryListbuilder) groceryListBuilder: GroceryListBuilder,
         @inject(dependencyIdentifiers.GroceryRepository) groceryRepository: GroceryRepository,
         @inject(dependencyIdentifiers.IngredientParser) ingredientParser: IngredientParser,
         @inject(dependencyIdentifiers.MealRepository) mealRepository: MealRepository,
-        @inject(dependencyIdentifiers.RecipeRepository) recipeRepository: RecipeRepository) {
+        @inject(dependencyIdentifiers.RecipeRepository) recipeRepository: RecipeRepository,
+        @inject(dependencyIdentifiers.UnitsOfMeasureRepository) unitsOfMeasureRepository: UnitsOfMeasureRepository) {
         this.commonItemsRepository = commonItemsRepository;
         this.groceryListBuilder = groceryListBuilder;
         this.groceryRepository = groceryRepository;
         this.ingredientParser = ingredientParser;
         this.mealRepository = mealRepository;
         this.recipeRepository = recipeRepository;
+        this.unitsOfMeasureRepository = unitsOfMeasureRepository;
     }
 
     public async getAsync(userId: string, groceryId: string): Promise<Result<Grocery>> {
@@ -48,8 +52,9 @@ export default class GroceryController {
 
     public async createAsync(userId: string, startDate: Date, stopDate: Date): Promise<Result<Grocery>> {
         const meals = await this.mealRepository.getAsync(userId, startDate, stopDate);
+        const unitsOfMeasure = await this.unitsOfMeasureRepository.getUnitsOfMeasure();
         const commonItems = await this.commonItemsRepository.getByUserIdAsync(userId);
-        const commonItemIngredients = commonItems.items.map(item => this.ingredientParser.parse(item));
+        const commonItemIngredients = commonItems.items.map(item => this.ingredientParser.parse(item, unitsOfMeasure));
         const groceryItems = await this.generateGroceryItems(userId, meals, commonItemIngredients);
         const grocery = new Grocery();
         grocery.userId = userId;
@@ -66,7 +71,8 @@ export default class GroceryController {
 
     public async createGroceryItemAsync(userId: string, groceryId: string, input: string): Promise<Result<Grocery>> {
         const grocery = await this.groceryRepository.getAsync(userId, groceryId);
-        const ingredient = this.ingredientParser.parse(input);
+        const unitsOfMeasure = await this.unitsOfMeasureRepository.getUnitsOfMeasure();
+        const ingredient = this.ingredientParser.parse(input, unitsOfMeasure);
         const groceryItems = await this.groceryListBuilder.combineIngredients(userId, [ingredient]);
         grocery.items.push(...groceryItems);
         grocery.items = this.groceryListBuilder.combineGroceryItems(grocery.items);
