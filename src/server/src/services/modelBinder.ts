@@ -38,7 +38,8 @@ export default class ModelBinder {
           modifier: i.modifier,
           preparation: i.preparation
         };
-      })
+      }),
+      keywords: body.keywords
     };
   }
 

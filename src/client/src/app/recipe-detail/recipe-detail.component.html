@@ -5,6 +5,7 @@
 
   <h1 class="display-5">{{recipe.title}}</h1>
   <p>{{recipe.description}}</p>
+  <p class="font-weight-lighter font-italic">{{(recipe && recipe.keywords) ? recipe.keywords.join(', ') : ''}}</p>
 
   <h3>Ingredients</h3>
   <ul>

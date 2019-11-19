@@ -56,7 +56,8 @@ export class RecipeEditComponent implements OnInit {
         description: recipeData.description,
         imageUrl: recipeData.imageUrl,
         preparation: recipeData.preparation,
-        ingredients: this.ParseIngredientString(recipeData.ingredients)
+        ingredients: this.ParseIngredientString(recipeData.ingredients),
+        keywords: recipeData.keywords.length > 0 ? recipeData.keywords.split(',') : []
       };
 
       if (recipe.id) {
@@ -90,6 +91,7 @@ export class RecipeEditComponent implements OnInit {
       imageUrl: recipe ? recipe.imageUrl : '',
       ingredients: new FormControl(this.ConvertIngredientsToText(recipe ? recipe.ingredients : []), [Validators.required]),
       preparation: new FormControl(recipe ? recipe.preparation : '', [Validators.required]),
+      keywords: new FormControl((recipe && recipe.keywords) ? recipe.keywords.join(',') : '')
     });
   }
 

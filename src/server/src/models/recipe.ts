@@ -8,5 +8,6 @@ export default class Recipe {
     public imageUrl: string;
     public preparation: string;
     public yield: string;
-    public ingredients: Array<Ingredient>;
+    public ingredients: Ingredient[];
+    public keywords: string[];
 }
