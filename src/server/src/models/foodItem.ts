@@ -1,5 +1,6 @@
 export default class FoodItem {
-    public constructor() {
+    public constructor(name: string = '') {
+        this.name = name;
         this.department = 'unknown';
     }
     public name: string;

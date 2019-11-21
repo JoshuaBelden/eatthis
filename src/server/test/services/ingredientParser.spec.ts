@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import IngredientParser from '../../src/services/ingredientParser';
 import DocumentRepository from '../../src/repositories/documentRepository';
+import FoodItem from '../../src/models/foodItem';
 
 describe('Ingredient parser', () => {
 
@@ -8,9 +9,14 @@ describe('Ingredient parser', () => {
     //  These probably need to be wrapped in a service and mocked. Which means the parser probably needs to rely on the match to come
     //  from the units of measure service.
     const unitsOfMeasure: Map<string, string[]> = new Map([['$1 can', ['([0-9]+.ounce).*can']], ['$1 slice', ['([0-9]+.ounce).*slice']], ['tsp', ['teaspoons', 'teaspoon', 'tsp']], ['tbs', ['tablespoons', 'tablespoon', 'tbs']], ['cup', ['cups', 'cup']], ['oz', ['ounces', 'ounce', 'oz']], ['pint', ['pints', 'pint']], ['qt', ['quarts', 'quart', 'qt']], ['gallon', ['gallons', 'gallon']], ['lb', ['pounds', 'pound', 'lb']], ['handful', ['handful']], ['dash', ['dash']], ['pinch', ['pinch']], ['stick', ['(stick)[s]*']], ['clove', ['(clove)[s]*']], ['bottle', ['(bottle)[s]*']]]);
-    const foodPreparations = [];
-    const foodModifiers = [];
-    const foodData = [];
+    const foodPreparations = ['diced'];
+    const foodModifiers = ['small', 'medium', 'large'];
+    const foodData = [
+        new FoodItem('avocado'),
+        new FoodItem('crushed tomatoes'),
+        new FoodItem('butter'),
+        new FoodItem('yellow onion')
+    ];
 
     it('should parse a simple ingredient line', async () => {
         const parser = new IngredientParser();
@@ -46,10 +52,10 @@ describe('Ingredient parser', () => {
 
     it('should handle certain size cans', async () => {
         const parser = new IngredientParser();
-        const result = await parser.parse('2 10-ounce cans of tomato sauce', unitsOfMeasure, foodPreparations, foodModifiers, foodData);
+        const result = await parser.parse('2 10-ounce cans of crushed tomatoes', unitsOfMeasure, foodPreparations, foodModifiers, foodData);
         expect(result.quantity).to.equal(2);
         expect(result.unitOfMeasure).to.equal('10-ounce can');
-        expect(result.name).to.equal('tomato sauce');
+        expect(result.name).to.equal('crushed tomatoes');
     });
 
     it('should parse food descriptions', async () => {
@@ -62,10 +68,10 @@ describe('Ingredient parser', () => {
 
     it('should parse food preparations', async () => {
         const parser = new IngredientParser();
-        const result = await parser.parse('1 medium green onion diced up', unitsOfMeasure, foodPreparations, foodModifiers, foodData);
+        const result = await parser.parse('1 medium yellow onion diced up', unitsOfMeasure, foodPreparations, foodModifiers, foodData);
         expect(result.quantity).to.equal(1);
         expect(result.modifier).to.equal('medium');
         expect(result.preparation).to.equal('diced');
-        expect(result.name).to.equal('green onion');
+        expect(result.name).to.equal('yellow onion');
     });
 });

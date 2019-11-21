@@ -5,6 +5,7 @@ import Ingredient from '../../src/models/ingredient';
 
 describe('Grocery list builder', () => {
     const departmentRepository = new DepartmentRepository();
+    const foodData = [];
 
     it('should combine equal ingredients', async () => {
         const groceryListBuilder = new GroceryListBuilder(departmentRepository);
@@ -29,7 +30,7 @@ describe('Grocery list builder', () => {
             },
         ];
 
-        const result = await groceryListBuilder.combineIngredients('user-id', ingredients);
+        const result = await groceryListBuilder.combineIngredients('user-id', ingredients, foodData);
         expect(result.length).to.equal(1);
         expect(result[0].ingredient).to.equal('butter');
         expect(result[0].quantity).to.equal(2);
