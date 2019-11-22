@@ -49,7 +49,7 @@ export default class GroceryListBuilder {
     public combineGroceryItems(groceryItems: GroceryItem[]): GroceryItem[] {
         const newCollection: GroceryItem[] = [];
         for (const newItem of groceryItems) {
-            let existingItem = newCollection.find(i => i.ingredient = newItem.ingredient);
+            let existingItem = newCollection.find(i => i.ingredient === newItem.ingredient);
             if (!existingItem) {
                 existingItem = newItem;
                 newCollection.push(newItem);
