@@ -19,7 +19,12 @@
                         <input #picked type="checkbox" [checked]="groceryItem.picked" (change)="onPickGroceryItem(selectedGrocery.id, groceryItem, picked.checked)">
                         <span [class]="groceryItem.onHandItem ? 'font-weight-light text-info' : ''">
                             <span [style.text-decoration]="groceryItem.picked ? 'line-through' : ''">
-                                {{groceryItem.quantity}} {{groceryItem.unit}} {{groceryItem.ingredient}}
+                                <span *ngFor="let amount of groceryItem.amounts; let isLast = last;">
+                                    {{amount.quantity}} {{amount.unit}} {{isLast ? '' : ' + '}}
+                                </span>
+                                <span>
+                                    {{groceryItem.ingredient}}
+                                </span>
                             </span>
                         </span>
                         <fa name="trash" class="text-danger pointer" (click)="onDeleteGroceryItem(selectedGrocery.id, groceryItem.id)"></fa>

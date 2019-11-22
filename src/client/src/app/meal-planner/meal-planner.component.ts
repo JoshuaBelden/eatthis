@@ -41,7 +41,8 @@ export class MealPlannerComponent implements OnInit {
       return;
     } else {
       const expression = new RegExp(keyword, 'i');
-      this.displayedRecipes = this.allRecipes.filter(recipe => recipe.title.match(expression));
+      this.displayedRecipes = this.allRecipes.filter(recipe =>
+        recipe.title.match(expression) || recipe.keywords.some(k => k.match(expression)));
     }
   }
 
@@ -175,5 +176,9 @@ export class MealPlannerComponent implements OnInit {
     const stopDate = Moment(stopDateString).toDate();
     await this.groceryService.createAsync(startDate, stopDate);
     this.router.navigate(['/groceries']);
+  }
+
+  viewRecipe(recipeId: string): void {
+    this.router.navigate(['/recipes', recipeId]);
   }
 }

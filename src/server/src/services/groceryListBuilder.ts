@@ -5,6 +5,8 @@ import dependencyIdentifiers from '../dependencyIdentifiers';
 import FoodItem from '../models/foodItem';
 import GroceryItem from '../models/groceryItem';
 import Ingredient from '../models/ingredient';
+import Amount from '../models/amount';
+import Grocery from '../models/grocery';
 
 @injectable()
 export default class GroceryListBuilder {
@@ -17,42 +19,58 @@ export default class GroceryListBuilder {
         this.departmentRepository = departmentRepository;
     }
 
-    public async combineIngredients(userId: string, ingredients: Ingredient[], foodData: FoodItem[]) {
-        const groceryItems: Map<string, GroceryItem> = new Map<string, GroceryItem>();
+    public async combineIngredients(userId: string, ingredients: Ingredient[], foodData: FoodItem[]): Promise<GroceryItem[]> {
+        const groceryItems: GroceryItem[] = [];
 
         for (const ingredient of ingredients) {
-            if (!groceryItems.has(ingredient.name)) {
+            let groceryItem = groceryItems.find(item => item.ingredient === ingredient.name);
+            if (!groceryItem) {
                 const foodItem = this.departmentRepository.matchFoodItem(ingredient.name, foodData);
-                groceryItems.set(ingredient.name, {
+                groceryItem = {
                     id: '',
                     department: foodItem.department,
                     ingredient: ingredient.name,
-                    unit: ingredient.unitOfMeasure,
-                    quantity: ingredient.quantity,
+                    amounts: [],
                     onHandItem: foodItem.onHandItem,
                     picked: false,
-                });
-            } else {
-                const item = groceryItems.get(ingredient.name);
-                item.quantity += ingredient.quantity;
-                item.quantity = parseFloat(item.quantity.toFixed(2));
+                };
+                groceryItems.push(groceryItem);
             }
+            const amount = {
+                unit: ingredient.unitOfMeasure,
+                quantity: ingredient.quantity
+            };
+            this.combineAmounts(groceryItem.amounts, [amount]);
         }
 
-        return Array.from(groceryItems.values());
+        return groceryItems;
     }
 
-    public combineGroceryItems(groceryItems: GroceryItem[]) {
-        const retVal: Map<string, GroceryItem> = new Map<string, GroceryItem>();
-        for (const groceryItem of groceryItems) {
-            if (!retVal.has(groceryItem.ingredient)) {
-                retVal.set(groceryItem.ingredient, groceryItem);
+    public combineGroceryItems(groceryItems: GroceryItem[]): GroceryItem[] {
+        const newCollection: GroceryItem[] = [];
+        for (const newItem of groceryItems) {
+            let existingItem = newCollection.find(i => i.ingredient = newItem.ingredient);
+            if (!existingItem) {
+                existingItem = newItem;
+                newCollection.push(newItem);
             } else {
-                const item = retVal.get(groceryItem.ingredient);
-                item.quantity += groceryItem.quantity;
-                item.quantity = parseFloat(item.quantity.toFixed(2));
+                this.combineAmounts(existingItem.amounts, newItem.amounts);
             }
         }
-        return Array.from(retVal.values());
+        return newCollection;
+    }
+
+    public combineAmounts(source: Amount[], items: Amount[]): void {
+        for (const item of items) {
+            let amount = source.find(i => i.unit === item.unit);
+            if (!amount) {
+                amount = new Amount();
+                amount.quantity = 0;
+                amount.unit = item.unit;
+                source.push(amount);
+            }
+            amount.quantity += item.quantity;
+            amount.quantity = parseFloat(amount.quantity.toFixed(2)); // Fix up the number of decimal places.
+        }
     }
 }

@@ -52,7 +52,7 @@ export class GroceryListComponent implements OnInit {
   }
 
   getGroceryItems(department: string) {
-    return _.get(this.groupedItems, department);
+    return _.sortBy(_.get(this.groupedItems, department), ['ingredient']);
   }
 
   toggleShowPicked() {

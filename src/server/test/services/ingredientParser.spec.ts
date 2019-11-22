@@ -5,9 +5,6 @@ import FoodItem from '../../src/models/foodItem';
 
 describe('Ingredient parser', () => {
 
-    // TODO: These units of measure are now coming from the database, which means we have to manage these in two places. Not good.
-    //  These probably need to be wrapped in a service and mocked. Which means the parser probably needs to rely on the match to come
-    //  from the units of measure service.
     const unitsOfMeasure: Map<string, string[]> = new Map([['$1 can', ['([0-9]+.ounce).*can']], ['$1 slice', ['([0-9]+.ounce).*slice']], ['tsp', ['teaspoons', 'teaspoon', 'tsp']], ['tbs', ['tablespoons', 'tablespoon', 'tbs']], ['cup', ['cups', 'cup']], ['oz', ['ounces', 'ounce', 'oz']], ['pint', ['pints', 'pint']], ['qt', ['quarts', 'quart', 'qt']], ['gallon', ['gallons', 'gallon']], ['lb', ['pounds', 'pound', 'lb']], ['handful', ['handful']], ['dash', ['dash']], ['pinch', ['pinch']], ['stick', ['(stick)[s]*']], ['clove', ['(clove)[s]*']], ['bottle', ['(bottle)[s]*']]]);
     const foodPreparations = ['diced'];
     const foodModifiers = ['small', 'medium', 'large'];
