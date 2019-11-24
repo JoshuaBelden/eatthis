@@ -1,1 +1,19 @@
-<p>account works!</p>
+<h3>
+    Account Settings
+    <small class="text-muted">Your Data</small>
+</h3>
+<p class="lead">
+    We have the following information about you.
+</p>
+<div>
+    <label>First Name: </label>
+    <span> {{authenticatedUser.firstName}}</span>
+</div>
+<div>
+    <label>Last Name: </label>
+    <span> {{authenticatedUser.lastName}}</span>
+</div>
+<div>
+    <label>Email: </label>
+    <span> {{authenticatedUser.email}}</span>
+</div>
