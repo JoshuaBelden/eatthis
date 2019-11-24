@@ -11,23 +11,24 @@ import User from '../models/user';
 export default class AccountController {
 
   private accountRepository: AccountRepository;
-  private authenticatonService: AuthenticationService;
+  private authenticationService: AuthenticationService;
 
   constructor(
     @inject(dependencyIdentifiers.AccountRepository) repo: AccountRepository,
-    @inject(dependencyIdentifiers.AuthenticationService) authenticatonService: AuthenticationService) {
+    @inject(dependencyIdentifiers.AuthenticationService) authenticationService: AuthenticationService) {
     this.accountRepository = repo;
-    this.authenticatonService = authenticatonService;
+    this.authenticationService = authenticationService;
   }
 
   public async loginAsync(email: string, password: string): Promise<Result<AuthToken>> {
-    const user = await this.accountRepository.loginAsync(email, password);
+    const user = await this.accountRepository.loginAsync(email, this.authenticationService.hashPassword(password));
     return user
-      ? new Result<AuthToken>(true, this.authenticatonService.createToken(user).value)
+      ? new Result<AuthToken>(true, this.authenticationService.createToken(user).value)
       : new Result<AuthToken>(false, null, 'User not found.');
   }
 
   public async registerAsync(user: User): Promise<Result<User>> {
+    user.password = this.authenticationService.hashPassword(user.password);
     return new Result<User>(true, await this.accountRepository.registerAsync(user));
   }
 }

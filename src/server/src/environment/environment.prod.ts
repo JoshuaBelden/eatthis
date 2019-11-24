@@ -6,7 +6,7 @@ export const config = {
         name: 'eatthis'
     },
     security: {
-        secret: '240Cf419-b8ef-4128-b612-11f1b888c63d',
+        secret: 'a385bd87-2df6-4593-bf17-c54d8fe1b1ca',
         tokenExpiration: 28800
     }
 };

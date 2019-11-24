@@ -1,5 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { Request } from 'express';
+import * as sha512 from 'js-sha512';
+import config from '../environment/environment';
 
 import AuthToken from '../models/authToken';
 import dependencyIdentifiers from '../dependencyIdentifiers';
@@ -32,5 +34,9 @@ export default class AuthenticationService {
     } catch (error) {
       return new Result<User>(false, null, error);
     }
+  }
+
+  public hashPassword(plainText: string): string {
+    return sha512.sha512.hmac(config.security.secret, plainText);
   }
 }
