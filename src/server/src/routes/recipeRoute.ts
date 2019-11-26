@@ -63,7 +63,7 @@ export default class RecipeRoute extends BaseRoute {
           const recipes = this.modelBinder.getRecipes(user.id, request.body);
 
           for (const recipe of recipes) {
-            result.push(await this.recipeController.createAsync(user.id, recipe));
+            result.push(await this.recipeController.updateAsync(user.id, recipe));
           }
 
           return result.every(r => r.success)

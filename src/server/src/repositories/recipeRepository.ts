@@ -137,7 +137,7 @@ export default class RecipeRepository {
                         .findOneAndReplace({
                             id: recipe.id,
                             userId
-                        }, recipe);
+                        }, recipe, { upsert: true });
 
                     resolve(recipe);
                 } catch (error) {
