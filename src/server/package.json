@@ -53,7 +53,7 @@
     "inversify": "^5.0.1",
     "js-sha512": "^0.8.0",
     "jsonwebtoken": "^8.5.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "mongodb": "^3.3.3",
     "reflect-metadata": "^0.1.13"
   }
