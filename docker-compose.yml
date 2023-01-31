@@ -1,0 +1,75 @@
+version: "3"
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+      - "/etc/certs:/etc/nginx/certs:ro"
+      - "nginx-vhost:/etc/nginx/vhost.d"
+      - "nginx-html:/usr/share/nginx/html"
+    labels:
+      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: ""
+
+  letsencrypt-companion:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    depends_on:
+      - nginx-proxy
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/etc/certs:/etc/nginx/certs:rw"
+      - "nginx-vhost:/etc/nginx/vhost.d"
+      - "nginx-html:/usr/share/nginx/html"
+
+  mongodb:
+    image: mongo
+    restart: always
+    volumes:
+      - ./data:/data/db
+    ports:
+      - 27017:27017
+    command: mongod --noauth
+
+  api:
+    build:
+      context: ./backend
+    depends_on:
+      - nginx-proxy
+      - letsencrypt-companion
+      - mongodb
+    volumes:
+      - ./backend:/api
+    environment:
+      - "VIRTUAL_HOST=api.eatthis.com"
+      - "LETSENCRYPT_HOST=api.eatthis.com"
+      - "LETSENCRYPT_EMAIL=eatthis@joshuabelden.com"
+      - "MONGO_HOST=mongodb"
+      - "MONGO_PORT=27017"
+      - "NODE_ENV=production"
+    env_file:
+      - vars.env
+
+  www:
+    build:
+      context: ./frontend
+    tty: true
+    depends_on:
+      - nginx-proxy
+      - letsencrypt-companion
+      - api
+    volumes:
+      - ./frontend:/www
+    environment:
+      - "VIRTUAL_HOST=eatthis.com,www.eatthis.com"
+      - "LETSENCRYPT_HOST=eatthis.com,www.eatthis.com"
+      - "LETSENCRYPT_EMAIL=eatthis@joshuabelden.com"
+      - "NODE_ENV=production"
+    env_file:
+      - vars.env
+
+volumes:
+  nginx-vhost:
+  nginx-html:
+  mongodata: {}

@@ -1,0 +1,22 @@
+{
+  "name": "Eat This!",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"cd backend && npm run start\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoshuaBelden/eatthis.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JoshuaBelden/eatthis/issues"
+  },
+  "homepage": "https://github.com/JoshuaBelden/eatthis#readme",
+  "devDependencies": {
+    "concurrently": "^5.2.0"
+  }
+}

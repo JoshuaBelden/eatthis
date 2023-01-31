@@ -1,0 +1,13 @@
+{
+    "smtp": {
+        "host": "",
+        "port": 25,
+        "user": "",
+        "password": ""
+    },
+    "site": {
+        "administrator": {
+            "email": ""
+        }
+    }
+}
