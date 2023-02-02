@@ -1,10 +1,10 @@
 {
-  "name": "Eat This!",
+  "name": "eat-this",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"cd backend && npm run start\""
+    "start": "concurrently \"cd backend && npm run start\" \"cd frontend && npm run start\""
   },
   "repository": {
     "type": "git",

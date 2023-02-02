@@ -4,13 +4,19 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug",
+      "name": "Debug Backend",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "start"],
       "console": "integratedTerminal",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"],
-      "port": 7000,
       "internalConsoleOptions": "openOnSessionStart"
+    },
+    {
+      "name": "Debug Frontend",
+      "request": "launch",
+      "type": "pwa-chrome",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/frontend"
     }
   ]
 }
