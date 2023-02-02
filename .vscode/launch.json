@@ -14,9 +14,27 @@
     {
       "name": "Debug Frontend",
       "request": "launch",
-      "type": "pwa-chrome",
+      "type": "chrome",
       "url": "http://localhost:5173",
       "webRoot": "${workspaceFolder}/frontend"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Tests",
+      "program": "${workspaceFolder}/backend/node_modules/mocha/bin/_mocha",
+      "args": [
+        // "--require",
+        // "${workspaceFolder}/backend/test/your-setup.js",
+        "--reporter",
+        "dot",
+        "--slow",
+        "5000",
+        "--colors",
+        "${workspaceFolder}/backend/test/**/*.spec.js"
+      ],
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": ["<node_internals>/**"]
     }
   ]
 }

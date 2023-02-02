@@ -4,8 +4,8 @@
   "description": "Social platform for developers.",
   "main": "server.js",
   "scripts": {
-    "test": "node server",
-    "start": "nodemon server"
+    "start": "nodemon server",
+    "test": "cross-env NODE_ENV=test mocha --reporter spec test/**/*.spec.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
     "bcryptjs": "^2.4.3",
     "config": "^3.3.2",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "emailjs": "^2.2.0",
     "express": "^4.17.1",
     "express-validator": "^6.6.1",
@@ -33,6 +34,9 @@
     "request": "^2.88.2"
   },
   "devDependencies": {
-    "concurrently": "^5.3.0"
+    "chai": "^4.3.7",
+    "chai-http": "^4.3.0",
+    "concurrently": "^5.3.0",
+    "mocha": "^10.2.0"
   }
 }

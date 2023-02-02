@@ -5,8 +5,10 @@ import { getAuthToken, getUser, setAuthHeader } from '@/lib/request';
 import { useStatusStore } from './status';
 
 const emptyUser = {
+  id: 0,
   name: '',
-  email: ''
+  email: '',
+  avatar: ''
 }
 
 export const useUserStore = defineStore('user', () => {
@@ -44,6 +46,7 @@ export const useUserStore = defineStore('user', () => {
     try {
       const token = await getAuthToken(email, password)
       persistToken(token)
+
       user.value = await getUser()
       return true;
     } catch (error) {

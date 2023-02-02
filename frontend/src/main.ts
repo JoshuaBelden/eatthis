@@ -3,7 +3,7 @@ import { createPinia } from 'pinia'
 import BootstrapVue3 from 'bootstrap-vue-3'
 
 import './extensions/string'
-import { setDefaults } from './lib/request'
+import { setRequestDefaults } from './lib/request'
 import { useUserStore } from './stores/user'
 import router from './router'
 import App from './App.vue'
@@ -21,7 +21,7 @@ app.use(router)
 // if (process.env.NODE_ENV === "production") {
 //   axios.defaults.baseURL = "https://api.johnappseed.com"
 // } else {
-setDefaults('http://localhost:7000/api')
+setRequestDefaults('http://localhost:7000/api')
 //}
 
 app.mount('#app')

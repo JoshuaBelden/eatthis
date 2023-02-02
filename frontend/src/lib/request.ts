@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const setDefaults = (url: string) => {
+export const setRequestDefaults = (url: string) => {
   axios.defaults.baseURL = url
   axios.defaults.headers.post['Content-Type'] = 'application/json'
 }

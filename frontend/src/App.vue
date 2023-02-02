@@ -16,9 +16,9 @@ const userStore = useUserStore()
         <RouterLink to="/about">About</RouterLink>
       </nav>
       <nav class="account-info">
+        <span v-if="userStore.isAuthenticated">{{ userStore.user.name }}</span>
         <RouterLink to="/login" v-if="!userStore.isAuthenticated">Login</RouterLink>
         <RouterLink to="/logout" v-if="userStore.isAuthenticated">Logout</RouterLink>
-        {{ userStore.user.name }}
       </nav>
     </div>
   </header>
@@ -37,7 +37,7 @@ header {
 .wrapper {
   display: flex;
   align-items: flex-end;
-  padding: 16px 8px 4px 16px;
+  padding: 16px 8px 8px 16px;
 }
 
 .logo {

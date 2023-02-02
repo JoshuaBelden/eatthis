@@ -7,11 +7,11 @@ import { useUserStore } from '@/stores/user'
 
 const statusStore = useStatusStore()
 const userStore = useUserStore()
+
 const email = ref('')
 const password = ref('')
 
 const login = async (email: string, password: string) => {
-  statusStore.clearLastError()
   const success = await userStore.login(email, password)
   success && router.push('/')
 }
@@ -36,7 +36,7 @@ const login = async (email: string, password: string) => {
           class="form-control mb-3" />
       </div>
       <button type="submit" class="btn btn-primary">Login</button>
-      <div v-if="statusStore.lastError" class="alert alert-danger">
+      <div v-if="statusStore.lastError" class="alert alert-danger mt-3">
         {{ statusStore.lastError }}
       </div>
     </form>
