@@ -2,8 +2,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import BootstrapVue3 from 'bootstrap-vue-3'
 
-import './extensions/string'
-import { setRequestDefaults } from './lib/request'
+import api from './lib/api'
 import { useUserStore } from './stores/user'
 import router from './router'
 import App from './App.vue'
@@ -21,12 +20,12 @@ app.use(router)
 // if (process.env.NODE_ENV === "production") {
 //   axios.defaults.baseURL = "https://api.johnappseed.com"
 // } else {
-setRequestDefaults('http://localhost:7000/api')
+api.defaults.setBaseUrl('http://localhost:7000/api')
 //}
 
 app.mount('#app')
 
 const userStore = useUserStore()
 if (!userStore.isAuthenticated && localStorage.token) {
-  await userStore.setAuthToken(localStorage.token)
+  userStore.setAuthToken(localStorage.token)
 }

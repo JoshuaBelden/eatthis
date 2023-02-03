@@ -1,9 +1,6 @@
 const express = require('express')
 const cors = require('cors')
 const connectDB = require('./config/db')
-const config = require('config')
-const https = require('https')
-const fs = require('fs')
 
 const app = express()
 
@@ -24,6 +21,8 @@ app.use('/api/users', require('./routes/api/users'))
 app.use('/api/auth', require('./routes/api/auth'))
 app.use('/api/profile', require('./routes/api/profile'))
 app.use('/api/ingredient', require('./routes/api/ingredient'))
+app.use('/api/recipe', require('./routes/api/recipe'))
+
 connectDB()
 
 const port = process.env.NODE_ENV === 'production' ? 80 : 7000

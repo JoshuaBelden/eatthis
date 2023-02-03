@@ -13,6 +13,7 @@ const userStore = useUserStore()
       <div class="logo"><h1>EatThis!</h1></div>
       <nav class="menu">
         <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/my-recipes" v-if="userStore.isAuthenticated">My Recipes</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
       <nav class="account-info">

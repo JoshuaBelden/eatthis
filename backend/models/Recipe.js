@@ -9,7 +9,7 @@ const RecipeSchema = new mongoose.Schema({
     type: String,
   },
   description: {
-    type: Date,
+    type: String,
   },
   imageUrl: {
     type: String,

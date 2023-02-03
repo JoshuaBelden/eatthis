@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 
-import { getAuthToken, getUser, setAuthHeader } from '@/lib/request';
+import api from '@/lib/api';
 import { useStatusStore } from './status';
 
 const emptyUser = {
@@ -22,20 +22,20 @@ export const useUserStore = defineStore('user', () => {
 
   const persistToken = (token: string) => {
     authToken.value = token;
-    setAuthHeader(token)
+    api.defaults.setAuthHeader(token)
     localStorage.setItem('token', token);
   }
 
   const clearToken = () => {
     authToken.value = ''
-    setAuthHeader('')
+    api.defaults.setAuthHeader('')
     localStorage.setItem('token', '')
   }
 
   const setAuthToken = async (value: string) => {
     try {
       persistToken(value)
-      user.value = await getUser()
+      user.value = await api.user.get()
     } catch (error) {
       logout();
       statusStore.setLastError('error.auth.login'.toMessage());
@@ -44,10 +44,10 @@ export const useUserStore = defineStore('user', () => {
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const token = await getAuthToken(email, password)
+      const token = await api.auth.get.authToken(email, password)
       persistToken(token)
 
-      user.value = await getUser()
+      user.value = await api.user.get()
       return true;
     } catch (error) {
       statusStore.setLastError('error.auth.login'.toMessage())
