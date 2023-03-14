@@ -4,4 +4,5 @@ export default class User {
   public lastName: string;
   public email: string;
   public password: string;
+  public locale: string;
 }

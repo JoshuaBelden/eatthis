@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+
+import { i18n } from '@/lib/i18n'
 import { useUserStore } from '@/stores/user'
 
 import './styles/vars.css'
+import { ref } from 'vue'
 
 const userStore = useUserStore()
 </script>
@@ -12,14 +15,20 @@ const userStore = useUserStore()
     <div class="wrapper">
       <div class="logo"><h1>EatThis!</h1></div>
       <nav class="menu">
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/my-recipes" v-if="userStore.isAuthenticated">My Recipes</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/">{{ i18n.translate('site.nav.home', userStore.user.locale) }}</RouterLink>
+        <RouterLink to="/my-recipes" v-if="userStore.isAuthenticated">{{
+          i18n.translate('site.nav.recipes', userStore.user.locale)
+        }}</RouterLink>
+        <RouterLink to="/about">{{ i18n.translate('site.nav.about', userStore.user.locale) }}</RouterLink>
       </nav>
       <nav class="account-info">
         <span v-if="userStore.isAuthenticated">{{ userStore.user.name }}</span>
-        <RouterLink to="/login" v-if="!userStore.isAuthenticated">Login</RouterLink>
-        <RouterLink to="/logout" v-if="userStore.isAuthenticated">Logout</RouterLink>
+        <RouterLink to="/login" v-if="!userStore.isAuthenticated">{{
+          i18n.translate('site.nav.login', userStore.user.locale)
+        }}</RouterLink>
+        <RouterLink to="/logout" v-if="userStore.isAuthenticated">{{
+          i18n.translate('site.nav.logout', userStore.user.locale)
+        }}</RouterLink>
       </nav>
     </div>
   </header>

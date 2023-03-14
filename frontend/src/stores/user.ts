@@ -1,29 +1,31 @@
-import { ref, computed } from 'vue';
-import { defineStore } from 'pinia';
+import { ref, computed } from 'vue'
+import { defineStore } from 'pinia'
 
-import api from '@/lib/api';
-import { useStatusStore } from './status';
+import api from '@/lib/api'
+import { defaultLocale } from '@/lib/i18n'
+import { useStatusStore } from './status'
 
 const emptyUser = {
   id: 0,
   name: '',
   email: '',
-  avatar: ''
+  avatar: '',
+  locale: defaultLocale,
 }
 
 export const useUserStore = defineStore('user', () => {
-  const statusStore = useStatusStore();
-  const authToken = ref('');
-  const user = ref(emptyUser);
+  const statusStore = useStatusStore()
+  const authToken = ref('')
+  const user = ref(emptyUser)
 
-  const isAuthenticated = computed(() =>{
+  const isAuthenticated = computed(() => {
     return !!authToken.value
   })
 
   const persistToken = (token: string) => {
-    authToken.value = token;
+    authToken.value = token
     api.defaults.setAuthHeader(token)
-    localStorage.setItem('token', token);
+    localStorage.setItem('token', token)
   }
 
   const clearToken = () => {
@@ -37,10 +39,10 @@ export const useUserStore = defineStore('user', () => {
       persistToken(value)
       user.value = await api.user.get()
     } catch (error) {
-      logout();
-      statusStore.setLastError('error.auth.login'.toMessage());
+      logout()
+      statusStore.setLastError('error.auth.login'.translate())
     }
-  };
+  }
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
@@ -48,12 +50,12 @@ export const useUserStore = defineStore('user', () => {
       persistToken(token)
 
       user.value = await api.user.get()
-      return true;
+      return true
     } catch (error) {
-      statusStore.setLastError('error.auth.login'.toMessage())
+      statusStore.setLastError('error.auth.login'.translate())
       return false
     }
-  };
+  }
 
   const logout = () => {
     clearToken()
@@ -61,4 +63,4 @@ export const useUserStore = defineStore('user', () => {
   }
 
   return { user, isAuthenticated, setAuthToken, login, logout }
-});
+})
