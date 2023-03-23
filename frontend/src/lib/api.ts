@@ -24,8 +24,23 @@ const getUser = async () => {
   return response.data
 }
 
+const getRecipes = async () => {
+  const response = await axios.get('recipe')
+  return response.data
+}
+
 const postRecipe = async (recipe: Recipe) => {
   const response = await axios.post('recipe', recipe)
+  return response.data
+}
+
+const putRecipe = async (recipe: Recipe) => {
+  const response = await axios.put('recipe', recipe)
+  return response.data
+}
+
+const deleteRecipe = async (recipeId: string) => {
+  const response = await axios.delete(`recipe/${recipeId}`)
   return response.data
 }
 
@@ -43,6 +58,9 @@ export default {
     get: getUser,
   },
   recipe: {
+    get: getRecipes,
+    put: putRecipe,
     post: postRecipe,
+    delete: deleteRecipe,
   },
 }

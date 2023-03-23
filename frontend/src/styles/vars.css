@@ -13,7 +13,8 @@
   --color-background-alt: var(--color-brass);
  
 
-  --color-text: var(var(--color-black-soft));
+  --color-text: var(--color-black-soft);
+  --color-text-alt: var(--color-timber-green);
   /* --vt-c-white: #ffffff;
   --vt-c-white-soft: #f8f8f8;
 
@@ -42,7 +43,10 @@
   --color-heading: var(--vt-c-text-light-1);
   --color-text: var(--vt-c-text-dark-1); */
 
+  --element-gap: 4px;
   --section-gap: 160px;
+
+  --font-size-title: 20px;
 }
 
 @media (prefers-color-scheme: dark) {

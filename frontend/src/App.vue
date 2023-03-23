@@ -3,9 +3,9 @@ import { RouterLink, RouterView } from 'vue-router'
 
 import { i18n } from '@/lib/i18n'
 import { useUserStore } from '@/stores/user'
+import ToastView from './views/ToastView.vue'
 
 import './styles/vars.css'
-import { ref } from 'vue'
 
 const userStore = useUserStore()
 </script>
@@ -35,6 +35,9 @@ const userStore = useUserStore()
   <main class="container-fluid">
     <RouterView />
   </main>
+  <footer>
+    <ToastView />
+  </footer>
 </template>
 
 <style scoped>

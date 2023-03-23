@@ -36,8 +36,8 @@ const login = async (email: string, password: string) => {
           class="form-control mb-3" />
       </div>
       <button type="submit" class="btn btn-primary">Login</button>
-      <div v-if="statusStore.lastError" class="alert alert-danger mt-3">
-        {{ statusStore.lastError }}
+      <div v-for="validation in statusStore.validations" class="alert alert-danger mt-3">
+        {{ validation }}
       </div>
     </form>
   </div>

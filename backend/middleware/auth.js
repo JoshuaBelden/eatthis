@@ -10,10 +10,10 @@ module.exports = function (req, res, next) {
     }
 
     try {
-        const result = jwt.verify(token, authSecret);
-        req.user = result.user;
-        next();
-    } catch (err) {
-        res.status(401).json({ message: 'Token not valid' });
+      const result = jwt.verify(token, authSecret)
+      req.user = result.user
+      next()
+    } catch {
+      res.status(401).json({ message: 'Token not valid' })
     }
 };

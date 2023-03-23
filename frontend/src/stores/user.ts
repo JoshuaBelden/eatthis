@@ -40,7 +40,7 @@ export const useUserStore = defineStore('user', () => {
       user.value = await api.user.get()
     } catch (error) {
       logout()
-      statusStore.setLastError('error.auth.login'.translate())
+      statusStore.queueAlert('error.auth.login'.translate())
     }
   }
 
@@ -52,7 +52,7 @@ export const useUserStore = defineStore('user', () => {
       user.value = await api.user.get()
       return true
     } catch (error) {
-      statusStore.setLastError('error.auth.login'.translate())
+      statusStore.queueValidation('error.auth.login'.translate())
       return false
     }
   }

@@ -14,7 +14,7 @@
     {
       "name": "Debug Frontend",
       "request": "launch",
-      "type": "chrome",
+      "type": "firefox",
       "url": "http://localhost:5173",
       "webRoot": "${workspaceFolder}/frontend"
     },
@@ -24,8 +24,6 @@
       "name": "Debug Tests",
       "program": "${workspaceFolder}/backend/node_modules/mocha/bin/_mocha",
       "args": [
-        // "--require",
-        // "${workspaceFolder}/backend/test/your-setup.js",
         "--reporter",
         "dot",
         "--slow",

@@ -16,5 +16,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+.flex {
+  display: flex;
+}
+
 @media (min-width: 1024px) {
 }

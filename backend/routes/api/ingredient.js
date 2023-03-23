@@ -34,8 +34,8 @@ router.post('/', auth, async (req, res) => {
       ingredientParser.parse(input, unitsOfMeasure, foodPreparations, foodModifiers, foodData)
     )
     res.json(ingredient)
-  } catch (err) {
-    console.error(err.message)
+  } catch (error) {
+    console.error(error.message)
     res.status(500).send('Server error')
   }
 })

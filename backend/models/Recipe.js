@@ -21,7 +21,7 @@ const RecipeSchema = new mongoose.Schema({
     type: String,
   },
   keywords: {
-    type: String,
+    type: [String],
   },
   ingredients: [
     {
