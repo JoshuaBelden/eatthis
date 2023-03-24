@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { i18n } from '@/lib/i18n'
 import { useStatusStore } from '@/stores/status'
 
 const statusStore = useStatusStore()
-const alerts = statusStore.alerts
 </script>
 
 <template>
@@ -16,6 +14,3 @@ const alerts = statusStore.alerts
     </div>
   </div>
 </template>
-
-<styled scoped>
-</styled>

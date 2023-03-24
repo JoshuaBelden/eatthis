@@ -15,19 +15,21 @@ const userStore = useUserStore()
     <div class="wrapper">
       <div class="logo"><h1>EatThis!</h1></div>
       <nav class="menu">
-        <RouterLink to="/">{{ i18n.translate('site.nav.home', userStore.user.locale) }}</RouterLink>
+        <RouterLink to="/">{{ i18n.translate('home.link.title', userStore.user.locale) }}</RouterLink>
         <RouterLink to="/my-recipes" v-if="userStore.isAuthenticated">{{
-          i18n.translate('site.nav.recipes', userStore.user.locale)
+          i18n.translate('recipe.link.title', userStore.user.locale)
         }}</RouterLink>
-        <RouterLink to="/about">{{ i18n.translate('site.nav.about', userStore.user.locale) }}</RouterLink>
+        <RouterLink to="/about">{{
+          i18n.translate('about.link.title', userStore.user.locale)
+        }}</RouterLink>
       </nav>
       <nav class="account-info">
         <span v-if="userStore.isAuthenticated">{{ userStore.user.name }}</span>
         <RouterLink to="/login" v-if="!userStore.isAuthenticated">{{
-          i18n.translate('site.nav.login', userStore.user.locale)
+          i18n.translate('login.link.title', userStore.user.locale)
         }}</RouterLink>
         <RouterLink to="/logout" v-if="userStore.isAuthenticated">{{
-          i18n.translate('site.nav.logout', userStore.user.locale)
+          i18n.translate('logout.link.title', userStore.user.locale)
         }}</RouterLink>
       </nav>
     </div>

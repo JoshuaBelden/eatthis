@@ -12,7 +12,7 @@ module.exports = {
     })
 
     var message = {
-      from: config.get('site.administrator.email'),
+      from: config.get('administrator.email'),
       to: to,
       subject: subject,
       text: plainTextBody,

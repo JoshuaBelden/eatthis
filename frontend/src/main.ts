@@ -8,9 +8,9 @@ import router from './router'
 import App from './App.vue'
 
 import './styles/reset.css'
-import './styles/site.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
+import './styles/site.css'
 
 const app = createApp(App)
 app.use(BootstrapVue3)
@@ -26,6 +26,6 @@ api.defaults.setBaseUrl('http://localhost:7000/api')
 const userStore = useUserStore()
 if (!userStore.isAuthenticated && localStorage.token) {
   await userStore.setAuthToken(localStorage.token)
-}           
+}
 
 app.mount('#app')

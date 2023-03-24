@@ -1,7 +1,7 @@
 @import './vars.css';
 
 body {
-  background: var(--color-background);
+  background-color: var(--color-background);
   color: var(--color-text);
   font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
   Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
@@ -18,6 +18,11 @@ body {
 
 .flex {
   display: flex;
+}
+
+.flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 @media (min-width: 1024px) {

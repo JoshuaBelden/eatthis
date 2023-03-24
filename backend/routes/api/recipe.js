@@ -6,10 +6,32 @@ const Recipe = require('../../models/Recipe')
 
 const router = express.Router()
 
+const unitsOfMeasure = [
+  ['$1 can', ['([0-9]+.ounce).*can']],
+  ['$1 slice', ['([0-9]+.ounce).*slice']],
+  ['tsp', ['teaspoons', 'teaspoon', 'tsp']],
+  ['tbs', ['tablespoons', 'tablespoon', 'tbs']],
+  ['cup', ['cups', 'cup']],
+  ['oz', ['ounces', 'ounce', 'oz']],
+  ['pint', ['pints', 'pint']],
+  ['qt', ['quarts', 'quart', 'qt']],
+  ['gallon', ['gallons', 'gallon']],
+  ['lb', ['pounds', 'pound', 'lb']],
+  ['handful', ['handful']],
+  ['dash', ['dash']],
+  ['pinch', ['pinch']],
+  ['stick', ['(stick)[s]*']],
+  ['clove', ['(clove)[s]*']],
+  ['bottle', ['(bottle)[s]*']],
+]
+const foodPreparations = ['diced']
+const foodModifiers = ['small', 'medium', 'large']
+const foodData = ['avocado', 'crushed tomatoes', 'butter', 'yellow onion', 'cheddar cheese']
+
 const validators = [
-  check('title', 'validation.recipe.title.required').exists(),
-  check('description', 'validation.recipe.description.required').exists(),
-  check('preparation', 'validation.recipe.preparation.required').exists(),
+  check('title', 'api.validation.recipe.title.required').exists(),
+  check('description', 'api.validation.recipe.description.required').exists(),
+  check('preparation', 'api.validation.recipe.preparation.required').exists(),
 ]
 
 router.get('/', auth, async (req, res) => {
@@ -28,7 +50,7 @@ router.post('/', validators, auth, async (req, res) => {
     return res.status(400).json({ errors: errors.array() })
   }
 
-  const { id, title, description, preparation, keywords } = req.body
+  const { id, title, description, preparation, keywords, ingredients } = req.body
   if (id) {
     return res
       .status(400)
@@ -42,6 +64,7 @@ router.post('/', validators, auth, async (req, res) => {
       description,
       preparation,
       keywords,
+      ingredients: ingredients.map(ingredient => ingredientParser.parse(ingredient, unitsOfMeasure, foodPreparations, foodModifiers, foodData))
     })
     await recipe.save()
     res.json(recipe)
